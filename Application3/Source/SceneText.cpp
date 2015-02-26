@@ -213,6 +213,9 @@ void SceneText::Update(double dt)
 	Here.AllowPickUp = false;
 	Here.AllowForce = false;
 	Here.AllowActivate = false;
+	Here.MoveKeysPressed = 0;
+	Here.MainFace[0] = false;Here.MainFace[1] = false;
+	Here.MainFace[2] = false;Here.MainFace[3] = false;
 	if (Application::IsKeyPressed('1')) //enable back face culling
 		glEnable(GL_CULL_FACE);
 	if (Application::IsKeyPressed('2')) //disable back face culling
@@ -261,7 +264,8 @@ void SceneText::Update(double dt)
 		charRotate.SetToRotation(SP.Call("Player").OBJcV->getFace(), 0, 1, 0);
 		SP.Call("Player").OBJcV->setVelocity(charRotate * SP.Call("Player").OBJcV->getVelocity());
 		SP.Call("Player").OBJcV->setCentre(SP.Call("Player").OBJcV->getCentre() + SP.Call("Player").OBJcV->getVelocity());
-		Here.MainFace = 0;
+		Here.MainFace[0] = true;
+		Here.MoveKeysPressed++;
 	}
 	if (Application::IsKeyPressed('S'))
 	{
@@ -271,7 +275,8 @@ void SceneText::Update(double dt)
 		charRotate.SetToRotation(SP.Call("Player").OBJcV->getFace(), 0, 1, 0);
 		SP.Call("Player").OBJcV->setVelocity(charRotate * SP.Call("Player").OBJcV->getVelocity());
 		SP.Call("Player").OBJcV->setCentre(SP.Call("Player").OBJcV->getCentre() - SP.Call("Player").OBJcV->getVelocity());
-		Here.MainFace = 1;
+		Here.MainFace[1] = true;
+		Here.MoveKeysPressed++;
 	}
 	if (Application::IsKeyPressed('A'))
 	{
@@ -281,7 +286,8 @@ void SceneText::Update(double dt)
 		charRotate.SetToRotation(SP.Call("Player").OBJcV->getFace(), 0, 1, 0);
 		SP.Call("Player").OBJcV->setVelocity(charRotate * SP.Call("Player").OBJcV->getVelocity());
 		SP.Call("Player").OBJcV->setCentre(SP.Call("Player").OBJcV->getCentre() - SP.Call("Player").OBJcV->getVelocity());
-		Here.MainFace = 2;
+		Here.MainFace[2] = true;
+		Here.MoveKeysPressed++;
 	}
 	if (Application::IsKeyPressed('D'))
 	{
@@ -291,7 +297,8 @@ void SceneText::Update(double dt)
 		charRotate.SetToRotation(SP.Call("Player").OBJcV->getFace(), 0, 1, 0);
 		SP.Call("Player").OBJcV->setVelocity(charRotate * SP.Call("Player").OBJcV->getVelocity());
 		SP.Call("Player").OBJcV->setCentre(SP.Call("Player").OBJcV->getCentre() + SP.Call("Player").OBJcV->getVelocity());
-		Here.MainFace = 3;
+		Here.MainFace[3] = true;
+		Here.MoveKeysPressed++;
 	}
 
 	if (Application::IsKeyPressed(VK_RIGHT))
@@ -368,16 +375,6 @@ void SceneText::Update(double dt)
 		SP.Call("Player").OBJcV->setFace(SP.Call("Player").OBJcV->getFace() + 360);
 	camera.Update(dt);
 }
-
-
-
-
-
-
-
-
-
-
 
 void SceneText::Render()
 {

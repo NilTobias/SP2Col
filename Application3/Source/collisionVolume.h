@@ -32,6 +32,9 @@ public:
 	bool getActivate(void)const;
 	void setActivate(bool Act);
 
+	float getTimer(void)const;
+	void setTimer(float time);
+
 	void Chase(collisionVolume* Target, float Speed);
 
 	void CollisionEffect(collisionVolume* Target);
@@ -39,7 +42,8 @@ public:
 	static bool AllowPickUp;
 	static bool AllowForce;
 	static bool AllowActivate;
-	static int MainFace;//W = 0, S = 1, A = 2, D = 3
+	static bool MainFace[4];//W = 0, S = 1, A = 2, D = 3
+	static int MoveKeysPressed;
 private:
 	Vector3 collisionCentre;
 	Vector3 Velocity;

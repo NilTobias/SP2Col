@@ -10,6 +10,7 @@ collisionVolume::collisionVolume(Vector3 cC, int eff)
 	Face = 0;
 	setEffect(eff);
 	setActivate(false);
+	timer = 0;
 }
 
 collisionVolume::collisionVolume()
@@ -19,6 +20,7 @@ collisionVolume::collisionVolume()
 	Face = 0;
 	setEffect(0);
 	setActivate(false);
+	timer = 0;
 }
 
 collisionVolume::~collisionVolume()
@@ -29,7 +31,8 @@ collisionVolume::~collisionVolume()
 bool collisionVolume::AllowPickUp = false;
 bool collisionVolume::AllowForce = false;
 bool collisionVolume::AllowActivate = false;
-int collisionVolume::MainFace = 0;
+bool collisionVolume::MainFace[4] = {false, false, false, false};
+int collisionVolume::MoveKeysPressed = 0;
 
 Vector3 collisionVolume::getCentre(void)const
 {
@@ -112,6 +115,15 @@ void collisionVolume::setActivate(bool Act)
 	Activate = Act;
 }
 
+float collisionVolume::getTimer(void)const
+{
+	return timer;
+}
+void collisionVolume::setTimer(float time)
+{
+	timer = time;
+}
+
 void collisionVolume::CollisionEffect(collisionVolume *Target)
 {
 	switch (getEffect())
@@ -123,34 +135,34 @@ void collisionVolume::CollisionEffect(collisionVolume *Target)
 		break;
 		//Stationary Bounds(Walls/Shelves)
 	case 1:
-		switch (MainFace)
+		if (MainFace[0]) //W
 		{
-		case 0: //W
 		Target->setVelocity(Vector3(10 * SceneText::DtCopy, 0, 0));
 		charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
 		Target->setVelocity(charRotate * Target->getVelocity());
 		Target->setCentre(Target->getCentre() - Target->getVelocity());
-		break;
-		case 1://S
-		Target->setVelocity(Vector3(10 * SceneText::DtCopy, 0, 0));
-		charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
-		Target->setVelocity(charRotate * Target->getVelocity());
-		Target->setCentre(Target->getCentre() + Target->getVelocity());
-		break;
-		case 2://A
-		Target->setVelocity(Vector3(0, 0, 10 * SceneText::DtCopy));
-		charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
-		Target->setVelocity(charRotate * Target->getVelocity());
-		Target->setCentre(Target->getCentre() + Target->getVelocity());
-		break;
-		case 3://D
-		Target->setVelocity(Vector3(0, 0, 10 * SceneText::DtCopy));
-		charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
-		Target->setVelocity(charRotate * Target->getVelocity());
-		Target->setCentre(Target->getCentre() - Target->getVelocity());
-		break;
 		}
-		break;
+		if (MainFace[1]) //S
+		{
+		Target->setVelocity(Vector3(10 * SceneText::DtCopy, 0, 0));
+		charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
+		Target->setVelocity(charRotate * Target->getVelocity());
+		Target->setCentre(Target->getCentre() + Target->getVelocity());
+		}
+		if (MainFace[2])//A
+		{
+		Target->setVelocity(Vector3(0, 0, 10 * SceneText::DtCopy));
+		charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
+		Target->setVelocity(charRotate * Target->getVelocity());
+		Target->setCentre(Target->getCentre() + Target->getVelocity());
+		}
+		if (MainFace[3])//D
+		{
+		Target->setVelocity(Vector3(0, 0, 10 * SceneText::DtCopy));
+		charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
+		Target->setVelocity(charRotate * Target->getVelocity());
+		Target->setCentre(Target->getCentre() - Target->getVelocity());
+		}
 		//Activation
 	case 2:
 		if (AllowActivate)
