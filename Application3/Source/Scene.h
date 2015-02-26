@@ -11,7 +11,14 @@
 #include "collisionVolume.h"
 #include "AABB.h"
 #include "SceneAssets.h"
+#include <irrKlang.h>
+#include <string>
+#include <Windows.h>
 
+#pragma comment(lib, "irrKlang.lib")
+
+using std::string;
+using namespace irrklang;
 
 class Scene
 {
@@ -60,6 +67,7 @@ class Scene
 		GEO_MODEL1,
 		GEO_MODEL4,
 		GEO_MODEL6,
+		FLOOR2,
 		TELEPORTER,
 		THIRDFLOOR,
 		GEO_TEXT,

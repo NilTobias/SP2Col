@@ -12,7 +12,7 @@
 #include <stdlib.h>
 
 #include "SceneText.h"
-
+#include "Floor2.h"
 
 
 GLFWwindow* m_window;
@@ -111,7 +111,7 @@ void Application::Init()
 void Application::Run()
 {
 	//Main Loop
-	Scene *scene = new SceneText();
+	Scene *scene = new Floor2();
 	scene->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
