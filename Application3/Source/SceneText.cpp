@@ -364,9 +364,9 @@ void SceneText::Update(double dt)
 
 	SP.CheckCollision();
 
-	if (Application::IsKeyPressed('G'))
+	if (Application::IsKeyPressed('F'))
 	{
-		SP.Call("Player").OBJcV->setCentre(Vector3(0.5, 0, 0) + SP.Call("Player").OBJcV->getCentre());
+		SP.Call("Bowser").OBJcV->Chase(SP.Call("Player").OBJcV, 1, true);
 	}
 
 	if (SP.Call("Player").OBJcV->getFace() > 180)
