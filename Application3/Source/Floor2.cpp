@@ -411,7 +411,7 @@ void Floor2::Update(double dt)
 
 	if (Application::IsKeyPressed('G'))
 	{
-		SP.Call("Bowser").OBJcV->Chase(SP.Call("Player").OBJcV, 1, true);
+		SP.Call("Player").OBJcV->setCentre(Vector3(0.5, 0, 0) + SP.Call("Player").OBJcV->getCentre());
 	}
 
 	if (SP.Call("Player").OBJcV->getFace() > 180)

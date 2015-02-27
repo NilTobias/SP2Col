@@ -31,7 +31,7 @@ collisionVolume::~collisionVolume()
 bool collisionVolume::AllowPickUp = false;
 bool collisionVolume::AllowForce = false;
 bool collisionVolume::AllowActivate = false;
-bool collisionVolume::MainFace[4] = { false, false, false, false };
+bool collisionVolume::MainFace[4] = {false, false, false, false};
 int collisionVolume::MoveKeysPressed = 0;
 
 Vector3 collisionVolume::getCentre(void)const
@@ -86,43 +86,15 @@ void collisionVolume::setFace(float f)
 	Face = f;
 }
 
-void collisionVolume::Chase(collisionVolume* Target, float Speed, float flying)
+void collisionVolume::Chase(collisionVolume* Target, float Speed)
 {
-	Vector3 ToTarget;
+	Vector3 DistanceAwayFromPlayer;
 
-	ToTarget = Target->getCentre() - getCentre();
+	DistanceAwayFromPlayer = Target->getCentre() - getCentre();
 
-	ToTarget.Normalize();
-	ToTarget *= Speed;
+	Vector3 ChasingSpeed = DistanceAwayFromPlayer;
 
-	if (flying)
-		ToTarget.y = 0;
-
-	setCentre(getCentre() + ToTarget);
-}
-
-void collisionVolume::Jump(float JumpStrength, float MaxHeight)
-{
-	Vector3 thisVector(1, 0, 0);
-	Vector3 thisOtherVector(0, 0, 1);
-
-	Vector3 up = thisVector.Cross(thisOtherVector);
-	up.Normalize();
-	up *= JumpStrength;
-
-	if (getCOORD(1) <= MaxHeight && !maxVelo)
-	{
-		setCentre(getCentre() + up);
-
-		if (getCOORD(1) == MaxHeight)
-			maxVelo = true;
-	}
-	else if (getCOORD(1) >= 0 && maxVelo)
-	{
-		setCentre(getCentre() - up);
-		if (getCOORD(1) == 0)
-			maxVelo = false;
-	}
+	setCentre(getCentre() + ChasingSpeed);
 }
 
 int collisionVolume::getEffect(void)const
@@ -157,44 +129,44 @@ void collisionVolume::CollisionEffect(collisionVolume *Target)
 	switch (getEffect())
 	{
 		//Pick Up
-	case 0:
+	case 0: 
 		if (AllowPickUp)
-			setCentre(Target->getCentre());
+		setCentre(Target->getCentre());
 		break;
 		//Stationary Bounds(Walls/Shelves)
 	case 1:
 		if (MainFace[0]) //W
 		{
-			Target->setVelocity(Vector3(10 * SceneText::DtCopy, 0, 0));
-			charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
-			Target->setVelocity(charRotate * Target->getVelocity());
-			Target->setCentre(Target->getCentre() - Target->getVelocity());
+		Target->setVelocity(Vector3(10 * SceneText::DtCopy, 0, 0));
+		charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
+		Target->setVelocity(charRotate * Target->getVelocity());
+		Target->setCentre(Target->getCentre() - Target->getVelocity());
 		}
 		if (MainFace[1]) //S
 		{
-			Target->setVelocity(Vector3(10 * SceneText::DtCopy, 0, 0));
-			charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
-			Target->setVelocity(charRotate * Target->getVelocity());
-			Target->setCentre(Target->getCentre() + Target->getVelocity());
+		Target->setVelocity(Vector3(10 * SceneText::DtCopy, 0, 0));
+		charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
+		Target->setVelocity(charRotate * Target->getVelocity());
+		Target->setCentre(Target->getCentre() + Target->getVelocity());
 		}
 		if (MainFace[2])//A
 		{
-			Target->setVelocity(Vector3(0, 0, 10 * SceneText::DtCopy));
-			charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
-			Target->setVelocity(charRotate * Target->getVelocity());
-			Target->setCentre(Target->getCentre() + Target->getVelocity());
+		Target->setVelocity(Vector3(0, 0, 10 * SceneText::DtCopy));
+		charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
+		Target->setVelocity(charRotate * Target->getVelocity());
+		Target->setCentre(Target->getCentre() + Target->getVelocity());
 		}
 		if (MainFace[3])//D
 		{
-			Target->setVelocity(Vector3(0, 0, 10 * SceneText::DtCopy));
-			charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
-			Target->setVelocity(charRotate * Target->getVelocity());
-			Target->setCentre(Target->getCentre() - Target->getVelocity());
+		Target->setVelocity(Vector3(0, 0, 10 * SceneText::DtCopy));
+		charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
+		Target->setVelocity(charRotate * Target->getVelocity());
+		Target->setCentre(Target->getCentre() - Target->getVelocity());
 		}
 		//Activation
 	case 2:
 		if (AllowActivate)
-			setActivate(true);
+		setActivate(true);
 		break;
 		//Add Vector
 	case 3:

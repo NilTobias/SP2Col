@@ -35,8 +35,7 @@ public:
 	float getTimer(void)const;
 	void setTimer(float time);
 
-	void Chase(collisionVolume* Target, float Speed, float flying);
-	void Jump(float JumpStrength, float MaxHeight = 5);
+	void Chase(collisionVolume* Target, float Speed);
 
 	void CollisionEffect(collisionVolume* Target);
 
@@ -53,7 +52,6 @@ private:
 	float timer;
 	int type; //0 == Sphere, 1 == AABB
 	bool Activate; //Object's Boolean that will be True when Collide
-	bool maxVelo;
 
 
 	int Effect;
