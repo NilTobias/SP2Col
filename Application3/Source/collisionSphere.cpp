@@ -35,7 +35,7 @@ bool collisionSphere::checkCollision(collisionSphere *target)
 	//Distance Between Their Centres
 	float d = pow((getCentre().x - target->getCentre().x), 2)
 		+ pow((getCentre().y - target->getCentre().y), 2)
-		+ pow((getCentre().z - target->getCentre().y), 2);
+		+ pow((getCentre().z - target->getCentre().z), 2);
 
 	//Combined Radius of Two Bounding Spheres
 	float tR = pow((getRadius() + target->getRadius()), 2);
@@ -45,7 +45,7 @@ bool collisionSphere::checkCollision(collisionSphere *target)
 		return true;
 		target->setEffect(true);
 	}	
-	else
+	else 
 		return false;
 }
 
