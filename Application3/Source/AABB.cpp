@@ -11,14 +11,15 @@ AABB::AABB()
 	
 }
 
-AABB::AABB(float l, float w, Vector3 cC)
+AABB::AABB(float l, float w, float h, Vector3 cC)
 {
 	length = l;
 	width = w;
-	maximum.Set(getCentre().x + width / 2, getCentre().y + height / 2, getCentre().z + length / 2);
-	minimum.Set(getCentre().x - width / 2, getCentre().y - height / 2, getCentre().z - length / 2);
-	setCollisionType(1);
+	height = h;
 	setCentre(cC);
+	maximum.Set(getCentre().x + length / 2, getCentre().y + height / 2, getCentre().z + width/ 2);
+	minimum.Set(getCentre().x - length / 2, getCentre().y - height / 2, getCentre().z - width / 2);
+	setCollisionType(1);
 }
 
 AABB::AABB(Vector3 min, Vector3 max, Vector3 cC)
@@ -76,13 +77,3 @@ Vector3 AABB::getMaximum(void)const
 {
 	return maximum;
 }
-
-/*
-bool AABB::checkCollision(AABB *target)
-{
-	Vector3 d1 = getMaximum() + target.getMaximum();
-	Vector3 d2 = getMinimum() - target.getMinimum();
-
-	return d2.greaterThan(d1);
-}
-*/

@@ -53,7 +53,7 @@ private:
 	float timer;
 	int type; //0 == Sphere, 1 == AABB
 	bool Activate; //Object's Boolean that will be True when Collide
-	bool maxVelo;
+	float maxVelo;
 
 
 	int Effect;

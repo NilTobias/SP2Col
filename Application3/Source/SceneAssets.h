@@ -12,9 +12,11 @@ public:
 	bool Delete(std::string toDelete);
 	Object Call(std::string ObjectName);
 	void CheckCollision();
-	std::string RenderAssets();
+	Mesh* RenderAssets();
 private:
 	CNode *head, *tail, *current, *newNode, *prev, *check;
+	int TotalAssets;
+	int ForRender;
 };
 
 

@@ -26,7 +26,7 @@ void Camera2::Update(double dt)
 {
 	if (!lockCamera)
 	{
-	static const float CAMERA_SPEED = 200.f;
+	static const float CAMERA_SPEED = 25.f;
 	if(Application::IsKeyPressed('A')){
 		Vector3 view = (target - position).Normalize();
 		Vector3 right = view.Cross(up);

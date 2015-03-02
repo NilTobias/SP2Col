@@ -1,7 +1,7 @@
 #include "collisionVolume.h"
 #include <math.h>
 #include "Mtx44.h"
-#include "SceneText.h"
+#include "Floor3.h"
 
 collisionVolume::collisionVolume(Vector3 cC, int eff)
 {
@@ -11,6 +11,7 @@ collisionVolume::collisionVolume(Vector3 cC, int eff)
 	setEffect(eff);
 	setActivate(false);
 	timer = 0;
+	maxVelo = 0;
 }
 
 collisionVolume::collisionVolume()
@@ -21,6 +22,7 @@ collisionVolume::collisionVolume()
 	setEffect(0);
 	setActivate(false);
 	timer = 0;
+	maxVelo = 0;
 }
 
 collisionVolume::~collisionVolume()
@@ -109,20 +111,8 @@ void collisionVolume::Jump(float JumpStrength, float MaxHeight)
 	Vector3 up = thisVector.Cross(thisOtherVector);
 	up.Normalize();
 	up *= JumpStrength;
-
-	if (getCOORD(1) <= MaxHeight && !maxVelo)
-	{
-		setCentre(getCentre() + up);
-
-		if (getCOORD(1) == MaxHeight)
-			maxVelo = true;
-	}
-	else if (getCOORD(1) >= 0 && maxVelo)
-	{
-		setCentre(getCentre() - up);
-		if (getCOORD(1) == 0)
-			maxVelo = false;
-	}
+	setCentre(getCentre() + up);
+	maxVelo += up.Length();
 }
 
 int collisionVolume::getEffect(void)const
@@ -165,28 +155,28 @@ void collisionVolume::CollisionEffect(collisionVolume *Target)
 	case 1:
 		if (MainFace[0]) //W
 		{
-			Target->setVelocity(Vector3(10 * SceneText::DtCopy, 0, 0));
+			Target->setVelocity(Vector3(10 * Floor3::DtCopy, 0, 0));
 			charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
 			Target->setVelocity(charRotate * Target->getVelocity());
 			Target->setCentre(Target->getCentre() - Target->getVelocity());
 		}
 		if (MainFace[1]) //S
 		{
-			Target->setVelocity(Vector3(10 * SceneText::DtCopy, 0, 0));
+			Target->setVelocity(Vector3(10 * Floor3::DtCopy, 0, 0));
 			charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
 			Target->setVelocity(charRotate * Target->getVelocity());
 			Target->setCentre(Target->getCentre() + Target->getVelocity());
 		}
 		if (MainFace[2])//A
 		{
-			Target->setVelocity(Vector3(0, 0, 10 * SceneText::DtCopy));
+			Target->setVelocity(Vector3(0, 0, 10 * Floor3::DtCopy));
 			charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
 			Target->setVelocity(charRotate * Target->getVelocity());
 			Target->setCentre(Target->getCentre() + Target->getVelocity());
 		}
 		if (MainFace[3])//D
 		{
-			Target->setVelocity(Vector3(0, 0, 10 * SceneText::DtCopy));
+			Target->setVelocity(Vector3(0, 0, 10 * Floor3::DtCopy));
 			charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
 			Target->setVelocity(charRotate * Target->getVelocity());
 			Target->setCentre(Target->getCentre() - Target->getVelocity());

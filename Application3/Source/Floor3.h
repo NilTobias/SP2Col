@@ -1,15 +1,15 @@
-#ifndef SCENE_TEXT_H
-#define SCENE_TEXT_H
+#ifndef FLOOR_3_H
+#define FLOOR_3_H
 
 #include "Scene.h"
 
 
-class SceneText  : public Scene
+class Floor3  : public Scene
 {
 	
 public:
-	SceneText ();
-	~SceneText ();
+	Floor3 ();
+	~Floor3 ();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -17,12 +17,7 @@ public:
 	virtual void Exit();
 	static double DtCopy;
 private:
-
-	
-	void Hold();
-	
-	
-
+	void RenderSP();
 	SceneAssets SP;
 
 	float LSPEED;

@@ -5,6 +5,7 @@
 SceneAssets::SceneAssets()
 {
 	head = tail = current = NULL;
+	TotalAssets = 0;
 }
 
 SceneAssets::~SceneAssets()
@@ -14,6 +15,7 @@ SceneAssets::~SceneAssets()
 
 void SceneAssets::Add(Object target)
 {
+	TotalAssets++;
 	newNode = new CNode(target);
 	if (head == NULL)
 	{
@@ -148,7 +150,7 @@ void SceneAssets::CheckCollision()
 						}
 						else
 						{
-							if (TempSphere2->checkCollision(TempBox))
+							if (TempSphere->checkCollision(TempBox2))
 								check->Data.OBJcV->CollisionEffect(current->Data.OBJcV);
 						}
 					}
@@ -167,9 +169,4 @@ void SceneAssets::CheckCollision()
 			current = current->next;
 		}
 	}
-}
-
-std::string SceneAssets::RenderAssets()
-{
-	return "";
 }

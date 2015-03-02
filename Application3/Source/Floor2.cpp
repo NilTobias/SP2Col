@@ -227,13 +227,22 @@ void Floor2::Init()
 	Object Wine;
 	Wine.Name = "Wine";
 	Wine.CollisionTrigger = false;
-	Wine.OBJcV = new collisionSphere(2.f, Vector3(15, 0, 0));
+	Wine.OBJcV = new collisionSphere(2.f, Vector3(10, 0, 0));
 	Wine.OBJcV->setEffect(1);
 	Wine.OBJcV->setVelocity(Vector3(0, 5, 0));
 	Wine.OBJmesh = MeshBuilder::GenerateOBJ("Wine", "OBJ//winebottle.obj");
 	Wine.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
 	SP.Add(Wine);
 
+	Object Random;
+	Random.Name = "Random";
+	Random.CollisionTrigger = false;
+	Random.OBJcV = new AABB(2.f, 2.f, Vector3(5, 0, 0));
+	Random.OBJcV->setEffect(0);
+	Random.OBJcV->setVelocity(Vector3(0, 1, 0));
+	Random.OBJmesh = MeshBuilder::GenerateOBJ("Random", "OBJ//winebottle.obj");
+	Random.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
+	SP.Add(Random);
 
 	//Initialize camera settings
 	camera.Init(Vector3(0, 25, 20), Vector3(0, 0, 0), Vector3(0, 1, 0));
@@ -351,55 +360,6 @@ void Floor2::Update(double dt)
 	else if (Application::IsKeyPressed(VK_LEFT))
 		SP.Call("Player").OBJcV->setFace(SP.Call("Player").OBJcV->getFace() + 5.f);
 
-	/*
-	if (Application::IsKeyPressed('E') && Player->checkCollision(Teleporter))
-	{
-	Teleport = true;
-	isFixed = true;
-	}
-	if (Teleport)
-	rotateTele += 15;
-	if (rotateTele > 1080)
-	{
-	Teleport = false;
-	isFixed = false;
-	rotateTele = 0;
-	Player->setCOORD(0,0,0);
-	}
-
-	//JetPack
-	if (Application::IsKeyPressed('F') && JetPackActivated)
-	{
-
-	Player->setCOORD(Player->getCOORD(0), Player->getCOORD(1) + 0.4, Player->getCOORD(2));
-	engineHeat += 40;
-	if (engineHeat >= 2000)
-	JetPackActivated = false;
-	}
-	if (Player->getCOORD(1) > 0)
-	{
-	Player->setCOORD(Player->getCOORD(0), Player->getCOORD(1) - 0.1, Player->getCOORD(2));
-	if (engineHeat < 50 && !JetPackActivated)
-	JetPackActivated = true;
-	else
-	engineHeat -= 10;
-	}
-
-	/* COLLISION EFFECTS
-	while (SP.CheckCollision().Name != "Finished")
-	//Pick Ups
-
-	//Stationary Bounds
-
-	//Activations
-
-	//Vector Addition
-
-	float test = engineHeat;
-	std::ostringstream ss;
-	ss<< test;
-	warningTest = ss.str();
-	*/
 	if (Application::IsKeyPressed('E'))
 	{
 		Here.AllowPickUp = true;
@@ -411,7 +371,8 @@ void Floor2::Update(double dt)
 
 	if (Application::IsKeyPressed('G'))
 	{
-		SP.Call("Bowser").OBJcV->Chase(SP.Call("Player").OBJcV, 1, true);
+		//SP.Call("Bowser").OBJcV->Chase(SP.Call("Player").OBJcV, 1, true);
+		//SP.Call("Player").OBJcV->Jump(0.1, 20);
 	}
 
 	if (SP.Call("Player").OBJcV->getFace() > 180)
@@ -496,6 +457,14 @@ void Floor2::Render()
 		SP.Call("Wine").OBJcV->getCOORD(2));
 	RenderMesh(SP.Call("Wine").OBJmesh, false);
 	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Random").OBJcV->getCOORD(0),
+		SP.Call("Random").OBJcV->getCOORD(1),
+		SP.Call("Random").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Random").OBJmesh, false);
+	modelStack.PopMatrix();
+
 	if(test == true)
 	{
 	sound();

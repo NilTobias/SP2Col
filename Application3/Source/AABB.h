@@ -11,7 +11,7 @@ class AABB : public collisionVolume
 	2)Provide Its Minimum and Maximum Extents
 	*/
 public:
-	AABB(float l, float w, Vector3 cC);
+	AABB(float l, float w, float h, Vector3 cC);
 	AABB(Vector3 min, Vector3 max, Vector3 cC);
 	AABB();
 	~AABB();

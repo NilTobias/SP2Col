@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "SceneText.h"
+#include "Floor3.h"
 #include "Floor2.h"
 
 
@@ -111,7 +111,7 @@ void Application::Init()
 void Application::Run()
 {
 	//Main Loop
-	Scene *scene = new Floor2();
+	Scene *scene = new Floor3();
 	scene->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame

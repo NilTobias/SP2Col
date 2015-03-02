@@ -1,4 +1,4 @@
-#include "SceneText.h"
+#include "Floor3.h"
 #include "GL\glew.h"
 #include "Time.h"
 #include "shader.hpp"
@@ -13,15 +13,15 @@
 #include "Object.h"
 
 
-SceneText::SceneText()
+Floor3::Floor3()
 {
 }
 
-SceneText ::~SceneText()
+Floor3 ::~Floor3()
 {
 }
 
-void SceneText::Init()
+void Floor3::Init()
 {
 	// Init VBO here
 
@@ -172,7 +172,7 @@ void SceneText::Init()
 	Object Can;
 	Can.Name = "Bowser";
 	Can.CollisionTrigger = false;
-	Can.OBJcV = new collisionSphere(2.f, Vector3(5, 0, 0));
+	Can.OBJcV = new collisionSphere(2.f, Vector3(25, 0, 0));
 	Can.OBJcV->setEffect(0);
 	Can.OBJcV->setVelocity(Vector3(0, 5, 0));
 	Can.OBJmesh = MeshBuilder::GenerateOBJ("Can", "OBJ//Bowser.obj");
@@ -189,6 +189,17 @@ void SceneText::Init()
 	Wine.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
 	SP.Add(Wine);
 
+	Object Random;
+	Random.Name = "Random";
+	Random.CollisionTrigger = false;
+	Random.OBJcV = new AABB(0.1f, 0.1f, 0.1f, Vector3(0,0,0));
+	Random.OBJcV->setEffect(1);
+	Random.OBJcV->setVelocity(Vector3(0, 5, 0));
+	Random.OBJmesh = MeshBuilder::GenerateOBJ("Random", "OBJ//winebottle.obj");
+	Random.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
+	SP.Add(Random);
+	
+
 
 	//Initialize camera settings
 	camera.Init(Vector3(0, 25, 20), Vector3(0, 0, 0), Vector3(0, 1, 0));
@@ -204,9 +215,9 @@ void SceneText::Init()
 static float ROT_LIMIT = 45.f;
 static float SCALE_LIMIT = 5.f;
 
-double SceneText::DtCopy = 0;
+double Floor3::DtCopy = 0;
 
-void SceneText::Update(double dt)
+void Floor3::Update(double dt)
 {
 	DtCopy = dt;
 	collisionVolume Here;
@@ -376,7 +387,7 @@ void SceneText::Update(double dt)
 	camera.Update(dt);
 }
 
-void SceneText::Render()
+void Floor3::Render()
 {
 	// Render VBO here
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -445,12 +456,24 @@ void SceneText::Render()
 		SP.Call("Wine").OBJcV->getCOORD(2));
 	RenderMesh(SP.Call("Wine").OBJmesh, false);
 	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Random").OBJcV->getCOORD(0),
+		SP.Call("Random").OBJcV->getCOORD(1),
+		SP.Call("Random").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Random").OBJmesh, false);
+	modelStack.PopMatrix();
 }
 
-void SceneText::Exit()
+void Floor3::Exit()
 {
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
+
+}
+
+void Floor3::RenderSP()
+{
 
 }
 
