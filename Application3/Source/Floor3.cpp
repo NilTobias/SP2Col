@@ -199,8 +199,9 @@ void Floor3::Init()
 
 	Object Floor;
 	Floor.Name = "Floor";//IMPORTANT
-	Floor.OBJcV = new AABB(10.f, 10.f, 10.f, Vector3(0,0,0)); //IMPORTANT
-	Floor.OBJcV->setEffect(5); //IMPORTANT
+	Floor.ReverseCollision = true;
+	Floor.OBJcV = new AABB(20.f, 100.f, 20.f, Vector3(0,0,0)); //IMPORTANT
+	Floor.OBJcV->setEffect(1); //IMPORTANT
 	Floor.OBJcV->setVelocity(Vector3(0, 5, 0));
 	Floor.OBJmesh = MeshBuilder::GenerateOBJ("Floor", "OBJ//winebottle.obj");
 	Floor.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
@@ -381,7 +382,7 @@ void Floor3::Update(double dt)
 	}
 
 	if (Application::IsKeyPressed('F'))
-		SP.Call("Player").OBJcV->Jump(5);
+		SP.Call("Player").OBJcV->Jump(2);
 
 	SP.CheckCollision();
 	SP.Gravity();
