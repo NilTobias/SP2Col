@@ -9,6 +9,14 @@ struct Object{
 	collisionVolume* OBJcV;
 	std::string Name;
 	bool CollisionTrigger; //If CollisionTrigger == 1, transverse this Object through the SceneAsset
+	bool ReverseCollision; //Checks if Not Colliding, then Uses Collision effect
+	bool Gravity;
+	Object()
+	{
+		CollisionTrigger = false;
+		ReverseCollision = false;
+		Gravity = true;
+	}
 };
 
 #endif

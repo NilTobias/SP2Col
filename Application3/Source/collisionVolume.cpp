@@ -111,8 +111,8 @@ void collisionVolume::Jump(float JumpStrength, float MaxHeight)
 	Vector3 up = thisVector.Cross(thisOtherVector);
 	up.Normalize();
 	up *= JumpStrength;
-	setCentre(getCentre() + up);
-	maxVelo += up.Length();
+	setCentre(getCentre() - up);
+	maxVelo -= up.Length();
 }
 
 int collisionVolume::getEffect(void)const

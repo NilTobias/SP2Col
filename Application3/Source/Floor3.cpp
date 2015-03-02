@@ -171,7 +171,6 @@ void Floor3::Init()
 
 	Object Can;
 	Can.Name = "Bowser";
-	Can.CollisionTrigger = false;
 	Can.OBJcV = new collisionSphere(2.f, Vector3(25, 0, 0));
 	Can.OBJcV->setEffect(0);
 	Can.OBJcV->setVelocity(Vector3(0, 5, 0));
@@ -181,7 +180,6 @@ void Floor3::Init()
 
 	Object Wine;
 	Wine.Name = "Wine";
-	Wine.CollisionTrigger = false;
 	Wine.OBJcV = new collisionSphere(2.f, Vector3(15, 0, 0));
 	Wine.OBJcV->setEffect(1);
 	Wine.OBJcV->setVelocity(Vector3(0, 5, 0));
@@ -190,14 +188,23 @@ void Floor3::Init()
 	SP.Add(Wine);
 
 	Object Random;
-	Random.Name = "Random";
-	Random.CollisionTrigger = false;
-	Random.OBJcV = new AABB(0.1f, 0.1f, 0.1f, Vector3(0,0,0));
-	Random.OBJcV->setEffect(1);
+	Random.Name = "Random";//IMPORTANT
+	Random.OBJcV = new AABB(0.1f, 0.1f, 0.1f, Vector3(0,0,0)); //IMPORTANT
+	Random.OBJcV->setEffect(1); //IMPORTANT
 	Random.OBJcV->setVelocity(Vector3(0, 5, 0));
 	Random.OBJmesh = MeshBuilder::GenerateOBJ("Random", "OBJ//winebottle.obj");
 	Random.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
 	SP.Add(Random);
+
+
+	Object Floor;
+	Floor.Name = "Floor";//IMPORTANT
+	Floor.OBJcV = new AABB(10.f, 10.f, 10.f, Vector3(0,0,0)); //IMPORTANT
+	Floor.OBJcV->setEffect(5); //IMPORTANT
+	Floor.OBJcV->setVelocity(Vector3(0, 5, 0));
+	Floor.OBJmesh = MeshBuilder::GenerateOBJ("Floor", "OBJ//winebottle.obj");
+	Floor.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
+	SP.Add(Floor);
 	
 
 
@@ -373,7 +380,11 @@ void Floor3::Update(double dt)
 		Here.AllowActivate = true;
 	}
 
+	if (Application::IsKeyPressed('F'))
+		SP.Call("Player").OBJcV->Jump(5);
+
 	SP.CheckCollision();
+	SP.Gravity();
 
 	if (Application::IsKeyPressed('F'))
 	{
@@ -463,17 +474,21 @@ void Floor3::Render()
 		SP.Call("Random").OBJcV->getCOORD(2));
 	RenderMesh(SP.Call("Random").OBJmesh, false);
 	modelStack.PopMatrix();
+
+	/*
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("ThirdLevel").OBJcV->getCOORD(0),
+		SP.Call("ThirdLevel").OBJcV->getCOORD(1),
+		SP.Call("ThirdLevel").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("ThirdLevel").OBJmesh, false);
+	modelStack.PopMatrix();
+	*/
 }
 
 void Floor3::Exit()
 {
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
-
-}
-
-void Floor3::RenderSP()
-{
 
 }
 

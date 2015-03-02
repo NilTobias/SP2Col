@@ -150,8 +150,16 @@ void SceneAssets::CheckCollision()
 						}
 						else
 						{
-							if (TempSphere->checkCollision(TempBox2))
-								check->Data.OBJcV->CollisionEffect(current->Data.OBJcV);
+							if (check->Data.ReverseCollision)
+							{
+								if (TempSphere->checkCollision(TempBox2) == false)
+									check->Data.OBJcV->CollisionEffect(current->Data.OBJcV);
+							}
+							else if (check->Data.ReverseCollision == false)
+							{
+								if (TempSphere->checkCollision(TempBox2))
+									check->Data.OBJcV->CollisionEffect(current->Data.OBJcV);
+							}
 						}
 					}
 					else if (!isSphere)
@@ -168,5 +176,28 @@ void SceneAssets::CheckCollision()
 			}
 			current = current->next;
 		}
+	}
+}
+
+void SceneAssets::Gravity(float force)
+{
+	check = head;
+	while (check != NULL)
+	{
+		if (check->Data.Gravity)
+		{
+			if (check->Data.OBJcV->getCOORD(1) > 0)
+			{
+			Vector3 thisVector(1, 0, 0);
+			Vector3 thisOtherVector(0, 0, 1);
+
+			Vector3 Gravity = thisVector.Cross(thisOtherVector);
+			Gravity.Normalize();
+			Gravity *= force;
+			float NewAltitude = check->Data.OBJcV->getCOORD(1) - Gravity.Length();
+			check->Data.OBJcV->setCentre(Vector3(check->Data.OBJcV->getCOORD(0),NewAltitude, check->Data.OBJcV->getCOORD(2)));
+			}
+		}
+		check = check->next;
 	}
 }

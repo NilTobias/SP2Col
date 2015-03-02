@@ -12,6 +12,7 @@ public:
 	bool Delete(std::string toDelete);
 	Object Call(std::string ObjectName);
 	void CheckCollision();
+	void Gravity(float force = 1);
 	Mesh* RenderAssets();
 private:
 	CNode *head, *tail, *current, *newNode, *prev, *check;
