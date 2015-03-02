@@ -2,6 +2,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include <vector>
 #include "timer.h"
 
 class Application
@@ -13,8 +14,11 @@ public:
 	void Run();
 	void Exit();
 	static bool IsKeyPressed(unsigned short key);
+
+
 private:
 
+	
 	//Declare a window object
 	StopWatch m_timer;
 };

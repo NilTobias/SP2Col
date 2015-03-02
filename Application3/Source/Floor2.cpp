@@ -474,6 +474,7 @@ void Floor2::Render()
 
 void Floor2::Exit()
 {
+	engine->drop();
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
 
