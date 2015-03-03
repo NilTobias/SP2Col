@@ -109,7 +109,6 @@ class Scene
 	Light lights[1];
 
 	MS modelStack, viewStack, projectionStack;
-
 };
 
 #endif

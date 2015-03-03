@@ -165,13 +165,14 @@ void Floor3::Init()
 	Player.Name = "Player";
 	Player.CollisionTrigger = true;
 	Player.OBJcV = new collisionSphere(2.f, Vector3(-10, 0, 0));
+	Player.OBJcV->setLiving(true);
 	Player.OBJmesh = MeshBuilder::GenerateOBJ("Player", "OBJ//doorman.obj");
 	Player.OBJmesh->textureID = LoadTGA("Image//doorman.tga");
 	SP.Add(Player);
 
 	Object Can;
 	Can.Name = "Bowser";
-	Can.OBJcV = new collisionSphere(2.f, Vector3(25, 0, 0));
+	Can.OBJcV = new collisionSphere(2.f, Vector3(25, 10, 0));
 	Can.OBJcV->setEffect(0);
 	Can.OBJcV->setVelocity(Vector3(0, 5, 0));
 	Can.OBJmesh = MeshBuilder::GenerateOBJ("Can", "OBJ//Bowser.obj");
@@ -198,14 +199,31 @@ void Floor3::Init()
 
 
 	Object Floor;
-	Floor.Name = "Floor";//IMPORTANT
+	Floor.Name = "ThirdLevel";//IMPORTANT
 	Floor.ReverseCollision = true;
-	Floor.OBJcV = new AABB(20.f, 100.f, 20.f, Vector3(0,0,0)); //IMPORTANT
+	Floor.OBJcV = new AABB(80.f, 75.f, 100.f, Vector3(0,0,0)); //IMPORTANT
 	Floor.OBJcV->setEffect(1); //IMPORTANT
 	Floor.OBJcV->setVelocity(Vector3(0, 5, 0));
-	Floor.OBJmesh = MeshBuilder::GenerateOBJ("Floor", "OBJ//winebottle.obj");
-	Floor.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
+	Floor.OBJmesh = MeshBuilder::GenerateOBJ("ThirdLevel", "OBJ//Floor3.obj");
+	Floor.OBJmesh->textureID = LoadTGA("Image//Floor3.tga");
 	SP.Add(Floor);
+
+	Object ChemicalX;
+	ChemicalX.Name = "ChemicalX";
+	ChemicalX.Gravity = false;
+	ChemicalX.OBJcV = new collisionSphere(1.f, Vector3(41, 5, 13));
+	ChemicalX.OBJcV->setEffect(0);
+	ChemicalX.OBJmesh = MeshBuilder::GenerateOBJ("ChemicalX", "OBJ//ChemicalX.obj");
+	ChemicalX.OBJmesh->textureID = LoadTGA("Image//Flask.tga");
+	SP.Add(ChemicalX);
+
+	Object Teleporter;
+	Teleporter.Name = "Teleporter";
+	Teleporter.Gravity = false;
+	Teleporter.OBJcV = new collisionSphere(1.5f, Vector3(0,0,0));
+	//Teleporter.OBJmesh = MeshBuilder::GenerateOBJ("Tele", "OBJ//Teleporter.obj");
+	//Teleporter.OBJmesh->textureID = LoadTGA("Image//Teleporter.tga");
+	SP.Add(Teleporter);
 	
 
 
@@ -325,55 +343,9 @@ void Floor3::Update(double dt)
 	else if (Application::IsKeyPressed(VK_LEFT))
 		SP.Call("Player").OBJcV->setFace(SP.Call("Player").OBJcV->getFace() + 5.f);
 
-	/*
-	if (Application::IsKeyPressed('E') && Player->checkCollision(Teleporter))
-	{
-	Teleport = true;
-	isFixed = true;
-	}
-	if (Teleport)
-	rotateTele += 15;
-	if (rotateTele > 1080)
-	{
-	Teleport = false;
-	isFixed = false;
-	rotateTele = 0;
-	Player->setCOORD(0,0,0);
-	}
-
-	//JetPack
-	if (Application::IsKeyPressed('F') && JetPackActivated)
-	{
-
-	Player->setCOORD(Player->getCOORD(0), Player->getCOORD(1) + 0.4, Player->getCOORD(2));
-	engineHeat += 40;
-	if (engineHeat >= 2000)
-	JetPackActivated = false;
-	}
-	if (Player->getCOORD(1) > 0)
-	{
-	Player->setCOORD(Player->getCOORD(0), Player->getCOORD(1) - 0.1, Player->getCOORD(2));
-	if (engineHeat < 50 && !JetPackActivated)
-	JetPackActivated = true;
-	else
-	engineHeat -= 10;
-	}
-
-	/* COLLISION EFFECTS
-	while (SP.CheckCollision().Name != "Finished")
-	//Pick Ups
-
-	//Stationary Bounds
-
-	//Activations
-
-	//Vector Addition
-
-	float test = engineHeat;
-	std::ostringstream ss;
-	ss<< test;
-	warningTest = ss.str();
-	*/
+	if (Application::IsKeyPressed('F'))
+		SP.Call("Player").OBJcV->Jump(0.1f);
+	
 	if (Application::IsKeyPressed('E'))
 	{
 		Here.AllowPickUp = true;
@@ -381,16 +353,10 @@ void Floor3::Update(double dt)
 		Here.AllowActivate = true;
 	}
 
-	if (Application::IsKeyPressed('F'))
-		SP.Call("Player").OBJcV->Jump(2);
-
 	SP.CheckCollision();
 	SP.Gravity();
 
-	if (Application::IsKeyPressed('F'))
-	{
-		SP.Call("Bowser").OBJcV->Chase(SP.Call("Player").OBJcV, 1, true);
-	}
+	SP.Call("Bowser").OBJcV->Chase(SP.Call("Player").OBJcV, 0.1, true);
 
 	if (SP.Call("Player").OBJcV->getFace() > 180)
 		SP.Call("Player").OBJcV->setFace(SP.Call("Player").OBJcV->getFace() - 360);
@@ -476,14 +442,19 @@ void Floor3::Render()
 	RenderMesh(SP.Call("Random").OBJmesh, false);
 	modelStack.PopMatrix();
 
-	/*
 	modelStack.PushMatrix();
 	modelStack.Translate(SP.Call("ThirdLevel").OBJcV->getCOORD(0),
 		SP.Call("ThirdLevel").OBJcV->getCOORD(1),
 		SP.Call("ThirdLevel").OBJcV->getCOORD(2));
 	RenderMesh(SP.Call("ThirdLevel").OBJmesh, false);
 	modelStack.PopMatrix();
-	*/
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("ChemicalX").OBJcV->getCOORD(0),
+		SP.Call("ChemicalX").OBJcV->getCOORD(1),
+		SP.Call("ChemicalX").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("ChemicalX").OBJmesh, false);
+	modelStack.PopMatrix();
 }
 
 void Floor3::Exit()

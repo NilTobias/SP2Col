@@ -11,7 +11,10 @@ collisionVolume::collisionVolume(Vector3 cC, int eff)
 	setEffect(eff);
 	setActivate(false);
 	timer = 0;
-	maxVelo = 0;
+	maxVelo = false;
+	Living = false;
+	RiseObject = 0;
+	Altitude = 0;
 }
 
 collisionVolume::collisionVolume()
@@ -22,7 +25,10 @@ collisionVolume::collisionVolume()
 	setEffect(0);
 	setActivate(false);
 	timer = 0;
-	maxVelo = 0;
+	maxVelo = false;
+	Living = false;
+	RiseObject = 0;
+	Altitude = 0;
 }
 
 collisionVolume::~collisionVolume()
@@ -105,23 +111,45 @@ void collisionVolume::Chase(collisionVolume* Target, float Speed, float flying)
 
 void collisionVolume::Jump(float JumpStrength, float MaxHeight)
 {
-	Vector3 thisVector(1, 0, 0);
-	Vector3 thisOtherVector(0, 0, 1);
+	if (getCOORD(1) <= MaxHeight && !maxVelo)
+	{
+		Vector3 thisVector(1, 0, 0);
+		Vector3 thisOtherVector(0, 0, 1);
 
-	Vector3 up = thisVector.Cross(thisOtherVector);
-	up.Normalize();
-	up *= JumpStrength;
-	setCentre(getCentre() - up);
-	maxVelo -= up.Length();
+		Vector3 up = thisVector.Cross(thisOtherVector);
+		up.Normalize();
+		up *= JumpStrength;
+		setCentre(getCentre() - up);
+		if (getCOORD(1) >= MaxHeight)
+			maxVelo = true;
+	}
+	else if (getCOORD(1) <= 0 && maxVelo)
+	{
+		setCOORD(getCOORD(0),0,getCOORD(2));
+		maxVelo = false;
+	}	
 }
 
-int collisionVolume::getEffect(void)const
+bool collisionVolume::getLiving(void)const
 {
-	return Effect;
+	return Living;
 }
-void collisionVolume::setEffect(int eff)
+void collisionVolume::setLiving(bool life)
+{
+	Living = life;
+}
+
+int collisionVolume::getEffect(bool mainEffect)const
+{
+	if (mainEffect)
+		return Effect;
+	else
+		return SecondaryEffect;
+}
+void collisionVolume::setEffect(int eff, int secEff)
 {
 	Effect = eff;
+	SecondaryEffect = secEff;
 }
 
 bool collisionVolume::getActivate(void)const
@@ -142,56 +170,79 @@ void collisionVolume::setTimer(float time)
 	timer = time;
 }
 
+float collisionVolume::getAlt(void)const
+{
+	return Altitude;
+}
+void collisionVolume::setAlt(float Alt)
+{
+	Altitude = Alt;
+}
+
 void collisionVolume::CollisionEffect(collisionVolume *Target)
 {
-	switch (getEffect())
+	//Pick Up
+	if (getEffect() == 0|| getEffect(false) == 0)
 	{
-		//Pick Up
-	case 0:
 		if (AllowPickUp)
+		{
 			setCentre(Target->getCentre());
-		break;
-		//Stationary Bounds(Walls/Shelves)
-	case 1:
-		if (MainFace[0]) //W
-		{
-			Target->setVelocity(Vector3(10 * Floor3::DtCopy, 0, 0));
-			charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
-			Target->setVelocity(charRotate * Target->getVelocity());
-			Target->setCentre(Target->getCentre() - Target->getVelocity());
+			Target->setAlt(0);
 		}
-		if (MainFace[1]) //S
+	}
+
+
+	//Stationary Bounds(Walls/Shelves)
+	if (getEffect() == 1|| getEffect(false) == 1)
+	{
+		if (Target->getLiving())
 		{
-			Target->setVelocity(Vector3(10 * Floor3::DtCopy, 0, 0));
-			charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
-			Target->setVelocity(charRotate * Target->getVelocity());
-			Target->setCentre(Target->getCentre() + Target->getVelocity());
+			if (MainFace[0]) //W
+			{
+				Target->setVelocity(Vector3(10 * Floor3::DtCopy, 0, 0));
+				charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
+				Target->setVelocity(charRotate * Target->getVelocity());
+				Target->setCentre(Target->getCentre() - Target->getVelocity());
+			}
+			if (MainFace[1]) //S
+			{
+				Target->setVelocity(Vector3(10 * Floor3::DtCopy, 0, 0));
+				charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
+				Target->setVelocity(charRotate * Target->getVelocity());
+				Target->setCentre(Target->getCentre() + Target->getVelocity());
+			}
+			if (MainFace[2])//A
+			{
+				Target->setVelocity(Vector3(0, 0, 10 * Floor3::DtCopy));
+				charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
+				Target->setVelocity(charRotate * Target->getVelocity());
+				Target->setCentre(Target->getCentre() + Target->getVelocity());
+			}
+			if (MainFace[3])//D
+			{
+				Target->setVelocity(Vector3(0, 0, 10 * Floor3::DtCopy));
+				charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
+				Target->setVelocity(charRotate * Target->getVelocity());
+				Target->setCentre(Target->getCentre() - Target->getVelocity());
+			}
 		}
-		if (MainFace[2])//A
+		else if (Target->getLiving() == false)
 		{
-			Target->setVelocity(Vector3(0, 0, 10 * Floor3::DtCopy));
-			charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
-			Target->setVelocity(charRotate * Target->getVelocity());
-			Target->setCentre(Target->getCentre() + Target->getVelocity());
+			Target->setAlt(getCOORD(1));
 		}
-		if (MainFace[3])//D
-		{
-			Target->setVelocity(Vector3(0, 0, 10 * Floor3::DtCopy));
-			charRotate.SetToRotation(Target->getFace(), 0, 1, 0);
-			Target->setVelocity(charRotate * Target->getVelocity());
-			Target->setCentre(Target->getCentre() - Target->getVelocity());
-		}
-		//Activation
-	case 2:
+	}
+
+
+	//Activation
+	if (getEffect() == 2|| getEffect(false) == 2)
+	{
 		if (AllowActivate)
 			setActivate(true);
-		break;
-		//Add Vector
-	case 3:
-		Target->setCentre(Target->getCentre() + getVelocity());
-		break;
-	default:
-		break;
 	}
+
+
+	//Add Vector
+	if (getEffect() == 3|| getEffect(false) == 3)
+		Target->setCentre(Target->getCentre() + getVelocity());
 }
 

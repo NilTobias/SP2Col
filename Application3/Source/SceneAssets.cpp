@@ -112,9 +112,6 @@ void SceneAssets::CheckCollision()
 		
 		while (current != NULL)
 		{
-			if (current->Data.CollisionTrigger)
-			{
-				
 				if (current->Data.OBJcV->getCollisionType() == 0)//It is a Sphere
 				{
 					TempSphere = ((collisionSphere*)current->Data.OBJcV);
@@ -173,7 +170,6 @@ void SceneAssets::CheckCollision()
 					check = check->next;
 					
 				}
-			}
 			current = current->next;
 		}
 	}
@@ -186,7 +182,7 @@ void SceneAssets::Gravity(float force)
 	{
 		if (check->Data.Gravity)
 		{
-			if (check->Data.OBJcV->getCOORD(1) > 0)
+			if (check->Data.OBJcV->getCOORD(1) > check->Data.OBJcV->getAlt())
 			{
 			Vector3 thisVector(1, 0, 0);
 			Vector3 thisOtherVector(0, 0, 1);
