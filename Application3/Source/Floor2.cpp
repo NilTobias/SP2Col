@@ -91,7 +91,7 @@ void Floor2::Init()
 	lightOn = true;
 	JetPackActivated = true;
 	MovementSpeed = 10;
-	test = true;
+	test = false;
 	//Load vertex and fragment shaders
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
 	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
@@ -209,7 +209,7 @@ void Floor2::Init()
 	Object Player;
 	Player.Name = "Player";
 	Player.CollisionTrigger = true;
-	Player.OBJcV = new collisionSphere(2.f, Vector3(-10, 0, 0));
+	Player.OBJcV = new collisionSphere(3.f, Vector3(-10, 0, 0));
 	Player.OBJmesh = MeshBuilder::GenerateOBJ("Player", "OBJ//doorman.obj");
 	Player.OBJmesh->textureID = LoadTGA("Image//doorman.tga");
 	SP.Add(Player);
@@ -217,7 +217,7 @@ void Floor2::Init()
 	Object Can;
 	Can.Name = "Bowser";
 	Can.CollisionTrigger = false;
-	Can.OBJcV = new collisionSphere(2.f, Vector3(5, 0, 0));
+	Can.OBJcV = new collisionSphere(0.01f, Vector3(5, 0, 0));
 	Can.OBJcV->setEffect(0);
 	Can.OBJcV->setVelocity(Vector3(0, 5, 0));
 	Can.OBJmesh = MeshBuilder::GenerateOBJ("Can", "OBJ//Bowser.obj");
@@ -243,7 +243,523 @@ void Floor2::Init()
 	Random.OBJmesh = MeshBuilder::GenerateOBJ("Random", "OBJ//winebottle.obj");
 	Random.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
 	SP.Add(Random);
+	/**********************************************************************************/
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Packet;
+			Packet.Name = "Packet1" + AddToName;
+			Packet.CollisionTrigger = false;
+			Packet.OBJcV = new collisionSphere(0.1f , Vector3(13.2, 4.2, -2.7+i*2));
+			Packet.OBJcV->setEffect(0);
+			Packet.OBJmesh = MeshBuilder::GenerateOBJ("Packet1", "OBJ//Packet.obj");
+			Packet.OBJmesh->textureID = LoadTGA("Image//Packet.tga");
+			SP.Add(Packet);
 
+
+	}
+
+	for(int j = 0; j < 5; j++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << j;
+			AddToName = ss.str();
+			Object Packet;
+			Packet.Name = "Packet2" + AddToName;
+			Packet.CollisionTrigger = false;
+			Packet.OBJcV = new collisionSphere(0.1f , Vector3(14.2, 4.2, -2.7+j*2));
+			Packet.OBJcV->setEffect(0);
+			Packet.OBJmesh = MeshBuilder::GenerateOBJ("Packet2", "OBJ//Packet.obj");
+			Packet.OBJmesh->textureID = LoadTGA("Image//Packet.tga");
+			SP.Add(Packet);
+
+
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Packet;
+			Packet.Name = "Packet4" + AddToName;
+			Packet.CollisionTrigger = false;
+			Packet.OBJcV = new collisionSphere(0.1f , Vector3(13.2, 2.6, -2.7+i*2));
+			Packet.OBJcV->setEffect(0);
+			Packet.OBJmesh = MeshBuilder::GenerateOBJ("Packet4", "OBJ//Packet.obj");
+			Packet.OBJmesh->textureID = LoadTGA("Image//Packet.tga");
+			SP.Add(Packet);
+
+
+	}
+
+	for(int k = 0; k < 5; k++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << k;
+			AddToName = ss.str();
+			Object Packet;
+			Packet.Name = "Packet3" + AddToName;
+			Packet.CollisionTrigger = false;
+			Packet.OBJcV = new collisionSphere(0.1f , Vector3(14.2, 2.6, -2.7+k*2));
+			Packet.OBJcV->setEffect(0);
+			Packet.OBJmesh = MeshBuilder::GenerateOBJ("Packet3", "OBJ//Packet.obj");
+			Packet.OBJmesh->textureID = LoadTGA("Image//Packet.tga");
+			SP.Add(Packet);
+
+
+	}
+	/**********************************************************************************/
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Sugar;
+			Sugar.Name = "Sugar1" + AddToName;
+			Sugar.CollisionTrigger = false;
+			Sugar.OBJcV = new collisionSphere(0.1f , Vector3(13.2, 4.2, -19+(i*2)));
+			Sugar.OBJcV->setEffect(0);
+			Sugar.OBJmesh = MeshBuilder::GenerateOBJ("Sugar1", "OBJ//Sugar.obj");
+			Sugar.OBJmesh->textureID = LoadTGA("Image//Sugar.tga");
+			SP.Add(Sugar);
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Sugar;
+			Sugar.Name = "Sugar2" + AddToName;
+			Sugar.CollisionTrigger = false;
+			Sugar.OBJcV = new collisionSphere(0.1f , Vector3(13.2, 2, -19+(i*2)));
+			Sugar.OBJcV->setEffect(0);
+			Sugar.OBJmesh = MeshBuilder::GenerateOBJ("Sugar2", "OBJ//Sugar.obj");
+			Sugar.OBJmesh->textureID = LoadTGA("Image//Sugar.tga");
+			SP.Add(Sugar);
+	}
+	/**********************************************************************************/
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box;
+			Box.Name = "Box1" + AddToName;
+			Box.CollisionTrigger = false;
+			Box.OBJcV = new collisionSphere(0.1f , Vector3(21, 3.95, -19.8+i*2));
+			Box.OBJcV->setEffect(0);
+			Box.OBJmesh = MeshBuilder::GenerateOBJ("Box1", "OBJ//Box.obj");
+			Box.OBJmesh->textureID = LoadTGA("Image//Box.tga");
+			SP.Add(Box);
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box;
+			Box.Name = "Box2" + AddToName;
+			Box.CollisionTrigger = false;
+			Box.OBJcV = new collisionSphere(0.1f , Vector3(22, 3.95, -19.8+i*2));
+			Box.OBJcV->setEffect(0);
+			Box.OBJmesh = MeshBuilder::GenerateOBJ("Box2", "OBJ//Box.obj");
+			Box.OBJmesh->textureID = LoadTGA("Image//Box.tga");
+			SP.Add(Box);
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box;
+			Box.Name = "Box3" + AddToName;
+			Box.CollisionTrigger = false;
+			Box.OBJcV = new collisionSphere(0.1f , Vector3(21, 2.27, -19.8+i*2));
+			Box.OBJcV->setEffect(0);
+			Box.OBJmesh = MeshBuilder::GenerateOBJ("Box3", "OBJ//Box.obj");
+			Box.OBJmesh->textureID = LoadTGA("Image//Box.tga");
+			SP.Add(Box);
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box;
+			Box.Name = "Box4" + AddToName;
+			Box.CollisionTrigger = false;
+			Box.OBJcV = new collisionSphere(0.1f , Vector3(22, 2.27, -19.8+i*2));
+			Box.OBJcV->setEffect(0);
+			Box.OBJmesh = MeshBuilder::GenerateOBJ("Box4", "OBJ//Box.obj");
+			Box.OBJmesh->textureID = LoadTGA("Image//Box.tga");
+			SP.Add(Box);
+	}
+	/**********************************************************************************/
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Spice;
+			Spice.Name = "Spice1" + AddToName;
+			Spice.CollisionTrigger = false;
+			Spice.OBJcV = new collisionSphere(0.1f , Vector3(22, 3.95, -2.3+i * 2));
+			Spice.OBJcV->setEffect(0);
+			Spice.OBJmesh = MeshBuilder::GenerateOBJ("Spice1", "OBJ//cat.obj");
+			Spice.OBJmesh->textureID = LoadTGA("Image//cat.tga");
+			SP.Add(Spice);
+	}
+	/**********************************************************************************/
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box2;
+			Box2.Name = "Box21" + AddToName;
+			Box2.CollisionTrigger = false;
+			Box2.OBJcV = new collisionSphere(0.1f , Vector3(21, 3.95, 12.7+i*2));
+			Box2.OBJcV->setEffect(0);
+			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box21", "OBJ//Box2.obj");
+			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
+			SP.Add(Box2);
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box2;
+			Box2.Name = "Box22" + AddToName;
+			Box2.CollisionTrigger = false;
+			Box2.OBJcV = new collisionSphere(0.1f , Vector3(21.5, 3.95, 12.7+i*2));
+			Box2.OBJcV->setEffect(0);
+			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box22", "OBJ//Box2.obj");
+			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
+			SP.Add(Box2);
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box2;
+			Box2.Name = "Box23" + AddToName;
+			Box2.CollisionTrigger = false;
+			Box2.OBJcV = new collisionSphere(0.1f , Vector3(22, 3.95, 12.7+i*2));
+			Box2.OBJcV->setEffect(0);
+			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box23", "OBJ//Box2.obj");
+			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
+			SP.Add(Box2);
+	}
+
+	for(int i = 0; i < 2; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box2;
+			Box2.Name = "Box24" + AddToName;
+			Box2.CollisionTrigger = false;
+			Box2.OBJcV = new collisionSphere(0.1f , Vector3(22.5, 3.95, 12.7+i*2));
+			Box2.OBJcV->setEffect(0);
+			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box24", "OBJ//Box2.obj");
+			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
+			SP.Add(Box2);
+	}
+
+	for(int i = 0; i < 2; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box2;
+			Box2.Name = "Box25" + AddToName;
+			Box2.CollisionTrigger = false;
+			Box2.OBJcV = new collisionSphere(0.1f , Vector3(22.5, 3.95, 18.7+i*2));
+			Box2.OBJcV->setEffect(0);
+			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box25", "OBJ//Box2.obj");
+			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
+			SP.Add(Box2);
+	}
+
+			Object Box2;
+			Box2.Name = "Spice2";
+			Box2.CollisionTrigger = false;
+			Box2.OBJcV = new collisionSphere(0.1f , Vector3(22.5, 3.95, 16.7));
+			Box2.OBJcV->setEffect(0);
+			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Spice2", "OBJ//Spice.obj");
+			Box2.OBJmesh->textureID = LoadTGA("Image//Spice.tga");
+			SP.Add(Box2);
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box2;
+			Box2.Name = "Box26" + AddToName;
+			Box2.CollisionTrigger = false;
+			Box2.OBJcV = new collisionSphere(0.1f , Vector3(21, 2.3, 12.7+i*2));
+			Box2.OBJcV->setEffect(0);
+			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box26", "OBJ//Box2.obj");
+			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
+			SP.Add(Box2);
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box2;
+			Box2.Name = "Box27" + AddToName;
+			Box2.CollisionTrigger = false;
+			Box2.OBJcV = new collisionSphere(0.1f , Vector3(21.5, 2.3, 12.7+i*2));
+			Box2.OBJcV->setEffect(0);
+			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box27", "OBJ//Box2.obj");
+			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
+			SP.Add(Box2);
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box2;
+			Box2.Name = "Box28" + AddToName;
+			Box2.CollisionTrigger = false;
+			Box2.OBJcV = new collisionSphere(0.1f , Vector3(22, 2.3, 12.7+i*2));
+			Box2.OBJcV->setEffect(0);
+			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box28", "OBJ//Box2.obj");
+			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
+			SP.Add(Box2);
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box2;
+			Box2.Name = "Box29" + AddToName;
+			Box2.CollisionTrigger = false;
+			Box2.OBJcV = new collisionSphere(0.1f , Vector3(22.5, 2.3, 12.7+i*2));
+			Box2.OBJcV->setEffect(0);
+			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box29", "OBJ//Box2.obj");
+			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
+			SP.Add(Box2);
+	}
+	/**********************************************************************************/
+			Object Nice;
+			Nice.Name = "Nice";
+			Nice.CollisionTrigger = false;
+			Nice.OBJcV = new collisionSphere(2.f, Vector3(3, 5, 25));
+			Nice.OBJcV->setEffect(0);
+			Nice.OBJmesh = MeshBuilder::GenerateOBJ("Nice", "OBJ//NICE.obj");
+			Nice.OBJmesh->textureID = LoadTGA("Image//NICE.tga");
+			SP.Add(Nice);
+	/**********************************************************************************/
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box3;
+			Box3.Name = "Box31" + AddToName;
+			Box3.CollisionTrigger = false;
+			Box3.OBJcV = new collisionSphere(0.1f , Vector3(13.2, 3.95, 12.8+i*2));
+			Box3.OBJcV->setEffect(0);
+			Box3.OBJmesh = MeshBuilder::GenerateOBJ("Box31", "OBJ//Box3.obj");
+			Box3.OBJmesh->textureID = LoadTGA("Image//Box3.tga");
+			SP.Add(Box3);
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box3;
+			Box3.Name = "Box32" + AddToName;
+			Box3.CollisionTrigger = false;
+			Box3.OBJcV = new collisionSphere(0.1f , Vector3(14.2, 3.95, 12.8+i*2));
+			Box3.OBJcV->setEffect(0);
+			Box3.OBJmesh = MeshBuilder::GenerateOBJ("Box32", "OBJ//Box3.obj");
+			Box3.OBJmesh->textureID = LoadTGA("Image//Box3.tga");
+			SP.Add(Box3);
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box3;
+			Box3.Name = "Box33" + AddToName;
+			Box3.CollisionTrigger = false;
+			Box3.OBJcV = new collisionSphere(0.1f , Vector3(13.2, 2.3, 12.8+i*2));
+			Box3.OBJcV->setEffect(0);
+			Box3.OBJmesh = MeshBuilder::GenerateOBJ("Box33", "OBJ//Box3.obj");
+			Box3.OBJmesh->textureID = LoadTGA("Image//Box3.tga");
+			SP.Add(Box3);
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box3;
+			Box3.Name = "Box34" + AddToName;
+			Box3.CollisionTrigger = false;
+			Box3.OBJcV = new collisionSphere(0.1f , Vector3(14.2, 2.3, 12.8+i*2));
+			Box3.OBJcV->setEffect(0);
+			Box3.OBJmesh = MeshBuilder::GenerateOBJ("Box34", "OBJ//Box3.obj");
+			Box3.OBJmesh->textureID = LoadTGA("Image//Box3.tga");
+			SP.Add(Box3);
+	}
+	/**********************************************************************************/
+	for(int i = 0; i < 12; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box4;
+			Box4.Name = "Box41" + AddToName;
+			Box4.CollisionTrigger = false;
+			Box4.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*2, 4, 18));
+			Box4.OBJcV->setEffect(0);
+			Box4.OBJmesh = MeshBuilder::GenerateOBJ("Box41", "OBJ//Box4.obj");
+			Box4.OBJmesh->textureID = LoadTGA("Image//Box4.tga");
+			SP.Add(Box4);
+	}
+
+	for(int i = 0; i < 12; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box4;
+			Box4.Name = "Box42" + AddToName;
+			Box4.CollisionTrigger = false;
+			Box4.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*2, 4, 19));
+			Box4.OBJcV->setEffect(0);
+			Box4.OBJmesh = MeshBuilder::GenerateOBJ("Box42", "OBJ//Box4.obj");
+			Box4.OBJmesh->textureID = LoadTGA("Image//Box4.tga");
+			SP.Add(Box4);
+	}
+	/**********************************************************************************/
+	for(int i = 0; i < 12; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box5;
+			Box5.Name = "Box51" + AddToName;
+			Box5.CollisionTrigger = false;
+			Box5.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*2, 4, -18));
+			Box5.OBJcV->setEffect(0);
+			Box5.OBJmesh = MeshBuilder::GenerateOBJ("Box51", "OBJ//Box5.obj");
+			Box5.OBJmesh->textureID = LoadTGA("Image//Box5.tga");
+			SP.Add(Box5);
+	}
+
+	for(int i = 0; i < 12; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box5;
+			Box5.Name = "Box52" + AddToName;
+			Box5.CollisionTrigger = false;
+			Box5.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*2, 4, -19));
+			Box5.OBJcV->setEffect(0);
+			Box5.OBJmesh = MeshBuilder::GenerateOBJ("Box52", "OBJ//Box5.obj");
+			Box5.OBJmesh->textureID = LoadTGA("Image//Box5.tga");
+			SP.Add(Box5);
+	}
+
+	for(int i = 0; i < 12; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box5;
+			Box5.Name = "Box53" + AddToName;
+			Box5.CollisionTrigger = false;
+			Box5.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*2, 2.3, -18));
+			Box5.OBJcV->setEffect(0);
+			Box5.OBJmesh = MeshBuilder::GenerateOBJ("Box53", "OBJ//Box5.obj");
+			Box5.OBJmesh->textureID = LoadTGA("Image//Box5.tga");
+			SP.Add(Box5);
+	}
+
+	for(int i = 0; i < 12; i++)
+	{
+			string AddToName;
+			std::ostringstream ss;
+			ss << i;
+			AddToName = ss.str();
+			Object Box5;
+			Box5.Name = "Box54" + AddToName;
+			Box5.CollisionTrigger = false;
+			Box5.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*2, 2.3, -19));
+			Box5.OBJcV->setEffect(0);
+			Box5.OBJmesh = MeshBuilder::GenerateOBJ("Box54", "OBJ//Box5.obj");
+			Box5.OBJmesh->textureID = LoadTGA("Image//Box5.tga");
+			SP.Add(Box5);
+	}
+	/**********************************************************************************/
+			Object UFO;
+			UFO.Name = "UFO";
+			UFO.CollisionTrigger = true;
+			UFO.OBJcV = new collisionSphere(0.1f , Vector3(10, 0, 0));
+			UFO.OBJcV->setEffect(2);
+			UFO.OBJmesh = MeshBuilder::GenerateOBJ("UFO", "OBJ//ufo.obj");
+			UFO.OBJmesh->textureID = LoadTGA("Image//UFO.tga");
+			SP.Add(UFO);
 	//Initialize camera settings
 	camera.Init(Vector3(0, 25, 20), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
@@ -375,6 +891,14 @@ void Floor2::Update(double dt)
 		//SP.Call("Player").OBJcV->Jump(0.1, 20);
 	}
 
+	SP.Call("UFO").OBJcV->Chase(SP.Call("Player").OBJcV, 0.1, true);
+
+
+
+	//if(SP.Call("UFO").OBJcV->getActivate() == true)
+		//gameover
+	
+
 	if (SP.Call("Player").OBJcV->getFace() > 180)
 		SP.Call("Player").OBJcV->setFace(SP.Call("Player").OBJcV->getFace() - 360);
 	if (SP.Call("Player").OBJcV->getFace() < -180)
@@ -451,18 +975,471 @@ void Floor2::Render()
 	RenderMesh(SP.Call("Bowser").OBJmesh, false);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	modelStack.Translate(SP.Call("Wine").OBJcV->getCOORD(0),
 		SP.Call("Wine").OBJcV->getCOORD(1),
 		SP.Call("Wine").OBJcV->getCOORD(2));
 	RenderMesh(SP.Call("Wine").OBJmesh, false);
-	modelStack.PopMatrix();
+	modelStack.PopMatrix();*/
 
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	modelStack.Translate(SP.Call("Random").OBJcV->getCOORD(0),
 		SP.Call("Random").OBJcV->getCOORD(1),
 		SP.Call("Random").OBJcV->getCOORD(2));
 	RenderMesh(SP.Call("Random").OBJmesh, false);
+	modelStack.PopMatrix();
+	*/
+	/*******************************************************************************/
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Packet1" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Packet1" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Packet1" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Packet1" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+	for(int j = 0; j < 5; j++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << j;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Packet2" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Packet2" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Packet2" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Packet2" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+	for(int k = 0; k < 5; k++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << k;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Packet3" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Packet3" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Packet3" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Packet3" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Packet4" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Packet4" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Packet4" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Packet4" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+	/*******************************************************************************/
+
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Sugar1" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Sugar1" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Sugar1" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Sugar1" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+	/*******************************************************************************/
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box1" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box1" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box1" + AddToName).OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Box1" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box2" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box2" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box2" + AddToName).OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Box2" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box3" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box3" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box3" + AddToName).OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Box3" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box4" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box4" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box4" + AddToName).OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Box4" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	/*******************************************************************************/
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Spice2").OBJcV->getCOORD(0),
+		SP.Call("Spice2").OBJcV->getCOORD(1),
+		SP.Call("Spice2").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Spice2").OBJmesh, false);
+	modelStack.PopMatrix();
+	/*******************************************************************************/
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Spice1" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Spice1" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Spice1" + AddToName).OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Spice1" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+	/********************************************************************************/
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box21" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box21" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box21" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Box21" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box22" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box22" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box22" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Box22" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box23" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box23" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box23" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Box23" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 2; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box24" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box24" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box24" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Box24" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 2; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box25" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box25" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box25" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Box25" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box26" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box26" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box26" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Box26" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box27" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box27" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box27" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Box27" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box28" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box28" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box28" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Box28" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box29" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box29" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box29" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Box29" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+	/*******************************************************************************/
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Nice").OBJcV->getCOORD(0),
+		SP.Call("Nice").OBJcV->getCOORD(1),
+		SP.Call("Nice").OBJcV->getCOORD(2));
+	modelStack.Rotate(180,0,1,0);
+	RenderMesh(SP.Call("Nice").OBJmesh, false);
+	modelStack.PopMatrix();
+	/*******************************************************************************/
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box31" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box31" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box31" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Box31" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box32" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box32" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box32" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Box32" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box33" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box33" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box33" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Box33" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 5; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box34" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box34" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box34" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-90,0,1,0);
+	RenderMesh(SP.Call("Box34" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+	/*******************************************************************************/
+	for(int i = 0; i < 12; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box41" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box41" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box41" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-180,0,1,0);
+	RenderMesh(SP.Call("Box41" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 12; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box42" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box42" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box42" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(-180,0,1,0);
+	RenderMesh(SP.Call("Box42" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+	/*******************************************************************************/
+	for(int i = 0; i < 12; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box51" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box51" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box51" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(90,0,1,0);
+	RenderMesh(SP.Call("Box51" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 12; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box52" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box52" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box52" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(90,0,1,0);
+	RenderMesh(SP.Call("Box52" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 12; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box53" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box53" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box53" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(90,0,1,0);
+	RenderMesh(SP.Call("Box53" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+
+	for(int i = 0; i < 12; i++)
+	{
+	string AddToName;
+	std::ostringstream ss;
+	ss << i;
+	AddToName = ss.str();
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Box54" + AddToName).OBJcV->getCOORD(0),
+		SP.Call("Box54" + AddToName).OBJcV->getCOORD(1),
+		SP.Call("Box54" + AddToName).OBJcV->getCOORD(2));
+	modelStack.Rotate(90,0,1,0);
+	RenderMesh(SP.Call("Box54" + AddToName).OBJmesh, false);
+	modelStack.PopMatrix();
+	}
+	/*******************************************************************************/
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("UFO").OBJcV->getCOORD(0),
+		SP.Call("UFO").OBJcV->getCOORD(1)+ 6,
+		SP.Call("UFO").OBJcV->getCOORD(2));
+	modelStack.Translate(0,10,0);
+	RenderMesh(SP.Call("UFO").OBJmesh, false);
 	modelStack.PopMatrix();
 
 	if(test == true)
