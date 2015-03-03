@@ -18,7 +18,7 @@ public:
 	static double DtCopy;
 private:
 	void RenderSP();
-	SceneAssets SP;
+	
 
 	float LSPEED;
 	float rotateCharacter, rotateTele;

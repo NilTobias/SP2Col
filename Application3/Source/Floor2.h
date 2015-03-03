@@ -23,7 +23,7 @@ private:
 	int sound();
 	
 
-	SceneAssets SP;
+	
 
 	float LSPEED;
 	float rotateCharacter, rotateTele;

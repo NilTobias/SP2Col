@@ -24,6 +24,8 @@ class Scene
 {
 	public:
 
+		SceneAssets SP;
+
 	enum UNIFORM_TYPE
 	{
 		U_MVP = 0,
