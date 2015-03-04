@@ -119,7 +119,7 @@ void Application::Init()
 void Application::Run()
 {
 	//Main Loop
-	for(int x = 0;x <= 1;++x)
+	for(size_t x = 0;x < loader.size();++x)
 	{
 		loader[x]->Init();
 
