@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "Floor4.h"
 #include "Floor3.h"
 #include "Floor2.h"
 
@@ -113,6 +114,9 @@ void Application::Init()
 	loader.push_back(scene);
 
 	scene = new Floor3();
+	loader.push_back(scene);
+
+	scene = new Floor4();
 	loader.push_back(scene);
 }
 
