@@ -23,10 +23,11 @@ private:
 	float LSPEED;
 	float rotateCharacter, rotateTele;
 
+	float rise;
+
 	float MovementSpeed;
 	std::string warningTest;
 	bool JetPackActivated;
 
 	bool test;
 };
-

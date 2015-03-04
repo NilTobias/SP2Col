@@ -90,6 +90,7 @@ void Floor4::Init()
 	lightOn = true;
 	JetPackActivated = true;
 	MovementSpeed = 10;
+	rise = 0.f;
 	test = true;
 	//Load vertex and fragment shaders
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
@@ -183,18 +184,10 @@ void Floor4::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//ExportedFont.tga");
 
-
-	Object Player;
-	Player.Name = "Player";
-	Player.CollisionTrigger = true;
-	Player.OBJcV = new collisionSphere(2.f, Vector3(-10, 0, 0));
-	Player.OBJmesh = MeshBuilder::GenerateOBJ("Player", "OBJ//doorman.obj");
-	Player.OBJmesh->textureID = LoadTGA("Image//doorman.tga");
-	SP.Add(Player);
-
+	
 	Object Blossom;
 	Blossom.Name = "Blossom";
-	Blossom.OBJcV = new collisionSphere(2.f, Vector3(10, 0, 0));
+	Blossom.OBJcV = new collisionSphere(2.f, Vector3(10, 0 + rise, 0));
 	Blossom.OBJmesh = MeshBuilder::GenerateOBJ("Blossom", "OBJ//PuffBod.obj");
 	Blossom.OBJmesh->textureID = LoadTGA("Image//Blossom.tga");
 	SP.Add(Blossom);
@@ -202,18 +195,26 @@ void Floor4::Init()
 	Object Bubbles;
 	Bubbles.Name = "Bubbles";
 	Bubbles.CollisionTrigger = true;
-	Bubbles.OBJcV = new collisionSphere(2.f, Vector3(10, 0, -5));
-	Bubbles.OBJmesh = MeshBuilder::GenerateOBJ("Buttercup", "OBJ//PuffBod.obj");
-	Bubbles.OBJmesh->textureID = LoadTGA("Image//doorman.tga");
+	Bubbles.OBJcV = new collisionSphere(2.f, Vector3(10, 0 + rise, -5));
+	Bubbles.OBJmesh = MeshBuilder::GenerateOBJ("Bubbles", "OBJ//PuffBod.obj");
+	Bubbles.OBJmesh->textureID = LoadTGA("Image//Bubbles.tga");
 	SP.Add(Bubbles);
 
 	Object Buttercup;
 	Buttercup.Name = "Buttercup";
 	Buttercup.CollisionTrigger = true;
-	Buttercup.OBJcV = new collisionSphere(2.f, Vector3(10, 0, 5));
+	Buttercup.OBJcV = new collisionSphere(2.f, Vector3(10, 0 + rise, 5));
 	Buttercup.OBJmesh = MeshBuilder::GenerateOBJ("Buttercup", "OBJ//PuffBod.obj");
-	Buttercup.OBJmesh->textureID = LoadTGA("Image//doorman.tga");
+	Buttercup.OBJmesh->textureID = LoadTGA("Image//Buttercup.tga");
 	SP.Add(Buttercup);
+
+	Object Platform;
+	Platform.Name = "Platform";
+	Platform.CollisionTrigger = true;
+	Platform.OBJcV = new collisionSphere(2.f, Vector3(10, 0 + rise, 0));
+	Platform.OBJmesh = MeshBuilder::GenerateOBJ("Platform", "OBJ//Platform.obj");
+	Platform.OBJmesh->textureID = LoadTGA("Image//Prison.tga");
+	SP.Add(Platform);
 
 	Object Prison;
 	Prison.Name = "Prison";
@@ -223,6 +224,39 @@ void Floor4::Init()
 	Prison.OBJmesh->textureID = LoadTGA("Image//Prison.tga");
 	SP.Add(Prison);
 
+	Object Sugar;
+	Sugar.Name = "Sugar";
+	Sugar.CollisionTrigger = true;
+	Sugar.OBJcV = new collisionSphere(2.f, Vector3(-200, 5.5, 0));
+	Sugar.OBJmesh = MeshBuilder::GenerateOBJ("Sugar", "OBJ//Sugar.obj");
+	Sugar.OBJmesh->textureID = LoadTGA("Image//Sugar.tga");
+	SP.Add(Sugar);
+
+	Object Spice;
+	Spice.Name = "Spice";
+	Spice.CollisionTrigger = true;
+	Spice.OBJcV = new collisionSphere(2.f, Vector3(-150, 5.5, 0));
+	Spice.OBJmesh = MeshBuilder::GenerateOBJ("Spice", "OBJ//Spice.obj");
+	Spice.OBJmesh->textureID = LoadTGA("Image//Spice.tga");
+	SP.Add(Spice);
+
+	Object Nice;
+	Nice.Name = "Nice";
+	Nice.CollisionTrigger = true;
+	Nice.OBJcV = new collisionSphere(2.f, Vector3(-100, 6, 0));
+	Nice.OBJmesh = MeshBuilder::GenerateOBJ("Nice", "OBJ//NICE.obj");
+	Nice.OBJmesh->textureID = LoadTGA("Image//Nice.tga");
+	SP.Add(Nice);
+
+
+	Object ChemicalX;
+	ChemicalX.Name = "ChemicalX";
+	ChemicalX.Gravity = false;
+	ChemicalX.OBJcV = new collisionSphere(1.f, Vector3(-50, 5.5, -2));
+	ChemicalX.OBJcV->setEffect(0);
+	ChemicalX.OBJmesh = MeshBuilder::GenerateOBJ("ChemicalX", "OBJ//ChemicalX.obj");
+	ChemicalX.OBJmesh->textureID = LoadTGA("Image//Flask.tga");
+	SP.Add(ChemicalX);
 	
 	
 	//Initialize camera settings
@@ -294,8 +328,16 @@ void Floor4::Update(double dt)
 
 	if(camera.position.x <= -10)
 	{
-		camera.position.x += 50 * dt;
-		camera.target.x += 50 * dt;
+		camera.position.x += 25 * dt;
+		camera.target.x += 25 * dt;
+	}
+
+	if(camera.position.x >= -11)
+	{
+		if (rise <= 3)
+		{
+			rise += 1 * dt;
+		}
 	}
 
 
@@ -344,26 +386,13 @@ void Floor4::Render()
 	Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
 	glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
 
-	RenderMesh(meshList[GEO_AXES], false);
-	// TEST TEST TEST
-	modelStack.PushMatrix();
-	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
-	RenderMesh(meshList[GEO_LIGHTBALL], lightOn);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Player").OBJcV->getCOORD(0),
-		SP.Call("Player").OBJcV->getCOORD(1),
-		SP.Call("Player").OBJcV->getCOORD(2));
-	modelStack.Rotate(SP.Call("Player").OBJcV->getFace() + 90, 0, 1, 0);
-	RenderMesh(SP.Call("Player").OBJmesh, false);
-	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(SP.Call("Blossom").OBJcV->getCOORD(0),
 		SP.Call("Blossom").OBJcV->getCOORD(1),
 		SP.Call("Blossom").OBJcV->getCOORD(2));
-	modelStack.Rotate(SP.Call("Blossom").OBJcV->getFace() + 90, 0, 1, 0);
+	modelStack.Translate(0,rise,0);
+	modelStack.Rotate(SP.Call("Blossom").OBJcV->getFace() - 90, 0, 1, 0);
 	RenderMesh(SP.Call("Blossom").OBJmesh, false);
 	modelStack.PopMatrix();
 
@@ -371,7 +400,8 @@ void Floor4::Render()
 	modelStack.Translate(SP.Call("Bubbles").OBJcV->getCOORD(0),
 		SP.Call("Bubbles").OBJcV->getCOORD(1),
 		SP.Call("Bubbles").OBJcV->getCOORD(2));
-	modelStack.Rotate(SP.Call("Bubbles").OBJcV->getFace() + 90, 0, 1, 0);
+	modelStack.Translate(0,rise,0);
+	modelStack.Rotate(SP.Call("Bubbles").OBJcV->getFace() - 90, 0, 1, 0);
 	RenderMesh(SP.Call("Bubbles").OBJmesh, false);
 	modelStack.PopMatrix();
 
@@ -379,9 +409,19 @@ void Floor4::Render()
 	modelStack.Translate(SP.Call("Buttercup").OBJcV->getCOORD(0),
 		SP.Call("Buttercup").OBJcV->getCOORD(1),
 		SP.Call("Buttercup").OBJcV->getCOORD(2));
-	modelStack.Rotate(SP.Call("Buttercup").OBJcV->getFace() + 90, 0, 1, 0);
+	modelStack.Translate(0,rise,0);
+	modelStack.Rotate(SP.Call("Buttercup").OBJcV->getFace() - 90, 0, 1, 0);
 	RenderMesh(SP.Call("Buttercup").OBJmesh, false);
 	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Platform").OBJcV->getCOORD(0),
+		SP.Call("Platform").OBJcV->getCOORD(1),
+		SP.Call("Platform").OBJcV->getCOORD(2));
+	modelStack.Translate(0,rise,0);
+	RenderMesh(SP.Call("Platform").OBJmesh, false);
+	modelStack.PopMatrix();
+
 
 	modelStack.PushMatrix();
 	modelStack.Translate(SP.Call("Prison").OBJcV->getCOORD(0),
@@ -390,6 +430,37 @@ void Floor4::Render()
 	RenderMesh(SP.Call("Prison").OBJmesh, false);
 	modelStack.PopMatrix();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Sugar").OBJcV->getCOORD(0),
+		SP.Call("Sugar").OBJcV->getCOORD(1),
+		SP.Call("Sugar").OBJcV->getCOORD(2));
+	modelStack.Rotate(SP.Call("Sugar").OBJcV->getFace() - 90, 0, 1, 0);
+	RenderMesh(SP.Call("Sugar").OBJmesh, false);
+	modelStack.PopMatrix();
+	
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Spice").OBJcV->getCOORD(0),
+		SP.Call("Spice").OBJcV->getCOORD(1),
+		SP.Call("Spice").OBJcV->getCOORD(2));
+	modelStack.Rotate(SP.Call("Spice").OBJcV->getFace() - 90, 0, 1, 0);
+	RenderMesh(SP.Call("Spice").OBJmesh, false);
+	modelStack.PopMatrix();
+	
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Nice").OBJcV->getCOORD(0),
+		SP.Call("Nice").OBJcV->getCOORD(1),
+		SP.Call("Nice").OBJcV->getCOORD(2));
+	modelStack.Rotate(SP.Call("Nice").OBJcV->getFace() - 90, 0, 1, 0);
+	RenderMesh(SP.Call("Nice").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("ChemicalX").OBJcV->getCOORD(0),
+		SP.Call("ChemicalX").OBJcV->getCOORD(1),
+		SP.Call("ChemicalX").OBJcV->getCOORD(2));
+	modelStack.Rotate(SP.Call("ChemicalX").OBJcV->getFace() - 90, 0, 1, 0);
+	RenderMesh(SP.Call("ChemicalX").OBJmesh, false);
+	modelStack.PopMatrix();
 
 	if(test == true)
 	{
@@ -405,4 +476,3 @@ void Floor4::Exit()
 	glDeleteProgram(m_programID);
 
 }
-
