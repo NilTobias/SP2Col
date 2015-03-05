@@ -341,10 +341,9 @@ void Floor3::Update(double dt)
 	ShootTo3("Bullet3",SP.Call("Player").OBJcV->getCentre(),SP.Call("Totem3").OBJcV->getCentre(),120,speed);
 	ShootTo4("Bullet4",SP.Call("Player").OBJcV->getCentre(),SP.Call("Totem4").OBJcV->getCentre(),170,speed);
 
-	if (SP.Call("ProfessorX").OBJcV->getActivate())
-	{
-		//TeleporterIsNowHere
-	}
+	Task3Complete();
+
+
 
 	std::ostringstream ss;
 	ss << Floor3Timer;
@@ -577,6 +576,14 @@ void Floor3::ShootTo4(std::string Target, Vector3 Destination, Vector3 Source, f
 	if( Distance >= MaxDistance)
 	{
 		SP.Call(Target).OBJcV->setCentre(Source);
+	}
+}
+
+void Floor3::Task3Complete()
+{
+	if (SP.Call("ProfessorX").OBJcV->getActivate())
+	{
+		SP.Call("Teleporter").OBJcV->setCOORD(0,0,0);
 	}
 }
 

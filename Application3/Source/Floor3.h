@@ -20,6 +20,7 @@ private:
 	void RenderSP();
 	void RenderObjective();
 	void RenderFloor3();
+	void Task3Complete();
 
 	void ShootTo(std::string Target,Vector3 Destination, Vector3 Source, float MaxDistance, float BulletSpeed);//Source will Always be the Totems.
 	void ShootTo2(std::string Target,Vector3 Destination, Vector3 Source, float MaxDistance, float BulletSpeed);

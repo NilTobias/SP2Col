@@ -23,6 +23,7 @@ private:
 	int sound();
 	void RenderTaskList();
 	void RenderFloor2();
+	void Task2Complete();
 	
 
 	float SpeedUp;

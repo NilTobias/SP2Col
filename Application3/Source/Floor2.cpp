@@ -831,11 +831,7 @@ void Floor2::Update(double dt)
 		Here.AllowForce = true;
 		Here.AllowActivate = true;
 	}
-
-	if (SP.Call("Nice").OBJcV->getActivate() == true)
-	{
-		TaskList[2] = true;
-	}
+	Task2Complete();
 
 	SP.CheckCollision();
 	SP.Gravity();
@@ -870,6 +866,8 @@ void Floor2::Update(double dt)
 
 	//if(SP.Call("UFO").OBJcV->getActivate() == true)
 		//gameover
+	
+	//Check Whether The Items has Entered the Tray.
 	
 
 	if (SP.Call("Player").OBJcV->getFace() > 180)
@@ -1463,5 +1461,27 @@ void Floor2::RenderFloor2()
 		SP.Call("FreezeBuff").OBJcV->getCOORD(2));
 	RenderMesh(SP.Call("FreezeBuff").OBJmesh, false);
 	modelStack.PopMatrix();
+}
+
+void Floor2::Task2Complete()
+{
+	if (TaskList[2] == true)
+	{
+		if (TaskList[0] == true)
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				string AddToName;
+				std::ostringstream ss;
+				ss << i;
+				AddToName = ss.str();
+				if (TaskList[1] == true)
+				{
+					SP.Call("Teleporter").OBJcV->setCOORD(0,0,0);
+					break;
+				}
+			}
+		}
+	}
 }
 
