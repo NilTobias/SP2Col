@@ -12,6 +12,8 @@
 #include "collisionSphere.h"
 #include "Object.h"
 
+ISoundEngine* engine4 = createIrrKlangDevice(ESOD_AUTO_DETECT, ESEO_MULTI_THREADED | ESEO_LOAD_PLUGINS | ESEO_USE_3D_BUFFERS );
+vec3df Pos4(0,0,0);
 
 Floor1::Floor1()
 {
@@ -19,6 +21,23 @@ Floor1::Floor1()
 
 Floor1 ::~Floor1()
 {
+}
+
+int Floor1::sound()
+{ 
+	engine4->setSoundVolume(1.0f);
+	if(!engine4)
+	{ 
+		return 0;
+	}
+	vec3df position(0,0,0);
+
+    ISound* music = engine4->play3D("../Sounds/floor1.mp3", Pos4,true,false,true);
+	if(music)
+	{
+		music->setMinDistance(0.f);
+		music->setMaxDistance(1000.f);
+	}
 }
 
 void Floor1::Init()
@@ -47,6 +66,7 @@ void Floor1::Init()
 	engineHeat = 0;
 	LSPEED = 20.f;
 	JetPackActivated = true;
+    test = true;
 	MovementSpeed = 10;
 
 	//Load vertex and fragment shaders
@@ -78,7 +98,7 @@ void Floor1::Init()
 
 	lights[0].position.Set(0, 20, 0);
 	lights[0].color.Set(1, 1, 1);
-	lights[0].power = 1;
+	lights[0].power = 3;
 	lights[0].kC = 1.f;
 	lights[0].kL = 0.01f;
 	lights[0].kQ = 0.001f;
@@ -166,6 +186,62 @@ void Floor1::Init()
 	Wine.OBJmesh->material.kShininess = 5.f;
 	SP.Add(Wine);
 
+    Object VD1;
+	VD1.Name = "VD1";
+	VD1.CollisionTrigger = false;
+	VD1.OBJcV = new collisionSphere(2.f, Vector3(17, 0, 5));
+	VD1.OBJcV->setEffect(1);
+	VD1.OBJcV->setVelocity(Vector3(0, 5, 0));
+	VD1.OBJmesh = MeshBuilder::GenerateOBJ("VD1", "OBJ//VendingMachine.obj");
+	VD1.OBJmesh->textureID = LoadTGA("Image//VendingMachine.tga");
+	VD1.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	VD1.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	VD1.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	VD1.OBJmesh->material.kShininess = 5.f;
+	SP.Add(VD1);
+
+    Object VD2;
+	VD2.Name = "VD2";
+	VD2.CollisionTrigger = false;
+	VD2.OBJcV = new collisionSphere(2.f, Vector3(-17, 0, -5));
+	VD2.OBJcV->setEffect(1);
+	VD2.OBJcV->setVelocity(Vector3(0, 5, 0));
+	VD2.OBJmesh = MeshBuilder::GenerateOBJ("VD2", "OBJ//VendingMachine.obj");
+	VD2.OBJmesh->textureID = LoadTGA("Image//VendingMachine.tga");
+	VD2.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	VD2.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	VD2.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	VD2.OBJmesh->material.kShininess = 5.f;
+	SP.Add(VD2);
+
+    Object VD3;
+	VD3.Name = "VD3";
+	VD3.CollisionTrigger = false;
+	VD3.OBJcV = new collisionSphere(2.f, Vector3(17, 0, -5));
+	VD3.OBJcV->setEffect(1);
+	VD3.OBJcV->setVelocity(Vector3(0, 5, 0));
+	VD3.OBJmesh = MeshBuilder::GenerateOBJ("VD3", "OBJ//VendingMachine.obj");
+	VD3.OBJmesh->textureID = LoadTGA("Image//VendingMachine.tga");
+	VD3.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	VD3.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	VD3.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	VD3.OBJmesh->material.kShininess = 5.f;
+	SP.Add(VD3);
+
+    Object VD4;
+	VD4.Name = "VD4";
+	VD4.CollisionTrigger = false;
+	VD4.OBJcV = new collisionSphere(2.f, Vector3(-17, 0, 5));
+	VD4.OBJcV->setEffect(1);
+	VD4.OBJcV->setVelocity(Vector3(0, 5, 0));
+	VD4.OBJmesh = MeshBuilder::GenerateOBJ("VD4", "OBJ//VendingMachine.obj");
+	VD4.OBJmesh->textureID = LoadTGA("Image//VendingMachine.tga");
+	VD4.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	VD4.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	VD4.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	VD4.OBJmesh->material.kShininess = 5.f;
+	SP.Add(VD4);
+
 	Object Shelf1;
 	Shelf1.Name = "Shelf1";
 	Shelf1.CollisionTrigger = false;
@@ -192,6 +268,10 @@ void Floor1::Init()
 	FirstFloor.OBJcV->setVelocity(Vector3(0, 5, 0));
 	FirstFloor.OBJmesh = MeshBuilder::GenerateOBJ("FirstFloor", "OBJ//FirstFloor.obj");
 	FirstFloor.OBJmesh->textureID = LoadTGA("Image//TeleporterRoom.tga");
+    FirstFloor.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	FirstFloor.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	FirstFloor.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	FirstFloor.OBJmesh->material.kShininess = 5.f;
 	SP.Add(FirstFloor);
 
 
@@ -446,14 +526,52 @@ void Floor1::Render()
 	modelStack.Translate(SP.Call("FirstFloor").OBJcV->getCOORD(0),
 		SP.Call("FirstFloor").OBJcV->getCOORD(1),
 		SP.Call("FirstFloor").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("FirstFloor").OBJmesh, false);
+	RenderMesh(SP.Call("FirstFloor").OBJmesh, true);
 	modelStack.PopMatrix();
 	
+    modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("VD1").OBJcV->getCOORD(0),
+		SP.Call("VD1").OBJcV->getCOORD(1),
+		SP.Call("VD1").OBJcV->getCOORD(2));
+    modelStack.Rotate(90, 0, -1, 0);
+	RenderMesh(SP.Call("VD1").OBJmesh, true);
+	modelStack.PopMatrix();
+
+     modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("VD2").OBJcV->getCOORD(0),
+		SP.Call("VD2").OBJcV->getCOORD(1),
+		SP.Call("VD2").OBJcV->getCOORD(2));
+    modelStack.Rotate(90, 0, 1, 0);
+	RenderMesh(SP.Call("VD2").OBJmesh, true);
+	modelStack.PopMatrix();
+
+     modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("VD3").OBJcV->getCOORD(0),
+		SP.Call("VD3").OBJcV->getCOORD(1),
+		SP.Call("VD3").OBJcV->getCOORD(2));
+    modelStack.Rotate(90, 0, -1, 0);
+	RenderMesh(SP.Call("VD3").OBJmesh, true);
+	modelStack.PopMatrix();
+
+     modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("VD4").OBJcV->getCOORD(0),
+		SP.Call("VD4").OBJcV->getCOORD(1),
+		SP.Call("VD4").OBJcV->getCOORD(2));
+    modelStack.Rotate(90, 0, 1, 0);
+	RenderMesh(SP.Call("VD4").OBJmesh, true);
+	modelStack.PopMatrix();
+
 	//Text on screen for later debug
 	std::ostringstream screenTxt1;
 	std::ostringstream screenTxt2;
 	std::ostringstream screenTxt3;
 	std::ostringstream screenTxt4;
+
+    if(test == true)
+	{
+	sound();
+	test = false;
+	}
 
 	screenTxt1 << "FPS:" << FPS;
 	RenderTextOnScreen(meshList[GEO_TEXT], screenTxt1.str(), Color(1, 1, 0), 3, 1, 1);
@@ -462,6 +580,7 @@ void Floor1::Render()
 
 void Floor1::Exit()
 {
+    engine4->drop();
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
 

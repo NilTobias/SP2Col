@@ -17,8 +17,6 @@ vec3df Pos(0,0,0);
 
 int  Floor2::sound()
 { 
-	engine->setDefault3DSoundMaxDistance(100.0f);
-	engine->setDefault3DSoundMinDistance(0.0f);
 	engine->setSoundVolume(1.0f);
 	if(!engine)
 	{ 
@@ -26,33 +24,12 @@ int  Floor2::sound()
 	}
 	vec3df position(0,0,0);
 
-		/*if(sound)
-		{
-			sound->setPosition(pos3d);
-		}*/
-
-		//int playPos = sound ? sound->getPlayPosition() : 0;
-
-
-
-		ISound* music = engine->play3D("../Sounds/test.mp3", Pos,true,false,true);
-				
-		ISound* sound = engine->play3D("../Sounds/wind.ogg", Pos,true,false,true);
-		/*if (sound)
-		{
-			sound->setPosition(position);
-		}*/
-	if(sound)
+    ISound* music = engine->play3D("../Sounds/floor2.mp3", Pos,true,false,true);
+	if(music)
 	{
-		sound->setMinDistance(0.f);
-		sound->setMaxDistance(1000.f);
 		music->setMinDistance(0.f);
 		music->setMaxDistance(1000.f);
 	}
-		//sound->setIsPaused(false);
-		//test = false;
-	
-
 }
 
 Floor2::Floor2()
@@ -89,7 +66,7 @@ void Floor2::Init()
 	isFixed = false;
 	LSPEED = 20.f;
 	MovementSpeed = 10;
-	test = false;
+	test = true;
 	TaskList[0] = false;
 	TaskList[1] = false;
 	TaskList[2] = false;
@@ -163,6 +140,10 @@ void Floor2::Init()
 
 	meshList[FLOOR2] = MeshBuilder::GenerateOBJ("SecondFloor", "OBJ//storey2.obj");
 	meshList[FLOOR2]->textureID = LoadTGA("Image//storey2.tga");
+	meshList[FLOOR2]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	meshList[FLOOR2]->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	meshList[FLOOR2]->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	meshList[FLOOR2]->material.kShininess = 5.f;
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//ExportedFont.tga");
@@ -392,22 +373,6 @@ void Floor2::Init()
 			ss << i;
 			AddToName = ss.str();
 			Object Box2;
-			Box2.Name = "Box21" + AddToName;
-			Box2.CollisionTrigger = false;
-			Box2.OBJcV = new collisionSphere(0.1f , Vector3(21, 3.95, 12.7+i*2));
-			Box2.OBJcV->setEffect(0);
-			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box21", "OBJ//Box2.obj");
-			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
-			SP2.Add(Box2);
-	}
-
-	for(int i = 0; i < 5; i++)
-	{
-			string AddToName;
-			std::ostringstream ss;
-			ss << i;
-			AddToName = ss.str();
-			Object Box2;
 			Box2.Name = "Box22" + AddToName;
 			Box2.CollisionTrigger = false;
 			Box2.OBJcV = new collisionSphere(0.1f , Vector3(21.5, 3.95, 12.7+i*2));
@@ -416,23 +381,6 @@ void Floor2::Init()
 			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
 			SP2.Add(Box2);
 	}
-
-	for(int i = 0; i < 5; i++)
-	{
-			string AddToName;
-			std::ostringstream ss;
-			ss << i;
-			AddToName = ss.str();
-			Object Box2;
-			Box2.Name = "Box23" + AddToName;
-			Box2.CollisionTrigger = false;
-			Box2.OBJcV = new collisionSphere(0.1f , Vector3(22, 3.95, 12.7+i*2));
-			Box2.OBJcV->setEffect(0);
-			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box23", "OBJ//Box2.obj");
-			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
-			SP2.Add(Box2);
-	}
-
 	for(int i = 0; i < 2; i++)
 	{
 			string AddToName;
@@ -473,23 +421,6 @@ void Floor2::Init()
 			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Spice2", "OBJ//Spice.obj");
 			Box2.OBJmesh->textureID = LoadTGA("Image//Spice.tga");
 			SP2.Add(Box2);
-
-	for(int i = 0; i < 5; i++)
-	{
-			string AddToName;
-			std::ostringstream ss;
-			ss << i;
-			AddToName = ss.str();
-			Object Box2;
-			Box2.Name = "Box26" + AddToName;
-			Box2.CollisionTrigger = false;
-			Box2.OBJcV = new collisionSphere(0.1f , Vector3(21, 2.3, 12.7+i*2));
-			Box2.OBJcV->setEffect(0);
-			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box26", "OBJ//Box2.obj");
-			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
-			SP2.Add(Box2);
-	}
-
 	for(int i = 0; i < 5; i++)
 	{
 			string AddToName;
@@ -505,23 +436,6 @@ void Floor2::Init()
 			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
 			SP2.Add(Box2);
 	}
-
-	for(int i = 0; i < 5; i++)
-	{
-			string AddToName;
-			std::ostringstream ss;
-			ss << i;
-			AddToName = ss.str();
-			Object Box2;
-			Box2.Name = "Box28" + AddToName;
-			Box2.CollisionTrigger = false;
-			Box2.OBJcV = new collisionSphere(0.1f , Vector3(22, 2.3, 12.7+i*2));
-			Box2.OBJcV->setEffect(0);
-			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box28", "OBJ//Box2.obj");
-			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
-			SP2.Add(Box2);
-	}
-
 	for(int i = 0; i < 5; i++)
 	{
 			string AddToName;
@@ -545,6 +459,10 @@ void Floor2::Init()
 			Nice.OBJcV->setEffect(0,2);
 			Nice.OBJmesh = MeshBuilder::GenerateOBJ("Nice", "OBJ//NICE.obj");
 			Nice.OBJmesh->textureID = LoadTGA("Image//NICE.tga");
+            Nice.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+        	Nice.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+        	Nice.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	        Nice.OBJmesh->material.kShininess = 5.f;
 			SP2.Add(Nice);
 	/**********************************************************************************/
 	for(int i = 0; i < 5; i++)
@@ -611,7 +529,7 @@ void Floor2::Init()
 			SP2.Add(Box3);
 	}
 	/**********************************************************************************/
-	for(int i = 0; i < 12; i++)
+	for(int i = 0; i < 6; i++)
 	{
 			string AddToName;
 			std::ostringstream ss;
@@ -620,14 +538,14 @@ void Floor2::Init()
 			Object Box4;
 			Box4.Name = "Box41" + AddToName;
 			Box4.CollisionTrigger = false;
-			Box4.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*2, 4, 18));
+			Box4.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*4, 4, 18));
 			Box4.OBJcV->setEffect(0);
 			Box4.OBJmesh = MeshBuilder::GenerateOBJ("Box41", "OBJ//Box4.obj");
 			Box4.OBJmesh->textureID = LoadTGA("Image//Box4.tga");
 			SP2.Add(Box4);
 	}
 
-	for(int i = 0; i < 12; i++)
+	for(int i = 0; i < 6; i++)
 	{
 			string AddToName;
 			std::ostringstream ss;
@@ -636,14 +554,14 @@ void Floor2::Init()
 			Object Box4;
 			Box4.Name = "Box42" + AddToName;
 			Box4.CollisionTrigger = false;
-			Box4.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*2, 4, 19));
+			Box4.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*4, 4, 19));
 			Box4.OBJcV->setEffect(0);
 			Box4.OBJmesh = MeshBuilder::GenerateOBJ("Box42", "OBJ//Box4.obj");
 			Box4.OBJmesh->textureID = LoadTGA("Image//Box4.tga");
 			SP2.Add(Box4);
 	}
 	/**********************************************************************************/
-	for(int i = 0; i < 12; i++)
+	for(int i = 0; i < 6; i++)
 	{
 			string AddToName;
 			std::ostringstream ss;
@@ -652,14 +570,14 @@ void Floor2::Init()
 			Object Box5;
 			Box5.Name = "Box51" + AddToName;
 			Box5.CollisionTrigger = false;
-			Box5.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*2, 4, -18));
+			Box5.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*4, 4, -18));
 			Box5.OBJcV->setEffect(0);
 			Box5.OBJmesh = MeshBuilder::GenerateOBJ("Box51", "OBJ//Box5.obj");
 			Box5.OBJmesh->textureID = LoadTGA("Image//Box5.tga");
 			SP2.Add(Box5);
 	}
 
-	for(int i = 0; i < 12; i++)
+	for(int i = 0; i < 6; i++)
 	{
 			string AddToName;
 			std::ostringstream ss;
@@ -668,14 +586,14 @@ void Floor2::Init()
 			Object Box5;
 			Box5.Name = "Box52" + AddToName;
 			Box5.CollisionTrigger = false;
-			Box5.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*2, 4, -19));
+			Box5.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*4, 4, -19));
 			Box5.OBJcV->setEffect(0);
 			Box5.OBJmesh = MeshBuilder::GenerateOBJ("Box52", "OBJ//Box5.obj");
 			Box5.OBJmesh->textureID = LoadTGA("Image//Box5.tga");
 			SP2.Add(Box5);
 	}
 
-	for(int i = 0; i < 12; i++)
+	for(int i = 0; i < 6; i++)
 	{
 			string AddToName;
 			std::ostringstream ss;
@@ -684,14 +602,14 @@ void Floor2::Init()
 			Object Box5;
 			Box5.Name = "Box53" + AddToName;
 			Box5.CollisionTrigger = false;
-			Box5.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*2, 2.3, -18));
+			Box5.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*4, 2.3, -18));
 			Box5.OBJcV->setEffect(0);
 			Box5.OBJmesh = MeshBuilder::GenerateOBJ("Box53", "OBJ//Box5.obj");
 			Box5.OBJmesh->textureID = LoadTGA("Image//Box5.tga");
 			SP2.Add(Box5);
 	}
 
-	for(int i = 0; i < 12; i++)
+	for(int i = 0; i < 6; i++)
 	{
 			string AddToName;
 			std::ostringstream ss;
@@ -700,7 +618,7 @@ void Floor2::Init()
 			Object Box5;
 			Box5.Name = "Box54" + AddToName;
 			Box5.CollisionTrigger = false;
-			Box5.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*2, 2.3, -19));
+			Box5.OBJcV = new collisionSphere(0.1f , Vector3(-28+i*4, 2.3, -19));
 			Box5.OBJcV->setEffect(0);
 			Box5.OBJmesh = MeshBuilder::GenerateOBJ("Box54", "OBJ//Box5.obj");
 			Box5.OBJmesh->textureID = LoadTGA("Image//Box5.tga");
@@ -727,8 +645,7 @@ void Floor2::Init()
 			FreezeBuff.Gravity = false;
 			FreezeBuff.OBJcV = new collisionSphere(0.2f, Vector3(0, 100, 0));
 			FreezeBuff.OBJcV->setEffect(2);
-			FreezeBuff.OBJmesh = MeshBuilder::GenerateOBJ("FreezeBuff", "OBJ//dart.obj");
-			FreezeBuff.OBJmesh->textureID = LoadTGA("Image//dart.tga");
+			FreezeBuff.OBJmesh = MeshBuilder::GenerateSphere("FreezeBuff",Color(0,0,1),10,10,1.f);
 			SP2.Add(FreezeBuff);
 			
 
@@ -1020,7 +937,7 @@ void Floor2::RenderFloor2()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderMesh(meshList[FLOOR2], false);
+	RenderMesh(meshList[FLOOR2], true);
 	modelStack.PopMatrix();
 
 	/*******************************************************************************/
@@ -1182,41 +1099,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP2.Call("Box21" + AddToName).OBJcV->getCOORD(0),
-			SP2.Call("Box21" + AddToName).OBJcV->getCOORD(1),
-			SP2.Call("Box21" + AddToName).OBJcV->getCOORD(2));
-		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP2.Call("Box21" + AddToName).OBJmesh, false);
-		modelStack.PopMatrix();
-	}
-
-	for (int i = 0; i < 5; i++)
-	{
-		string AddToName;
-		std::ostringstream ss;
-		ss << i;
-		AddToName = ss.str();
-		modelStack.PushMatrix();
 		modelStack.Translate(SP2.Call("Box22" + AddToName).OBJcV->getCOORD(0),
 			SP2.Call("Box22" + AddToName).OBJcV->getCOORD(1),
 			SP2.Call("Box22" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
 		RenderMesh(SP2.Call("Box22" + AddToName).OBJmesh, false);
-		modelStack.PopMatrix();
-	}
-
-	for (int i = 0; i < 5; i++)
-	{
-		string AddToName;
-		std::ostringstream ss;
-		ss << i;
-		AddToName = ss.str();
-		modelStack.PushMatrix();
-		modelStack.Translate(SP2.Call("Box23" + AddToName).OBJcV->getCOORD(0),
-			SP2.Call("Box23" + AddToName).OBJcV->getCOORD(1),
-			SP2.Call("Box23" + AddToName).OBJcV->getCOORD(2));
-		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP2.Call("Box23" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1257,41 +1144,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP2.Call("Box26" + AddToName).OBJcV->getCOORD(0),
-			SP2.Call("Box26" + AddToName).OBJcV->getCOORD(1),
-			SP2.Call("Box26" + AddToName).OBJcV->getCOORD(2));
-		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP2.Call("Box26" + AddToName).OBJmesh, false);
-		modelStack.PopMatrix();
-	}
-
-	for (int i = 0; i < 5; i++)
-	{
-		string AddToName;
-		std::ostringstream ss;
-		ss << i;
-		AddToName = ss.str();
-		modelStack.PushMatrix();
 		modelStack.Translate(SP2.Call("Box27" + AddToName).OBJcV->getCOORD(0),
 			SP2.Call("Box27" + AddToName).OBJcV->getCOORD(1),
 			SP2.Call("Box27" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
 		RenderMesh(SP2.Call("Box27" + AddToName).OBJmesh, false);
-		modelStack.PopMatrix();
-	}
-
-	for (int i = 0; i < 5; i++)
-	{
-		string AddToName;
-		std::ostringstream ss;
-		ss << i;
-		AddToName = ss.str();
-		modelStack.PushMatrix();
-		modelStack.Translate(SP2.Call("Box28" + AddToName).OBJcV->getCOORD(0),
-			SP2.Call("Box28" + AddToName).OBJcV->getCOORD(1),
-			SP2.Call("Box28" + AddToName).OBJcV->getCOORD(2));
-		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP2.Call("Box28" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1315,7 +1172,7 @@ void Floor2::RenderFloor2()
 		SP2.Call("Nice").OBJcV->getCOORD(1),
 		SP2.Call("Nice").OBJcV->getCOORD(2));
 	modelStack.Rotate(180, 0, 1, 0);
-	RenderMesh(SP2.Call("Nice").OBJmesh, false);
+	RenderMesh(SP2.Call("Nice").OBJmesh, true);
 	modelStack.PopMatrix();
 	/*******************************************************************************/
 	for (int i = 0; i < 5; i++)
@@ -1378,7 +1235,7 @@ void Floor2::RenderFloor2()
 		modelStack.PopMatrix();
 	}
 	/*******************************************************************************/
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		string AddToName;
 		std::ostringstream ss;
@@ -1393,7 +1250,7 @@ void Floor2::RenderFloor2()
 		modelStack.PopMatrix();
 	}
 
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		string AddToName;
 		std::ostringstream ss;
@@ -1408,7 +1265,7 @@ void Floor2::RenderFloor2()
 		modelStack.PopMatrix();
 	}
 	/*******************************************************************************/
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		string AddToName;
 		std::ostringstream ss;
@@ -1423,7 +1280,7 @@ void Floor2::RenderFloor2()
 		modelStack.PopMatrix();
 	}
 
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		string AddToName;
 		std::ostringstream ss;
@@ -1438,7 +1295,7 @@ void Floor2::RenderFloor2()
 		modelStack.PopMatrix();
 	}
 
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		string AddToName;
 		std::ostringstream ss;
@@ -1453,7 +1310,7 @@ void Floor2::RenderFloor2()
 		modelStack.PopMatrix();
 	}
 
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		string AddToName;
 		std::ostringstream ss;
@@ -1480,6 +1337,7 @@ void Floor2::RenderFloor2()
 	modelStack.Translate(SP2.Call("FreezeBuff").OBJcV->getCOORD(0),
 		SP2.Call("FreezeBuff").OBJcV->getCOORD(1),
 		SP2.Call("FreezeBuff").OBJcV->getCOORD(2));
+    modelStack.Translate(0, 5, 0);
 	RenderMesh(SP2.Call("FreezeBuff").OBJmesh, false);
 	modelStack.PopMatrix();
 }

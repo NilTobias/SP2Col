@@ -12,6 +12,8 @@
 #include "collisionSphere.h"
 #include "Object.h"
 
+ISoundEngine* engine3 = createIrrKlangDevice(ESOD_AUTO_DETECT, ESEO_MULTI_THREADED | ESEO_LOAD_PLUGINS | ESEO_USE_3D_BUFFERS );
+vec3df Pos3(0,0,0);
 
 Floor3::Floor3()
 {
@@ -19,6 +21,23 @@ Floor3::Floor3()
 
 Floor3 ::~Floor3()
 {
+}
+
+int  Floor3::sound()
+{ 
+	engine3->setSoundVolume(1.0f);
+	if(!engine3)
+	{ 
+		return 0;
+	}
+	vec3df position(0,0,0);
+
+    ISound* music = engine3->play3D("../Sounds/floor3.mp3", Pos3,true,false,true);
+	if(music)
+	{
+		music->setMinDistance(0.f);
+		music->setMaxDistance(1000.f);
+	}
 }
 
 void Floor3::Init()
@@ -48,6 +67,7 @@ void Floor3::Init()
 	Limiter = 1950;
 	//SP3.Call("Teleporter").OBJcV->setActivate(false);
 	speed = 0.2;
+    test = true;
 	//Load vertex and fragment shaders
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
 	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
@@ -208,7 +228,7 @@ void Floor3::Init()
 
 	Object Bullet;
 	Bullet.Name = "Bullet";//IMPORTANT
-	Bullet.OBJcV = new collisionSphere(1.f, Vector3(-39,5,-35)); //IMPORTANT
+	Bullet.OBJcV = new collisionSphere(1.f, Vector3(-39,0,-35)); //IMPORTANT
 	Bullet.OBJcV->setEffect(2); //IMPORTANT
 	Bullet.OBJcV->setVelocity(Vector3(0, 5, 0));
 	Bullet.OBJmesh = MeshBuilder::GenerateSphere("Bullet",Color(1,0,0),10,10,0.3f);
@@ -346,6 +366,7 @@ void Floor3::Update(double dt)
 		SP3.Call("Player").OBJcV->setFace(SP3.Call("Player").OBJcV->getFace() + 5.f);
 
 	if (Application::IsKeyPressed('F'))
+        //engine3->play3D("../Sounds/jump.wav", Pos3,false,false);
 		SP3.Call("Player").OBJcV->Jump(0.1f);
 	
 	if (Application::IsKeyPressed('E'))
@@ -358,6 +379,7 @@ void Floor3::Update(double dt)
 	Floor3Timer -= 0.5f;
 	if (Floor3Timer <= Limiter)
 	{
+        engine3->play3D("../Sounds/Timer.mp3", Pos3,false,false);
 		speed += 0.05;
 		Limiter -= 150;
 		SP3.Call("ProfessorX").OBJcV->setCOORD(randomX,0,randomZ);
@@ -416,10 +438,17 @@ void Floor3::Render()
 
 	RenderObjective();
 	RenderFloor3();
+
+    if(test == true)
+	{
+	sound();
+	test = false;
+	}
 }
 
 void Floor3::Exit()
 {
+    engine3->drop();
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
 

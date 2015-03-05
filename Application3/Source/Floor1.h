@@ -17,6 +17,7 @@ public:
 	virtual void Render();
 	virtual void Exit();
 	static double DtCopy;
+    int sound();
 private:
 	void RenderSP();
 	SceneAssets SP;
@@ -30,6 +31,7 @@ private:
 
 	bool Teleport;
 	bool renderScreenText;
+    bool test;
 	float FPS;
 
 };
