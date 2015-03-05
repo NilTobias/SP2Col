@@ -34,17 +34,13 @@ int  Floor4::sound()
 
 
 
-		ISound* music = engine1->play3D("../Sounds/test.mp3", Pos1,true,false,true);
-				
-		ISound* sound = engine1->play3D("../Sounds/wind.ogg", Pos1,true,false,true);
+		ISound* music = engine1->play3D("../Sounds/ending.mp3", Pos1,false,false,true);
 		/*if (sound)
 		{
 			sound->setPosition(position);
 		}*/
-	if(sound)
+	if(music)
 	{
-		sound->setMinDistance(0.f);
-		sound->setMaxDistance(1000.f);
 		music->setMinDistance(0.f);
 		music->setMaxDistance(1000.f);
 	}
@@ -346,7 +342,7 @@ void Floor4::Update(double dt)
 	}
 
 
-	float multiplier = 0.1f;
+	float multiplier = 0.001f;
 	Vector3 view = 0.f;
 	view = (camera.target + camera.position);
 	//engine->setListenerPosition(vec3df(multiplier * camera.position.x,multiplier * camera.position.y,multiplier * camera.position.z), vec3df(0,0,0), vec3df(0,0,0), Pos);

@@ -47,7 +47,7 @@ void Floor3::Init()
 	Floor3Timer = 2100;
 	Limiter = 1950;
 	SP.Call("Teleporter").OBJcV->setActivate(false);
-
+	speed = 0.2;
 	//Load vertex and fragment shaders
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
 	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
@@ -145,13 +145,75 @@ void Floor3::Init()
 
 	Object Totem;
 	Totem.Name = "Totem";//IMPORTANT
-	Totem.OBJcV = new collisionSphere(1.f, Vector3(0,0,0)); //IMPORTANT
+	Totem.OBJcV = new collisionSphere(1.f, Vector3(-39,0,-35)); //IMPORTANT
 	Totem.OBJcV->setEffect(2); //IMPORTANT
 	Totem.OBJcV->setVelocity(Vector3(0, 5, 0));
 	Totem.OBJmesh = MeshBuilder::GenerateOBJ("Totem", "OBJ//Totem.obj");
 	Totem.OBJmesh->textureID = LoadTGA("Image//Totem.tga");
 	SP.Add(Totem);
 
+	Object Totem2;
+	Totem2.Name = "Totem2";//IMPORTANT
+	Totem2.OBJcV = new collisionSphere(1.f, Vector3(40,0,45)); //IMPORTANT
+	Totem2.OBJcV->setEffect(2); //IMPORTANT
+	Totem2.OBJcV->setVelocity(Vector3(0, 5, 0));
+	Totem2.OBJmesh = MeshBuilder::GenerateOBJ("Totem2", "OBJ//Totem.obj");
+	Totem2.OBJmesh->textureID = LoadTGA("Image//Totem.tga");
+	SP.Add(Totem2);
+
+	Object Totem3;
+	Totem3.Name = "Totem3";//IMPORTANT
+	Totem3.OBJcV = new collisionSphere(1.f, Vector3(40,0,-34)); //IMPORTANT
+	Totem3.OBJcV->setEffect(2); //IMPORTANT
+	Totem3.OBJcV->setVelocity(Vector3(0, 5, 0));
+	Totem3.OBJmesh = MeshBuilder::GenerateOBJ("Totem3", "OBJ//Totem.obj");
+	Totem3.OBJmesh->textureID = LoadTGA("Image//Totem.tga");
+	SP.Add(Totem3);
+
+	Object Totem4;
+	Totem4.Name = "Totem4";//IMPORTANT
+	Totem4.OBJcV = new collisionSphere(1.f, Vector3(-35,0,43)); //IMPORTANT
+	Totem4.OBJcV->setEffect(2); //IMPORTANT
+	Totem4.OBJcV->setVelocity(Vector3(0, 5, 0));
+	Totem4.OBJmesh = MeshBuilder::GenerateOBJ("Totem4", "OBJ//Totem.obj");
+	Totem4.OBJmesh->textureID = LoadTGA("Image//Totem.tga");
+	SP.Add(Totem4);
+
+	Object Bullet;
+	Bullet.Name = "Bullet";//IMPORTANT
+	Bullet.OBJcV = new collisionSphere(1.f, Vector3(-39,5,-35)); //IMPORTANT
+	Bullet.OBJcV->setEffect(2); //IMPORTANT
+	Bullet.OBJcV->setVelocity(Vector3(0, 5, 0));
+	Bullet.OBJmesh = MeshBuilder::GenerateSphere("Bullet",Color(1,0,0),10,10,0.3f);
+	//Bullet.OBJmesh->textureID = LoadTGA("Image//dart.tga");
+	SP.Add(Bullet);
+
+	Object Bullet2;
+	Bullet2.Name = "Bullet2";//IMPORTANT
+	Bullet2.OBJcV = new collisionSphere(1.f, Vector3(40,0,45)); //IMPORTANT
+	Bullet2.OBJcV->setEffect(2); //IMPORTANT
+	Bullet2.OBJcV->setVelocity(Vector3(0, 5, 0));
+	Bullet2.OBJmesh = MeshBuilder::GenerateSphere("Bullet2",Color(1,0,0),10,10,0.3f);
+	//Bullet.OBJmesh->textureID = LoadTGA("Image//dart.tga");
+	SP.Add(Bullet2);
+
+	Object Bullet3;
+	Bullet3.Name = "Bullet3";//IMPORTANT
+	Bullet3.OBJcV = new collisionSphere(1.f, Vector3(40,0,-34)); //IMPORTANT
+	Bullet3.OBJcV->setEffect(2); //IMPORTANT
+	Bullet3.OBJcV->setVelocity(Vector3(0, 5, 0));
+	Bullet3.OBJmesh = MeshBuilder::GenerateSphere("Bullet3",Color(1,0,0),10,10,0.3f);
+	//Bullet.OBJmesh->textureID = LoadTGA("Image//dart.tga");
+	SP.Add(Bullet3);
+
+	Object Bullet4;
+	Bullet4.Name = "Bullet4";//IMPORTANT
+	Bullet4.OBJcV = new collisionSphere(1.f, Vector3(-35,0,43)); //IMPORTANT
+	Bullet4.OBJcV->setEffect(2); //IMPORTANT
+	Bullet4.OBJcV->setVelocity(Vector3(0, 5, 0));
+	Bullet4.OBJmesh = MeshBuilder::GenerateSphere("Bullet4",Color(1,0,0),10,10,0.3f);
+	//Bullet.OBJmesh->textureID = LoadTGA("Image//dart.tga");
+	SP.Add(Bullet4);
 
 	//Initialize camera settings
 	camera.Init(Vector3(0, 25, 20), Vector3(0, 0, 0), Vector3(0, 1, 0));
@@ -171,6 +233,8 @@ double Floor3::DtCopy = 0;
 
 void Floor3::Update(double dt)
 {
+	int randomX = rand() % 57 + -25;
+	int randomZ = rand() % 44 + -19;
 	DtCopy = dt;
 	collisionVolume Here;
 	Here.AllowPickUp = false;
@@ -267,9 +331,15 @@ void Floor3::Update(double dt)
 	Floor3Timer -= 0.5f;
 	if (Floor3Timer <= Limiter)
 	{
+		speed += 0.05;
 		Limiter -= 150;
-		SP.Call("ProfessorX").OBJcV->setCOORD(5,0,0);
+		SP.Call("ProfessorX").OBJcV->setCOORD(randomX,0,randomZ);
 	}
+
+	ShootTo("Bullet",SP.Call("Player").OBJcV->getCentre(),SP.Call("Totem").OBJcV->getCentre(),130,speed);
+	ShootTo2("Bullet2",SP.Call("Player").OBJcV->getCentre(),SP.Call("Totem2").OBJcV->getCentre(),150,speed);
+	ShootTo3("Bullet3",SP.Call("Player").OBJcV->getCentre(),SP.Call("Totem3").OBJcV->getCentre(),120,speed);
+	ShootTo4("Bullet4",SP.Call("Player").OBJcV->getCentre(),SP.Call("Totem4").OBJcV->getCentre(),170,speed);
 
 	if (SP.Call("ProfessorX").OBJcV->getActivate())
 	{
@@ -316,11 +386,6 @@ void Floor3::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0,5,0);
-	RenderMesh(meshList[GEO_MODEL1], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -409,5 +474,109 @@ void Floor3::RenderFloor3()
 		SP.Call("Totem").OBJcV->getCOORD(2));
 	RenderMesh(SP.Call("Totem").OBJmesh, false);
 	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Bullet").OBJcV->getCOORD(0),
+		SP.Call("Bullet").OBJcV->getCOORD(1),
+		SP.Call("Bullet").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Bullet").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Totem2").OBJcV->getCOORD(0),
+		SP.Call("Totem2").OBJcV->getCOORD(1),
+		SP.Call("Totem2").OBJcV->getCOORD(2));
+	modelStack.Rotate(-135,0,1,0);
+	RenderMesh(SP.Call("Totem2").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Bullet2").OBJcV->getCOORD(0),
+		SP.Call("Bullet2").OBJcV->getCOORD(1),
+		SP.Call("Bullet2").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Bullet2").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Totem3").OBJcV->getCOORD(0),
+		SP.Call("Totem3").OBJcV->getCOORD(1),
+		SP.Call("Totem3").OBJcV->getCOORD(2));
+	modelStack.Rotate(-45,0,1,0);
+	RenderMesh(SP.Call("Totem3").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Bullet3").OBJcV->getCOORD(0),
+		SP.Call("Bullet3").OBJcV->getCOORD(1),
+		SP.Call("Bullet3").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Bullet3").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Totem4").OBJcV->getCOORD(0),
+		SP.Call("Totem4").OBJcV->getCOORD(1),
+		SP.Call("Totem4").OBJcV->getCOORD(2));
+	modelStack.Rotate(135,0,1,0);
+	RenderMesh(SP.Call("Totem4").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Bullet4").OBJcV->getCOORD(0),
+		SP.Call("Bullet4").OBJcV->getCOORD(1),
+		SP.Call("Bullet4").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Bullet4").OBJmesh, false);
+	modelStack.PopMatrix();
+}
+
+void Floor3::ShootTo(std::string Target, Vector3 Destination, Vector3 Source, float MaxDistance, float BulletSpeed)
+{
+	SP.Call(Target).OBJcV->setVelocity(Destination - Source);//Vector from Totem to Player
+	Vector3 Temp = SP.Call(Target).OBJcV->getVelocity().Normalize();   //Direction from Totem to Player
+	Temp = Temp * BulletSpeed;
+	SP.Call(Target).OBJcV->setCentre(SP.Call(Target).OBJcV->getCentre() + Temp);
+	float Distance = (Source - SP.Call(Target).OBJcV->getCentre()).Length();
+	if( Distance >= MaxDistance)
+	{
+		SP.Call(Target).OBJcV->setCentre(Source);
+	}
+}
+
+void Floor3::ShootTo2(std::string Target, Vector3 Destination, Vector3 Source, float MaxDistance, float BulletSpeed)
+{
+	SP.Call(Target).OBJcV->setVelocity(Destination - Source);//Vector from Totem to Player
+	Vector3 Temp = SP.Call(Target).OBJcV->getVelocity().Normalize();   //Direction from Totem to Player
+	Temp = Temp * BulletSpeed;
+	SP.Call(Target).OBJcV->setCentre(SP.Call(Target).OBJcV->getCentre() + Temp);
+	float Distance = (Source - SP.Call(Target).OBJcV->getCentre()).Length();
+	if( Distance >= MaxDistance)
+	{
+		SP.Call(Target).OBJcV->setCentre(Source);
+	}
+}
+
+void Floor3::ShootTo3(std::string Target, Vector3 Destination, Vector3 Source, float MaxDistance, float BulletSpeed)
+{
+	SP.Call(Target).OBJcV->setVelocity(Destination - Source);//Vector from Totem to Player
+	Vector3 Temp = SP.Call(Target).OBJcV->getVelocity().Normalize();   //Direction from Totem to Player
+	Temp = Temp * BulletSpeed;
+	SP.Call(Target).OBJcV->setCentre(SP.Call(Target).OBJcV->getCentre() + Temp);
+	float Distance = (Source - SP.Call(Target).OBJcV->getCentre()).Length();
+	if( Distance >= MaxDistance)
+	{
+		SP.Call(Target).OBJcV->setCentre(Source);
+	}
+}
+
+void Floor3::ShootTo4(std::string Target, Vector3 Destination, Vector3 Source, float MaxDistance, float BulletSpeed)
+{
+	SP.Call(Target).OBJcV->setVelocity(Destination - Source);//Vector from Totem to Player
+	Vector3 Temp = SP.Call(Target).OBJcV->getVelocity().Normalize();   //Direction from Totem to Player
+	Temp = Temp * BulletSpeed;
+	SP.Call(Target).OBJcV->setCentre(SP.Call(Target).OBJcV->getCentre() + Temp);
+	float Distance = (Source - SP.Call(Target).OBJcV->getCentre()).Length();
+	if( Distance >= MaxDistance)
+	{
+		SP.Call(Target).OBJcV->setCentre(Source);
+	}
 }
 

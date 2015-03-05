@@ -729,6 +729,8 @@ double Floor2::DtCopy = 0;
 
 void Floor2::Update(double dt)
 {
+	int randomX = rand() %  42 + -30;
+	int randomZ = rand() %  34 + -17;
 	DtCopy = dt;
 	collisionVolume Here;
 	Here.AllowPickUp = false;
@@ -847,7 +849,7 @@ void Floor2::Update(double dt)
 	{
 		Limiter -= 100;
 		SpeedUp += 0.01f;
-		SP.Call("FreezeBuff").OBJcV->setCOORD(5,0,0);
+		SP.Call("FreezeBuff").OBJcV->setCOORD(randomX,0,randomZ);
 	}
 
 	if (Floor2Timer > 1 && SP.Call("FreezeBuff").OBJcV->getActivate() == false)
