@@ -15,46 +15,17 @@
 
 Scene::Scene()
 {
-	Object Player;
-	Player.Name = "Player";
-	Player.OBJcV = new collisionSphere(2.f, Vector3(-10, 0, 0));
-	Player.OBJcV->setLiving(true);
-	Player.OBJmesh = MeshBuilder::GenerateOBJ("Player", "OBJ//doorman.obj");
-	Player.OBJmesh->textureID = LoadTGA("Image//doorman.tga");
-	SP.Add(Player);
-
-
-	Object Teleporter;
-	Teleporter.Name = "Teleporter";
-	Teleporter.Gravity = false;
-	Teleporter.OBJcV = new collisionSphere(1.5f, Vector3(0, 0, 10));
-	Teleporter.OBJcV->setEffect(2);
-	Teleporter.OBJmesh = MeshBuilder::GenerateOBJ("Tele", "OBJ//Elevator.obj");
-	Teleporter.OBJmesh->textureID = LoadTGA("Image//Elevator.tga");
-	SP.Add(Teleporter);
-
-	Object Crosshair;
-	Crosshair.Name = "Crosshair";
-	Crosshair.Gravity = false;
-	Crosshair.OBJcV = new collisionSphere(0.1f, Vector3(0, 0, 0));
-	Crosshair.OBJcV->setCursor(true);
-	Crosshair.OBJmesh = MeshBuilder::GenerateQuad("Crosshair", Color(1, 1, 1), 1.f);
-	Crosshair.OBJmesh->textureID = LoadTGA("Image//Hand.tga");
-	SP.Add(Crosshair);
 }
 
 bool Scene::FloorLevel = false;
 
 void Scene::Teleport()
 {
-	if (SP.Call("Teleporter").OBJcV->getActivate())
-	{
-		FloorLevel = true;
-	}
 }
 
 void Scene::UpdateCrosshair()
 {
+	/*
 	Vector3 Temp2(2, 0, 0);
 	Mtx44 charRotate;
 	charRotate.SetToRotation(SP.Call("Player").OBJcV->getFace(), 0, 1, 0);
@@ -80,6 +51,14 @@ void Scene::UpdateCrosshair()
 				SP.Call("Crosshair").OBJcV->getCOORD(2));
 		}
 	}
+
+	Vector3 NewTarget = SP.Call("Crosshair").OBJcV->getCentre();
+	camera.position = SP.Call("Player").OBJcV->getCentre();
+	camera.position.y = 6;
+	camera.target = NewTarget;
+	camera.target.y = 6;
+	camera.up.Set(0, 1, 0);
+	*/
 }
 
 

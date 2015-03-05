@@ -168,15 +168,36 @@ void Floor2::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//ExportedFont.tga");
 
 
-	/*
-	Object Floor2;
-	Floor2.Name = "SecondLevel";//IMPORTANT
-	Floor2.ReverseCollision = true;
-	Floor2.OBJcV = new AABB(80.f, 75.f, 100.f, Vector3(0, 0, 0)); //IMPORTANT
-	Floor2.OBJcV->setEffect(1); //IMPORTANT
-	Floor2.OBJcV->setVelocity(Vector3(0, 5, 0));
-	SP.Add(Floor2);
-	*/
+	
+
+	Object Player;
+	Player.Name = "Player";
+	Player.OBJcV = new collisionSphere(2.f, Vector3(-10, 0, 0));
+	Player.OBJcV->setLiving(true);
+	Player.OBJmesh = MeshBuilder::GenerateOBJ("Player", "OBJ//doorman.obj");
+	Player.OBJmesh->textureID = LoadTGA("Image//doorman.tga");
+	SP2.Add(Player);
+
+
+	Object Teleporter;
+	Teleporter.Name = "Teleporter";
+	Teleporter.Gravity = false;
+	Teleporter.OBJcV = new collisionSphere(1.5f, Vector3(0, 0, 10));
+	Teleporter.OBJcV->setEffect(2);
+	Teleporter.OBJmesh = MeshBuilder::GenerateOBJ("Tele", "OBJ//Elevator.obj");
+	Teleporter.OBJmesh->textureID = LoadTGA("Image//Elevator.tga");
+	SP2.Add(Teleporter);
+
+	Object Crosshair;
+	Crosshair.Name = "Crosshair";
+	Crosshair.Gravity = false;
+	Crosshair.OBJcV = new collisionSphere(0.1f, Vector3(0, 0, 0));
+	Crosshair.OBJcV->setCursor(true);
+	Crosshair.OBJmesh = MeshBuilder::GenerateQuad("Crosshair", Color(1, 1, 1), 1.f);
+	Crosshair.OBJmesh->textureID = LoadTGA("Image//Hand.tga");
+	SP2.Add(Crosshair);
+
+
 	/**********************************************************************************/
 	for(int i = 0; i < 5; i++)
 	{
@@ -191,7 +212,7 @@ void Floor2::Init()
 			Packet.OBJcV->setEffect(0);
 			Packet.OBJmesh = MeshBuilder::GenerateOBJ("Packet1", "OBJ//Packet.obj");
 			Packet.OBJmesh->textureID = LoadTGA("Image//Packet.tga");
-			SP.Add(Packet);
+			SP2.Add(Packet);
 
 
 	}
@@ -209,7 +230,7 @@ void Floor2::Init()
 			Packet.OBJcV->setEffect(0);
 			Packet.OBJmesh = MeshBuilder::GenerateOBJ("Packet2", "OBJ//Packet.obj");
 			Packet.OBJmesh->textureID = LoadTGA("Image//Packet.tga");
-			SP.Add(Packet);
+			SP2.Add(Packet);
 
 
 	}
@@ -227,7 +248,7 @@ void Floor2::Init()
 			Packet.OBJcV->setEffect(0);
 			Packet.OBJmesh = MeshBuilder::GenerateOBJ("Packet4", "OBJ//Packet.obj");
 			Packet.OBJmesh->textureID = LoadTGA("Image//Packet.tga");
-			SP.Add(Packet);
+			SP2.Add(Packet);
 
 
 	}
@@ -245,7 +266,7 @@ void Floor2::Init()
 			Packet.OBJcV->setEffect(0);
 			Packet.OBJmesh = MeshBuilder::GenerateOBJ("Packet3", "OBJ//Packet.obj");
 			Packet.OBJmesh->textureID = LoadTGA("Image//Packet.tga");
-			SP.Add(Packet);
+			SP2.Add(Packet);
 
 
 	}
@@ -264,7 +285,7 @@ void Floor2::Init()
 			Sugar.OBJcV->setEffect(0);
 			Sugar.OBJmesh = MeshBuilder::GenerateOBJ("Sugar1", "OBJ//Sugar.obj");
 			Sugar.OBJmesh->textureID = LoadTGA("Image//Sugar.tga");
-			SP.Add(Sugar);
+			SP2.Add(Sugar);
 	}
 
 	for(int i = 0; i < 5; i++)
@@ -280,7 +301,7 @@ void Floor2::Init()
 			Sugar.OBJcV->setEffect(0);
 			Sugar.OBJmesh = MeshBuilder::GenerateOBJ("Sugar2", "OBJ//Sugar.obj");
 			Sugar.OBJmesh->textureID = LoadTGA("Image//Sugar.tga");
-			SP.Add(Sugar);
+			SP2.Add(Sugar);
 	}
 	/**********************************************************************************/
 
@@ -297,7 +318,7 @@ void Floor2::Init()
 			Box.OBJcV->setEffect(0);
 			Box.OBJmesh = MeshBuilder::GenerateOBJ("Box1", "OBJ//Box.obj");
 			Box.OBJmesh->textureID = LoadTGA("Image//Box.tga");
-			SP.Add(Box);
+			SP2.Add(Box);
 	}
 
 	for(int i = 0; i < 5; i++)
@@ -313,7 +334,7 @@ void Floor2::Init()
 			Box.OBJcV->setEffect(0);
 			Box.OBJmesh = MeshBuilder::GenerateOBJ("Box2", "OBJ//Box.obj");
 			Box.OBJmesh->textureID = LoadTGA("Image//Box.tga");
-			SP.Add(Box);
+			SP2.Add(Box);
 	}
 
 	for(int i = 0; i < 5; i++)
@@ -329,7 +350,7 @@ void Floor2::Init()
 			Box.OBJcV->setEffect(0);
 			Box.OBJmesh = MeshBuilder::GenerateOBJ("Box3", "OBJ//Box.obj");
 			Box.OBJmesh->textureID = LoadTGA("Image//Box.tga");
-			SP.Add(Box);
+			SP2.Add(Box);
 	}
 
 	for(int i = 0; i < 5; i++)
@@ -345,7 +366,7 @@ void Floor2::Init()
 			Box.OBJcV->setEffect(0);
 			Box.OBJmesh = MeshBuilder::GenerateOBJ("Box4", "OBJ//Box.obj");
 			Box.OBJmesh->textureID = LoadTGA("Image//Box.tga");
-			SP.Add(Box);
+			SP2.Add(Box);
 	}
 	/**********************************************************************************/
 	for(int i = 0; i < 5; i++)
@@ -361,7 +382,7 @@ void Floor2::Init()
 			Spice.OBJcV->setEffect(0);
 			Spice.OBJmesh = MeshBuilder::GenerateOBJ("Spice1", "OBJ//cat.obj");
 			Spice.OBJmesh->textureID = LoadTGA("Image//cat.tga");
-			SP.Add(Spice);
+			SP2.Add(Spice);
 	}
 	/**********************************************************************************/
 	for(int i = 0; i < 5; i++)
@@ -377,7 +398,7 @@ void Floor2::Init()
 			Box2.OBJcV->setEffect(0);
 			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box21", "OBJ//Box2.obj");
 			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
-			SP.Add(Box2);
+			SP2.Add(Box2);
 	}
 
 	for(int i = 0; i < 5; i++)
@@ -393,7 +414,7 @@ void Floor2::Init()
 			Box2.OBJcV->setEffect(0);
 			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box22", "OBJ//Box2.obj");
 			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
-			SP.Add(Box2);
+			SP2.Add(Box2);
 	}
 
 	for(int i = 0; i < 5; i++)
@@ -409,7 +430,7 @@ void Floor2::Init()
 			Box2.OBJcV->setEffect(0);
 			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box23", "OBJ//Box2.obj");
 			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
-			SP.Add(Box2);
+			SP2.Add(Box2);
 	}
 
 	for(int i = 0; i < 2; i++)
@@ -425,7 +446,7 @@ void Floor2::Init()
 			Box2.OBJcV->setEffect(0);
 			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box24", "OBJ//Box2.obj");
 			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
-			SP.Add(Box2);
+			SP2.Add(Box2);
 	}
 
 	for(int i = 0; i < 2; i++)
@@ -441,7 +462,7 @@ void Floor2::Init()
 			Box2.OBJcV->setEffect(0);
 			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box25", "OBJ//Box2.obj");
 			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
-			SP.Add(Box2);
+			SP2.Add(Box2);
 	}
 
 			Object Box2;
@@ -451,7 +472,7 @@ void Floor2::Init()
 			Box2.OBJcV->setEffect(0);
 			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Spice2", "OBJ//Spice.obj");
 			Box2.OBJmesh->textureID = LoadTGA("Image//Spice.tga");
-			SP.Add(Box2);
+			SP2.Add(Box2);
 
 	for(int i = 0; i < 5; i++)
 	{
@@ -466,7 +487,7 @@ void Floor2::Init()
 			Box2.OBJcV->setEffect(0);
 			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box26", "OBJ//Box2.obj");
 			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
-			SP.Add(Box2);
+			SP2.Add(Box2);
 	}
 
 	for(int i = 0; i < 5; i++)
@@ -482,7 +503,7 @@ void Floor2::Init()
 			Box2.OBJcV->setEffect(0);
 			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box27", "OBJ//Box2.obj");
 			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
-			SP.Add(Box2);
+			SP2.Add(Box2);
 	}
 
 	for(int i = 0; i < 5; i++)
@@ -498,7 +519,7 @@ void Floor2::Init()
 			Box2.OBJcV->setEffect(0);
 			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box28", "OBJ//Box2.obj");
 			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
-			SP.Add(Box2);
+			SP2.Add(Box2);
 	}
 
 	for(int i = 0; i < 5; i++)
@@ -514,7 +535,7 @@ void Floor2::Init()
 			Box2.OBJcV->setEffect(0);
 			Box2.OBJmesh = MeshBuilder::GenerateOBJ("Box29", "OBJ//Box2.obj");
 			Box2.OBJmesh->textureID = LoadTGA("Image//Box2.tga");
-			SP.Add(Box2);
+			SP2.Add(Box2);
 	}
 	/**********************************************************************************/
 			Object Nice;
@@ -524,7 +545,7 @@ void Floor2::Init()
 			Nice.OBJcV->setEffect(0,2);
 			Nice.OBJmesh = MeshBuilder::GenerateOBJ("Nice", "OBJ//NICE.obj");
 			Nice.OBJmesh->textureID = LoadTGA("Image//NICE.tga");
-			SP.Add(Nice);
+			SP2.Add(Nice);
 	/**********************************************************************************/
 	for(int i = 0; i < 5; i++)
 	{
@@ -539,7 +560,7 @@ void Floor2::Init()
 			Box3.OBJcV->setEffect(0);
 			Box3.OBJmesh = MeshBuilder::GenerateOBJ("Box31", "OBJ//Box3.obj");
 			Box3.OBJmesh->textureID = LoadTGA("Image//Box3.tga");
-			SP.Add(Box3);
+			SP2.Add(Box3);
 	}
 
 	for(int i = 0; i < 5; i++)
@@ -555,7 +576,7 @@ void Floor2::Init()
 			Box3.OBJcV->setEffect(0);
 			Box3.OBJmesh = MeshBuilder::GenerateOBJ("Box32", "OBJ//Box3.obj");
 			Box3.OBJmesh->textureID = LoadTGA("Image//Box3.tga");
-			SP.Add(Box3);
+			SP2.Add(Box3);
 	}
 
 	for(int i = 0; i < 5; i++)
@@ -571,7 +592,7 @@ void Floor2::Init()
 			Box3.OBJcV->setEffect(0);
 			Box3.OBJmesh = MeshBuilder::GenerateOBJ("Box33", "OBJ//Box3.obj");
 			Box3.OBJmesh->textureID = LoadTGA("Image//Box3.tga");
-			SP.Add(Box3);
+			SP2.Add(Box3);
 	}
 
 	for(int i = 0; i < 5; i++)
@@ -587,7 +608,7 @@ void Floor2::Init()
 			Box3.OBJcV->setEffect(0);
 			Box3.OBJmesh = MeshBuilder::GenerateOBJ("Box34", "OBJ//Box3.obj");
 			Box3.OBJmesh->textureID = LoadTGA("Image//Box3.tga");
-			SP.Add(Box3);
+			SP2.Add(Box3);
 	}
 	/**********************************************************************************/
 	for(int i = 0; i < 12; i++)
@@ -603,7 +624,7 @@ void Floor2::Init()
 			Box4.OBJcV->setEffect(0);
 			Box4.OBJmesh = MeshBuilder::GenerateOBJ("Box41", "OBJ//Box4.obj");
 			Box4.OBJmesh->textureID = LoadTGA("Image//Box4.tga");
-			SP.Add(Box4);
+			SP2.Add(Box4);
 	}
 
 	for(int i = 0; i < 12; i++)
@@ -619,7 +640,7 @@ void Floor2::Init()
 			Box4.OBJcV->setEffect(0);
 			Box4.OBJmesh = MeshBuilder::GenerateOBJ("Box42", "OBJ//Box4.obj");
 			Box4.OBJmesh->textureID = LoadTGA("Image//Box4.tga");
-			SP.Add(Box4);
+			SP2.Add(Box4);
 	}
 	/**********************************************************************************/
 	for(int i = 0; i < 12; i++)
@@ -635,7 +656,7 @@ void Floor2::Init()
 			Box5.OBJcV->setEffect(0);
 			Box5.OBJmesh = MeshBuilder::GenerateOBJ("Box51", "OBJ//Box5.obj");
 			Box5.OBJmesh->textureID = LoadTGA("Image//Box5.tga");
-			SP.Add(Box5);
+			SP2.Add(Box5);
 	}
 
 	for(int i = 0; i < 12; i++)
@@ -651,7 +672,7 @@ void Floor2::Init()
 			Box5.OBJcV->setEffect(0);
 			Box5.OBJmesh = MeshBuilder::GenerateOBJ("Box52", "OBJ//Box5.obj");
 			Box5.OBJmesh->textureID = LoadTGA("Image//Box5.tga");
-			SP.Add(Box5);
+			SP2.Add(Box5);
 	}
 
 	for(int i = 0; i < 12; i++)
@@ -667,7 +688,7 @@ void Floor2::Init()
 			Box5.OBJcV->setEffect(0);
 			Box5.OBJmesh = MeshBuilder::GenerateOBJ("Box53", "OBJ//Box5.obj");
 			Box5.OBJmesh->textureID = LoadTGA("Image//Box5.tga");
-			SP.Add(Box5);
+			SP2.Add(Box5);
 	}
 
 	for(int i = 0; i < 12; i++)
@@ -683,7 +704,7 @@ void Floor2::Init()
 			Box5.OBJcV->setEffect(0);
 			Box5.OBJmesh = MeshBuilder::GenerateOBJ("Box54", "OBJ//Box5.obj");
 			Box5.OBJmesh->textureID = LoadTGA("Image//Box5.tga");
-			SP.Add(Box5);
+			SP2.Add(Box5);
 
 	}
 	/**********************************************************************************/
@@ -698,7 +719,7 @@ void Floor2::Init()
 			UFO.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
 			UFO.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
 			UFO.OBJmesh->material.kShininess = 5.f;
-			SP.Add(UFO);
+			SP2.Add(UFO);
 
 			Object FreezeBuff;
 			FreezeBuff.Name = "FreezeBuff";
@@ -708,7 +729,7 @@ void Floor2::Init()
 			FreezeBuff.OBJcV->setEffect(2);
 			FreezeBuff.OBJmesh = MeshBuilder::GenerateOBJ("FreezeBuff", "OBJ//dart.obj");
 			FreezeBuff.OBJmesh->textureID = LoadTGA("Image//dart.tga");
-			SP.Add(FreezeBuff);
+			SP2.Add(FreezeBuff);
 			
 
 	//Initialize camera settings
@@ -779,10 +800,10 @@ void Floor2::Update(double dt)
 	{
 		Mtx44 charRotate;
 
-		SP.Call("Player").OBJcV->setVelocity(Vector3(MovementSpeed*dt, 0, 0));
-		charRotate.SetToRotation(SP.Call("Player").OBJcV->getFace(), 0, 1, 0);
-		SP.Call("Player").OBJcV->setVelocity(charRotate * SP.Call("Player").OBJcV->getVelocity());
-		SP.Call("Player").OBJcV->setCentre(SP.Call("Player").OBJcV->getCentre() + SP.Call("Player").OBJcV->getVelocity());
+		SP2.Call("Player").OBJcV->setVelocity(Vector3(MovementSpeed*dt, 0, 0));
+		charRotate.SetToRotation(SP2.Call("Player").OBJcV->getFace(), 0, 1, 0);
+		SP2.Call("Player").OBJcV->setVelocity(charRotate * SP2.Call("Player").OBJcV->getVelocity());
+		SP2.Call("Player").OBJcV->setCentre(SP2.Call("Player").OBJcV->getCentre() + SP2.Call("Player").OBJcV->getVelocity());
 		Here.MainFace[0] = true;
 		Here.MoveKeysPressed++;
 	}
@@ -790,10 +811,10 @@ void Floor2::Update(double dt)
 	{
 		Mtx44 charRotate;
 
-		SP.Call("Player").OBJcV->setVelocity(Vector3(MovementSpeed*dt, 0, 0));
-		charRotate.SetToRotation(SP.Call("Player").OBJcV->getFace(), 0, 1, 0);
-		SP.Call("Player").OBJcV->setVelocity(charRotate * SP.Call("Player").OBJcV->getVelocity());
-		SP.Call("Player").OBJcV->setCentre(SP.Call("Player").OBJcV->getCentre() - SP.Call("Player").OBJcV->getVelocity());
+		SP2.Call("Player").OBJcV->setVelocity(Vector3(MovementSpeed*dt, 0, 0));
+		charRotate.SetToRotation(SP2.Call("Player").OBJcV->getFace(), 0, 1, 0);
+		SP2.Call("Player").OBJcV->setVelocity(charRotate * SP2.Call("Player").OBJcV->getVelocity());
+		SP2.Call("Player").OBJcV->setCentre(SP2.Call("Player").OBJcV->getCentre() - SP2.Call("Player").OBJcV->getVelocity());
 		Here.MainFace[1] = true;
 		Here.MoveKeysPressed++;
 	}
@@ -801,10 +822,10 @@ void Floor2::Update(double dt)
 	{
 		Mtx44 charRotate;
 
-		SP.Call("Player").OBJcV->setVelocity(Vector3(0, 0, MovementSpeed*dt));
-		charRotate.SetToRotation(SP.Call("Player").OBJcV->getFace(), 0, 1, 0);
-		SP.Call("Player").OBJcV->setVelocity(charRotate * SP.Call("Player").OBJcV->getVelocity());
-		SP.Call("Player").OBJcV->setCentre(SP.Call("Player").OBJcV->getCentre() - SP.Call("Player").OBJcV->getVelocity());
+		SP2.Call("Player").OBJcV->setVelocity(Vector3(0, 0, MovementSpeed*dt));
+		charRotate.SetToRotation(SP2.Call("Player").OBJcV->getFace(), 0, 1, 0);
+		SP2.Call("Player").OBJcV->setVelocity(charRotate * SP2.Call("Player").OBJcV->getVelocity());
+		SP2.Call("Player").OBJcV->setCentre(SP2.Call("Player").OBJcV->getCentre() - SP2.Call("Player").OBJcV->getVelocity());
 		Here.MainFace[2] = true;
 		Here.MoveKeysPressed++;
 	}
@@ -812,18 +833,18 @@ void Floor2::Update(double dt)
 	{
 		Mtx44 charRotate;
 
-		SP.Call("Player").OBJcV->setVelocity(Vector3(0, 0, MovementSpeed*dt));
-		charRotate.SetToRotation(SP.Call("Player").OBJcV->getFace(), 0, 1, 0);
-		SP.Call("Player").OBJcV->setVelocity(charRotate * SP.Call("Player").OBJcV->getVelocity());
-		SP.Call("Player").OBJcV->setCentre(SP.Call("Player").OBJcV->getCentre() + SP.Call("Player").OBJcV->getVelocity());
+		SP2.Call("Player").OBJcV->setVelocity(Vector3(0, 0, MovementSpeed*dt));
+		charRotate.SetToRotation(SP2.Call("Player").OBJcV->getFace(), 0, 1, 0);
+		SP2.Call("Player").OBJcV->setVelocity(charRotate * SP2.Call("Player").OBJcV->getVelocity());
+		SP2.Call("Player").OBJcV->setCentre(SP2.Call("Player").OBJcV->getCentre() + SP2.Call("Player").OBJcV->getVelocity());
 		Here.MainFace[3] = true;
 		Here.MoveKeysPressed++;
 	}
 
 	if (Application::IsKeyPressed(VK_RIGHT))
-		SP.Call("Player").OBJcV->setFace(SP.Call("Player").OBJcV->getFace() - 5.f);// TEST TEST TEST
+		SP2.Call("Player").OBJcV->setFace(SP2.Call("Player").OBJcV->getFace() - 5.f);// TEST TEST TEST
 	else if (Application::IsKeyPressed(VK_LEFT))
-		SP.Call("Player").OBJcV->setFace(SP.Call("Player").OBJcV->getFace() + 5.f);
+		SP2.Call("Player").OBJcV->setFace(SP2.Call("Player").OBJcV->getFace() + 5.f);
 
 	if (Application::IsKeyPressed('E'))
 	{
@@ -833,30 +854,30 @@ void Floor2::Update(double dt)
 	}
 	Task2Complete();
 
-	SP.CheckCollision();
-	SP.Gravity();
+	SP2.CheckCollision();
+	SP2.Gravity();
 	UpdateCrosshair();
 
 
-	if (SP.Call("FreezeBuff").OBJcV->getActivate() == false)
-		SP.Call("UFO").OBJcV->Chase(SP.Call("Player").OBJcV, 0.1f + SpeedUp, true);
+	if (SP2.Call("FreezeBuff").OBJcV->getActivate() == false)
+		SP2.Call("UFO").OBJcV->Chase(SP2.Call("Player").OBJcV, 0.1f + SpeedUp, true);
 
 	if (Floor2Timer <= Limiter)
 	{
 		Limiter -= 100;
 		SpeedUp += 0.01f;
-		SP.Call("FreezeBuff").OBJcV->setCOORD(randomX,0,randomZ);
+		SP2.Call("FreezeBuff").OBJcV->setCOORD(randomX,0,randomZ);
 	}
 
-	if (Floor2Timer > 1 && SP.Call("FreezeBuff").OBJcV->getActivate() == false)
+	if (Floor2Timer > 1 && SP2.Call("FreezeBuff").OBJcV->getActivate() == false)
 		Floor2Timer -= 1;
 	else
 		FreezeTimer += 0.5f;
 
 	if (FreezeTimer >= 50)
 	{
-		SP.Call("FreezeBuff").OBJcV->setCOORD(0,100,0);
-		SP.Call("FreezeBuff").OBJcV->setActivate(false);
+		SP2.Call("FreezeBuff").OBJcV->setCOORD(0,100,0);
+		SP2.Call("FreezeBuff").OBJcV->setActivate(false);
 		FreezeTimer = 0;
 	}
 
@@ -864,16 +885,16 @@ void Floor2::Update(double dt)
 	ss << Floor2Timer;
 	MyTimer = ss.str();
 
-	//if(SP.Call("UFO").OBJcV->getActivate() == true)
+	//if(SP2.Call("UFO").OBJcV->getActivate() == true)
 		//gameover
 	
 	//Check Whether The Items has Entered the Tray.
 	
 
-	if (SP.Call("Player").OBJcV->getFace() > 180)
-		SP.Call("Player").OBJcV->setFace(SP.Call("Player").OBJcV->getFace() - 360);
-	if (SP.Call("Player").OBJcV->getFace() < -180)
-		SP.Call("Player").OBJcV->setFace(SP.Call("Player").OBJcV->getFace() + 360);
+	if (SP2.Call("Player").OBJcV->getFace() > 180)
+		SP2.Call("Player").OBJcV->setFace(SP2.Call("Player").OBJcV->getFace() - 360);
+	if (SP2.Call("Player").OBJcV->getFace() < -180)
+		SP2.Call("Player").OBJcV->setFace(SP2.Call("Player").OBJcV->getFace() + 360);
 
 	float multiplier = 0.1f;
 	Vector3 view = 0.f;
@@ -913,10 +934,10 @@ void Floor2::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Crosshair").OBJcV->getCOORD(0),
-		SP.Call("Crosshair").OBJcV->getCOORD(1),
-		SP.Call("Crosshair").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Crosshair").OBJmesh, false);
+	modelStack.Translate(SP2.Call("Crosshair").OBJcV->getCOORD(0),
+		SP2.Call("Crosshair").OBJcV->getCOORD(1),
+		SP2.Call("Crosshair").OBJcV->getCOORD(2));
+	RenderMesh(SP2.Call("Crosshair").OBJmesh, false);
 	modelStack.PopMatrix();
 
 	RenderFloor2();
@@ -943,7 +964,7 @@ void Floor2::RenderTaskList()
 	RenderTextOnScreen(meshList[GEO_TEXT], MyTimer, Color(1,1,1),10,6.5f,5.5f);
 	modelStack.PopMatrix();
 
-	if (SP.Call("FreezeBuff").OBJcV->getActivate() == true)
+	if (SP2.Call("FreezeBuff").OBJcV->getActivate() == true)
 	{
 		modelStack.PushMatrix();
 		RenderTextOnScreen(meshList[GEO_TEXT], "Time Has Frozen!", Color(1, 1, 1), 10, 1, 5);
@@ -991,11 +1012,11 @@ void Floor2::RenderTaskList()
 void Floor2::RenderFloor2()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Player").OBJcV->getCOORD(0),
-		SP.Call("Player").OBJcV->getCOORD(1),
-		SP.Call("Player").OBJcV->getCOORD(2));
-	modelStack.Rotate(SP.Call("Player").OBJcV->getFace() + 90, 0, 1, 0);
-	RenderMesh(SP.Call("Player").OBJmesh, false);
+	modelStack.Translate(SP2.Call("Player").OBJcV->getCOORD(0),
+		SP2.Call("Player").OBJcV->getCOORD(1),
+		SP2.Call("Player").OBJcV->getCOORD(2));
+	modelStack.Rotate(SP2.Call("Player").OBJcV->getFace() + 90, 0, 1, 0);
+	RenderMesh(SP2.Call("Player").OBJmesh, false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -1010,11 +1031,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Packet1" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Packet1" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Packet1" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Packet1" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Packet1" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Packet1" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Packet1" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Packet1" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 	for (int j = 0; j < 5; j++)
@@ -1024,11 +1045,11 @@ void Floor2::RenderFloor2()
 		ss << j;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Packet2" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Packet2" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Packet2" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Packet2" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Packet2" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Packet2" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Packet2" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Packet2" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 	for (int k = 0; k < 5; k++)
@@ -1038,11 +1059,11 @@ void Floor2::RenderFloor2()
 		ss << k;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Packet3" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Packet3" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Packet3" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Packet3" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Packet3" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Packet3" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Packet3" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Packet3" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 	for (int i = 0; i < 5; i++)
@@ -1052,11 +1073,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Packet4" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Packet4" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Packet4" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Packet4" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Packet4" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Packet4" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Packet4" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Packet4" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 	/*******************************************************************************/
@@ -1068,11 +1089,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Sugar1" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Sugar1" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Sugar1" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Sugar1" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Sugar1" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Sugar1" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Sugar1" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Sugar1" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 	/*******************************************************************************/
@@ -1083,10 +1104,10 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box1" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box1" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box1" + AddToName).OBJcV->getCOORD(2));
-		RenderMesh(SP.Call("Box1" + AddToName).OBJmesh, false);
+		modelStack.Translate(SP2.Call("Box1" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box1" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box1" + AddToName).OBJcV->getCOORD(2));
+		RenderMesh(SP2.Call("Box1" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1097,10 +1118,10 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box2" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box2" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box2" + AddToName).OBJcV->getCOORD(2));
-		RenderMesh(SP.Call("Box2" + AddToName).OBJmesh, false);
+		modelStack.Translate(SP2.Call("Box2" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box2" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box2" + AddToName).OBJcV->getCOORD(2));
+		RenderMesh(SP2.Call("Box2" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1111,10 +1132,10 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box3" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box3" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box3" + AddToName).OBJcV->getCOORD(2));
-		RenderMesh(SP.Call("Box3" + AddToName).OBJmesh, false);
+		modelStack.Translate(SP2.Call("Box3" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box3" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box3" + AddToName).OBJcV->getCOORD(2));
+		RenderMesh(SP2.Call("Box3" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1125,19 +1146,19 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box4" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box4" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box4" + AddToName).OBJcV->getCOORD(2));
-		RenderMesh(SP.Call("Box4" + AddToName).OBJmesh, false);
+		modelStack.Translate(SP2.Call("Box4" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box4" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box4" + AddToName).OBJcV->getCOORD(2));
+		RenderMesh(SP2.Call("Box4" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
 	/*******************************************************************************/
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Spice2").OBJcV->getCOORD(0),
-		SP.Call("Spice2").OBJcV->getCOORD(1),
-		SP.Call("Spice2").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Spice2").OBJmesh, false);
+	modelStack.Translate(SP2.Call("Spice2").OBJcV->getCOORD(0),
+		SP2.Call("Spice2").OBJcV->getCOORD(1),
+		SP2.Call("Spice2").OBJcV->getCOORD(2));
+	RenderMesh(SP2.Call("Spice2").OBJmesh, false);
 	modelStack.PopMatrix();
 	/*******************************************************************************/
 	for (int i = 0; i < 5; i++)
@@ -1147,10 +1168,10 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Spice1" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Spice1" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Spice1" + AddToName).OBJcV->getCOORD(2));
-		RenderMesh(SP.Call("Spice1" + AddToName).OBJmesh, false);
+		modelStack.Translate(SP2.Call("Spice1" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Spice1" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Spice1" + AddToName).OBJcV->getCOORD(2));
+		RenderMesh(SP2.Call("Spice1" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 	/********************************************************************************/
@@ -1161,11 +1182,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box21" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box21" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box21" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box21" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box21" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box21" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Box21" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box21" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1176,11 +1197,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box22" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box22" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box22" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box22" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box22" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box22" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Box22" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box22" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1191,11 +1212,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box23" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box23" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box23" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box23" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box23" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box23" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Box23" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box23" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1206,11 +1227,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box24" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box24" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box24" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box24" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box24" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box24" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Box24" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box24" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1221,11 +1242,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box25" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box25" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box25" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box25" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box25" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box25" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Box25" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box25" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1236,11 +1257,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box26" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box26" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box26" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box26" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box26" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box26" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Box26" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box26" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1251,11 +1272,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box27" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box27" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box27" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box27" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box27" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box27" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Box27" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box27" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1266,11 +1287,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box28" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box28" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box28" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box28" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box28" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box28" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Box28" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box28" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1281,20 +1302,20 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box29" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box29" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box29" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box29" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box29" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box29" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Box29" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box29" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 	/*******************************************************************************/
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Nice").OBJcV->getCOORD(0),
-		SP.Call("Nice").OBJcV->getCOORD(1),
-		SP.Call("Nice").OBJcV->getCOORD(2));
+	modelStack.Translate(SP2.Call("Nice").OBJcV->getCOORD(0),
+		SP2.Call("Nice").OBJcV->getCOORD(1),
+		SP2.Call("Nice").OBJcV->getCOORD(2));
 	modelStack.Rotate(180, 0, 1, 0);
-	RenderMesh(SP.Call("Nice").OBJmesh, false);
+	RenderMesh(SP2.Call("Nice").OBJmesh, false);
 	modelStack.PopMatrix();
 	/*******************************************************************************/
 	for (int i = 0; i < 5; i++)
@@ -1304,11 +1325,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box31" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box31" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box31" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box31" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box31" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box31" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Box31" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box31" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1319,11 +1340,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box32" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box32" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box32" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box32" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box32" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box32" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Box32" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box32" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1334,11 +1355,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box33" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box33" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box33" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box33" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box33" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box33" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Box33" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box33" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1349,11 +1370,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box34" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box34" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box34" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box34" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box34" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box34" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-90, 0, 1, 0);
-		RenderMesh(SP.Call("Box34" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box34" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 	/*******************************************************************************/
@@ -1364,11 +1385,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box41" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box41" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box41" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box41" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box41" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box41" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-180, 0, 1, 0);
-		RenderMesh(SP.Call("Box41" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box41" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1379,11 +1400,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box42" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box42" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box42" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box42" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box42" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box42" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(-180, 0, 1, 0);
-		RenderMesh(SP.Call("Box42" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box42" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 	/*******************************************************************************/
@@ -1394,11 +1415,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box51" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box51" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box51" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box51" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box51" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box51" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(90, 0, 1, 0);
-		RenderMesh(SP.Call("Box51" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box51" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1409,11 +1430,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box52" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box52" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box52" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box52" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box52" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box52" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(90, 0, 1, 0);
-		RenderMesh(SP.Call("Box52" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box52" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1424,11 +1445,11 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box53" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box53" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box53" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box53" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box53" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box53" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(90, 0, 1, 0);
-		RenderMesh(SP.Call("Box53" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box53" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 
@@ -1439,27 +1460,27 @@ void Floor2::RenderFloor2()
 		ss << i;
 		AddToName = ss.str();
 		modelStack.PushMatrix();
-		modelStack.Translate(SP.Call("Box54" + AddToName).OBJcV->getCOORD(0),
-			SP.Call("Box54" + AddToName).OBJcV->getCOORD(1),
-			SP.Call("Box54" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Translate(SP2.Call("Box54" + AddToName).OBJcV->getCOORD(0),
+			SP2.Call("Box54" + AddToName).OBJcV->getCOORD(1),
+			SP2.Call("Box54" + AddToName).OBJcV->getCOORD(2));
 		modelStack.Rotate(90, 0, 1, 0);
-		RenderMesh(SP.Call("Box54" + AddToName).OBJmesh, false);
+		RenderMesh(SP2.Call("Box54" + AddToName).OBJmesh, false);
 		modelStack.PopMatrix();
 	}
 	/*******************************************************************************/
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("UFO").OBJcV->getCOORD(0),
-		SP.Call("UFO").OBJcV->getCOORD(1) + 6,
-		SP.Call("UFO").OBJcV->getCOORD(2));
+	modelStack.Translate(SP2.Call("UFO").OBJcV->getCOORD(0),
+		SP2.Call("UFO").OBJcV->getCOORD(1) + 6,
+		SP2.Call("UFO").OBJcV->getCOORD(2));
 	modelStack.Translate(0, 10, 0);
-	RenderMesh(SP.Call("UFO").OBJmesh, true);
+	RenderMesh(SP2.Call("UFO").OBJmesh, true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("FreezeBuff").OBJcV->getCOORD(0),
-		SP.Call("FreezeBuff").OBJcV->getCOORD(1),
-		SP.Call("FreezeBuff").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("FreezeBuff").OBJmesh, false);
+	modelStack.Translate(SP2.Call("FreezeBuff").OBJcV->getCOORD(0),
+		SP2.Call("FreezeBuff").OBJcV->getCOORD(1),
+		SP2.Call("FreezeBuff").OBJcV->getCOORD(2));
+	RenderMesh(SP2.Call("FreezeBuff").OBJmesh, false);
 	modelStack.PopMatrix();
 }
 
@@ -1477,7 +1498,7 @@ void Floor2::Task2Complete()
 				AddToName = ss.str();
 				if (TaskList[1] == true)
 				{
-					SP.Call("Teleporter").OBJcV->setCOORD(0,0,0);
+					SP2.Call("Teleporter").OBJcV->setCOORD(0,0,0);
 					break;
 				}
 			}

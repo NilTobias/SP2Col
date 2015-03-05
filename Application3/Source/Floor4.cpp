@@ -172,7 +172,7 @@ void Floor4::Init()
 	Blossom.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
 	Blossom.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
 	Blossom.OBJmesh->material.kShininess = 5.f;
-	SP.Add(Blossom);
+	SP4.Add(Blossom);
 
 	Object Bubbles;
 	Bubbles.Name = "Bubbles";
@@ -184,7 +184,7 @@ void Floor4::Init()
 	Bubbles.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
 	Bubbles.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
 	Bubbles.OBJmesh->material.kShininess = 5.f;
-	SP.Add(Bubbles);
+	SP4.Add(Bubbles);
 
 	Object Buttercup;
 	Buttercup.Name = "Buttercup";
@@ -196,7 +196,7 @@ void Floor4::Init()
 	Buttercup.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
 	Buttercup.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
 	Buttercup.OBJmesh->material.kShininess = 5.f;
-	SP.Add(Buttercup);
+	SP4.Add(Buttercup);
 
 	Object Platform;
 	Platform.Name = "Platform";
@@ -208,7 +208,7 @@ void Floor4::Init()
 	Platform.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
 	Platform.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
 	Platform.OBJmesh->material.kShininess = 5.f;
-	SP.Add(Platform);
+	SP4.Add(Platform);
 
 	Object Prison;
 	Prison.Name = "Prison";
@@ -220,7 +220,7 @@ void Floor4::Init()
 	Prison.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
 	Prison.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
 	Prison.OBJmesh->material.kShininess = 5.f;
-	SP.Add(Prison);
+	SP4.Add(Prison);
 
 	Object Sugar;
 	Sugar.Name = "Sugar";
@@ -232,7 +232,7 @@ void Floor4::Init()
 	Sugar.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
 	Sugar.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
 	Sugar.OBJmesh->material.kShininess = 5.f;
-	SP.Add(Sugar);
+	SP4.Add(Sugar);
 
 	Object Spice;
 	Spice.Name = "Spice";
@@ -244,7 +244,7 @@ void Floor4::Init()
 	Spice.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
 	Spice.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
 	Spice.OBJmesh->material.kShininess = 5.f;
-	SP.Add(Spice);
+	SP4.Add(Spice);
 
 	Object Nice;
 	Nice.Name = "Nice";
@@ -256,7 +256,7 @@ void Floor4::Init()
 	Nice.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
 	Nice.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
 	Nice.OBJmesh->material.kShininess = 5.f;
-	SP.Add(Nice);
+	SP4.Add(Nice);
 
 
 	Object ChemicalX;
@@ -270,7 +270,7 @@ void Floor4::Init()
 	ChemicalX.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
 	ChemicalX.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
 	ChemicalX.OBJmesh->material.kShininess = 5.f;
-	SP.Add(ChemicalX);
+	SP4.Add(ChemicalX);
 	
 	
 	//Initialize camera settings
@@ -375,78 +375,78 @@ void Floor4::Render()
 
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Blossom").OBJcV->getCOORD(0),
-		SP.Call("Blossom").OBJcV->getCOORD(1),
-		SP.Call("Blossom").OBJcV->getCOORD(2));
+	modelStack.Translate(SP4.Call("Blossom").OBJcV->getCOORD(0),
+		SP4.Call("Blossom").OBJcV->getCOORD(1),
+		SP4.Call("Blossom").OBJcV->getCOORD(2));
 	modelStack.Translate(0,rise,0);
-	modelStack.Rotate(SP.Call("Blossom").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("Blossom").OBJmesh, true);
+	modelStack.Rotate(SP4.Call("Blossom").OBJcV->getFace() - 90, 0, 1, 0);
+	RenderMesh(SP4.Call("Blossom").OBJmesh, true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Bubbles").OBJcV->getCOORD(0),
-		SP.Call("Bubbles").OBJcV->getCOORD(1),
-		SP.Call("Bubbles").OBJcV->getCOORD(2));
+	modelStack.Translate(SP4.Call("Bubbles").OBJcV->getCOORD(0),
+		SP4.Call("Bubbles").OBJcV->getCOORD(1),
+		SP4.Call("Bubbles").OBJcV->getCOORD(2));
 	modelStack.Translate(0,rise,0);
-	modelStack.Rotate(SP.Call("Bubbles").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("Bubbles").OBJmesh, true);
+	modelStack.Rotate(SP4.Call("Bubbles").OBJcV->getFace() - 90, 0, 1, 0);
+	RenderMesh(SP4.Call("Bubbles").OBJmesh, true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Buttercup").OBJcV->getCOORD(0),
-		SP.Call("Buttercup").OBJcV->getCOORD(1),
-		SP.Call("Buttercup").OBJcV->getCOORD(2));
+	modelStack.Translate(SP4.Call("Buttercup").OBJcV->getCOORD(0),
+		SP4.Call("Buttercup").OBJcV->getCOORD(1),
+		SP4.Call("Buttercup").OBJcV->getCOORD(2));
 	modelStack.Translate(0,rise,0);
-	modelStack.Rotate(SP.Call("Buttercup").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("Buttercup").OBJmesh, true);
+	modelStack.Rotate(SP4.Call("Buttercup").OBJcV->getFace() - 90, 0, 1, 0);
+	RenderMesh(SP4.Call("Buttercup").OBJmesh, true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Platform").OBJcV->getCOORD(0),
-		SP.Call("Platform").OBJcV->getCOORD(1),
-		SP.Call("Platform").OBJcV->getCOORD(2));
+	modelStack.Translate(SP4.Call("Platform").OBJcV->getCOORD(0),
+		SP4.Call("Platform").OBJcV->getCOORD(1),
+		SP4.Call("Platform").OBJcV->getCOORD(2));
 	modelStack.Translate(0,rise,0);
-	RenderMesh(SP.Call("Platform").OBJmesh, true);
+	RenderMesh(SP4.Call("Platform").OBJmesh, true);
 	modelStack.PopMatrix();
 
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Prison").OBJcV->getCOORD(0),
-		SP.Call("Prison").OBJcV->getCOORD(1),
-		SP.Call("Prison").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Prison").OBJmesh, true);
+	modelStack.Translate(SP4.Call("Prison").OBJcV->getCOORD(0),
+		SP4.Call("Prison").OBJcV->getCOORD(1),
+		SP4.Call("Prison").OBJcV->getCOORD(2));
+	RenderMesh(SP4.Call("Prison").OBJmesh, true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Sugar").OBJcV->getCOORD(0),
-		SP.Call("Sugar").OBJcV->getCOORD(1),
-		SP.Call("Sugar").OBJcV->getCOORD(2));
-	modelStack.Rotate(SP.Call("Sugar").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("Sugar").OBJmesh, true);
+	modelStack.Translate(SP4.Call("Sugar").OBJcV->getCOORD(0),
+		SP4.Call("Sugar").OBJcV->getCOORD(1),
+		SP4.Call("Sugar").OBJcV->getCOORD(2));
+	modelStack.Rotate(SP4.Call("Sugar").OBJcV->getFace() - 90, 0, 1, 0);
+	RenderMesh(SP4.Call("Sugar").OBJmesh, true);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Spice").OBJcV->getCOORD(0),
-		SP.Call("Spice").OBJcV->getCOORD(1),
-		SP.Call("Spice").OBJcV->getCOORD(2));
-	modelStack.Rotate(SP.Call("Spice").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("Spice").OBJmesh, true);
+	modelStack.Translate(SP4.Call("Spice").OBJcV->getCOORD(0),
+		SP4.Call("Spice").OBJcV->getCOORD(1),
+		SP4.Call("Spice").OBJcV->getCOORD(2));
+	modelStack.Rotate(SP4.Call("Spice").OBJcV->getFace() - 90, 0, 1, 0);
+	RenderMesh(SP4.Call("Spice").OBJmesh, true);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Nice").OBJcV->getCOORD(0),
-		SP.Call("Nice").OBJcV->getCOORD(1),
-		SP.Call("Nice").OBJcV->getCOORD(2));
-	modelStack.Rotate(SP.Call("Nice").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("Nice").OBJmesh, true);
+	modelStack.Translate(SP4.Call("Nice").OBJcV->getCOORD(0),
+		SP4.Call("Nice").OBJcV->getCOORD(1),
+		SP4.Call("Nice").OBJcV->getCOORD(2));
+	modelStack.Rotate(SP4.Call("Nice").OBJcV->getFace() - 90, 0, 1, 0);
+	RenderMesh(SP4.Call("Nice").OBJmesh, true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("ChemicalX").OBJcV->getCOORD(0),
-		SP.Call("ChemicalX").OBJcV->getCOORD(1),
-		SP.Call("ChemicalX").OBJcV->getCOORD(2));
-	modelStack.Rotate(SP.Call("ChemicalX").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("ChemicalX").OBJmesh, true);
+	modelStack.Translate(SP4.Call("ChemicalX").OBJcV->getCOORD(0),
+		SP4.Call("ChemicalX").OBJcV->getCOORD(1),
+		SP4.Call("ChemicalX").OBJcV->getCOORD(2));
+	modelStack.Rotate(SP4.Call("ChemicalX").OBJcV->getFace() - 90, 0, 1, 0);
+	RenderMesh(SP4.Call("ChemicalX").OBJmesh, true);
 	modelStack.PopMatrix();
 
 	if(test == true)

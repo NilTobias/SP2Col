@@ -122,24 +122,6 @@ void Floor1::Init()
 	meshList[GEO_MODEL1] = MeshBuilder::GenerateOBJ("model1", "OBJ//chair.obj");
 	meshList[GEO_MODEL1]->textureID = LoadTGA("Image//chair.tga");
 
-	meshList[GEO_MODEL4] = MeshBuilder::GenerateOBJ("model1", "OBJ//doorman.obj");
-	meshList[GEO_MODEL4]->textureID = LoadTGA("Image//doorman.tga");
-	cV[GEO_MODEL4] = new collisionSphere(2.f);
-	Player = ((collisionSphere*)(cV[GEO_MODEL4]));
-	Player->setCOORD(0, 0, 0);
-	Player->setCOORD(1, 1, 1);
-
-	/*meshList[THIRDFLOOR] = MeshBuilder::GenerateOBJ("ThirdFloor", "OBJ//ThirdFloor.obj");
-	meshList[THIRDFLOOR]->textureID = LoadTGA("Image//ThirdFloor.tga");
-	cV[THIRDFLOOR] = new collisionSphere(25.f);
-	((collisionSphere*)(cV[THIRDFLOOR]))->setCOORD(0, 0, 0);*/
-
-	meshList[TELEPORTER] = MeshBuilder::GenerateOBJ("elevator", "OBJ//Elevator.obj");
-	meshList[TELEPORTER]->textureID = LoadTGA("Image//Elevator.tga");
-	cV[TELEPORTER] = new collisionSphere(0.5f);// TEST TEST TEST
-	Teleporter = ((collisionSphere*)cV[TELEPORTER]);
-	Teleporter->setCOORD(10, 0, 0);
-
 	meshList[GEO_MODEL6] = MeshBuilder::GenerateOBJ("model1", "OBJ//winebottle.obj");
 	meshList[GEO_MODEL6]->textureID = LoadTGA("Image//winebottle.tga");
 	meshList[GEO_MODEL6]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);

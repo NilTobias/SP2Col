@@ -28,6 +28,7 @@ private:
 	float MovementSpeed;
 	std::string warningTest;
 	bool JetPackActivated;
+	SceneAssets SP4;
 
 	bool test;
 };

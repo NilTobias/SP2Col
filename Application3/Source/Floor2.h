@@ -1,5 +1,5 @@
-#ifndef FLOOR_H
-#define FLOOR_H
+#ifndef FLOOR_2_H
+#define FLOOR_2_H
 
 #include "Scene.h"
 
@@ -32,9 +32,8 @@ private:
 	float Limiter;
 	float LSPEED;
 	float MovementSpeed;
-	std::string warningTest;
-	bool JetPackActivated;
 	std::string MyTimer;
+	SceneAssets SP2;
 	
 	
 	bool Teleport;

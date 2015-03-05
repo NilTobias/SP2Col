@@ -23,8 +23,6 @@ using namespace irrklang;
 class Scene
 {
 	public:
-
-		SceneAssets SP;
 		static bool FloorLevel;
 
 	enum UNIFORM_TYPE
