@@ -1,7 +1,86 @@
 #include "Scene.h"
 #include "GL\glew.h"
+#include "Time.h"
+#include "shader.hpp"
+#include "Mtx44.h"
+#include "Application.h"
+#include "MeshBuilder.h"
+#include "LoadTGA.h"
+#include "stdint.h"
+#include <iostream>
+#include <sstream>
+#include "collisionSphere.h"
+#include "Object.h"
 
 
+Scene::Scene()
+{
+	Object Player;
+	Player.Name = "Player";
+	Player.OBJcV = new collisionSphere(2.f, Vector3(-10, 0, 0));
+	Player.OBJcV->setLiving(true);
+	Player.OBJmesh = MeshBuilder::GenerateOBJ("Player", "OBJ//doorman.obj");
+	Player.OBJmesh->textureID = LoadTGA("Image//doorman.tga");
+	SP.Add(Player);
+
+
+	Object Teleporter;
+	Teleporter.Name = "Teleporter";
+	Teleporter.Gravity = false;
+	Teleporter.OBJcV = new collisionSphere(1.5f, Vector3(0, 0, 10));
+	Teleporter.OBJcV->setEffect(2);
+	Teleporter.OBJmesh = MeshBuilder::GenerateOBJ("Tele", "OBJ//Elevator.obj");
+	Teleporter.OBJmesh->textureID = LoadTGA("Image//Elevator.tga");
+	SP.Add(Teleporter);
+
+	Object Crosshair;
+	Crosshair.Name = "Crosshair";
+	Crosshair.Gravity = false;
+	Crosshair.OBJcV = new collisionSphere(0.1f, Vector3(0, 0, 0));
+	Crosshair.OBJcV->setCursor(true);
+	Crosshair.OBJmesh = MeshBuilder::GenerateQuad("Crosshair", Color(1, 1, 1), 1.f);
+	Crosshair.OBJmesh->textureID = LoadTGA("Image//Hand.tga");
+	SP.Add(Crosshair);
+}
+
+bool Scene::FloorLevel = false;
+
+void Scene::Teleport()
+{
+	if (SP.Call("Teleporter").OBJcV->getActivate())
+	{
+		FloorLevel = true;
+	}
+}
+
+void Scene::UpdateCrosshair()
+{
+	Vector3 Temp2(2, 0, 0);
+	Mtx44 charRotate;
+	charRotate.SetToRotation(SP.Call("Player").OBJcV->getFace(), 0, 1, 0);
+	Temp2 = charRotate * Temp2;
+	Temp2 = SP.Call("Player").OBJcV->getCentre() + Temp2;
+	SP.Call("Crosshair").OBJcV->setCentre(Vector3(Temp2.x, SP.Call("Crosshair").OBJcV->getCOORD(1), Temp2.z));
+
+	if (Application::IsKeyPressed(VK_UP))
+	{
+		if (SP.Call("Crosshair").OBJcV->getCOORD(1) < 8)
+		{
+			SP.Call("Crosshair").OBJcV->setCOORD(SP.Call("Crosshair").OBJcV->getCOORD(0),
+				SP.Call("Crosshair").OBJcV->getCOORD(1) + 0.1f,
+				SP.Call("Crosshair").OBJcV->getCOORD(2));
+		}
+	}
+	if (Application::IsKeyPressed(VK_DOWN))
+	{
+		if (SP.Call("Crosshair").OBJcV->getCOORD(1) > 0)
+		{
+			SP.Call("Crosshair").OBJcV->setCOORD(SP.Call("Crosshair").OBJcV->getCOORD(0),
+				SP.Call("Crosshair").OBJcV->getCOORD(1) - 0.1f,
+				SP.Call("Crosshair").OBJcV->getCOORD(2));
+		}
+	}
+}
 
 
 
@@ -77,10 +156,10 @@ void Scene::RenderText(Mesh* mesh, std::string text, Color color)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
 	glEnable(GL_DEPTH_TEST);
-}	
+}
 
 
-	void Scene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void Scene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -99,6 +178,7 @@ void Scene::RenderText(Mesh* mesh, std::string text, Color color)
 	modelStack.Translate(x, y, 0);
 
 	glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
+	glUniform3fv(m_parameters[U_TEXT_COLOR], 1, &color.r);
 	glUniform1i(m_parameters[U_LIGHTENABLED], 0);
 	glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
 	glActiveTexture(GL_TEXTURE0);

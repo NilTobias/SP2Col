@@ -15,7 +15,7 @@ struct Object{
 	{
 		CollisionTrigger = false;
 		ReverseCollision = false;
-		Gravity = true;
+		Gravity = false;
 	}
 };
 

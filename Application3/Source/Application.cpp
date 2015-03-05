@@ -14,6 +14,7 @@
 #include "Floor4.h"
 #include "Floor3.h"
 #include "Floor2.h"
+#include "Floor1.h"
 
 
 GLFWwindow* m_window;
@@ -110,7 +111,10 @@ void Application::Init()
 		//return -1;
 	}
 	
-	Scene *scene = new Floor2();
+	Scene *scene = new Floor1();
+	loader.push_back(scene);
+
+	scene = new Floor2();
 	loader.push_back(scene);
 
 	scene = new Floor3();

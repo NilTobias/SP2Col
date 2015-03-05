@@ -10,11 +10,12 @@ collisionVolume::collisionVolume(Vector3 cC, int eff)
 	Face = 0;
 	setEffect(eff);
 	setActivate(false);
-	timer = 0;
 	maxVelo = false;
 	Living = false;
 	RiseObject = 0;
 	Altitude = 0;
+	isFixed = false;
+	isCursor = false;
 }
 
 collisionVolume::collisionVolume()
@@ -24,11 +25,12 @@ collisionVolume::collisionVolume()
 	Face = 0;
 	setEffect(0);
 	setActivate(false);
-	timer = 0;
 	maxVelo = false;
 	Living = false;
 	RiseObject = 0;
 	Altitude = 0;
+	isFixed = false;
+	isCursor = false;
 }
 
 collisionVolume::~collisionVolume()
@@ -94,7 +96,7 @@ void collisionVolume::setFace(float f)
 	Face = f;
 }
 
-void collisionVolume::Chase(collisionVolume* Target, float Speed, float flying)
+void collisionVolume::Chase(collisionVolume* Target, float Speed, bool flying)
 {
 	Vector3 ToTarget;
 
@@ -161,13 +163,13 @@ void collisionVolume::setActivate(bool Act)
 	Activate = Act;
 }
 
-float collisionVolume::getTimer(void)const
+bool collisionVolume::getFixed(void)const
 {
-	return timer;
+	return isFixed;
 }
-void collisionVolume::setTimer(float time)
+void collisionVolume::setFixed(bool f)
 {
-	timer = time;
+	isFixed = f;
 }
 
 float collisionVolume::getAlt(void)const
@@ -179,12 +181,21 @@ void collisionVolume::setAlt(float Alt)
 	Altitude = Alt;
 }
 
+bool collisionVolume::getCursor(void)const
+{
+	return isCursor;
+}
+void collisionVolume::setCursor(bool cur)
+{
+	isCursor = cur;
+}
+
 void collisionVolume::CollisionEffect(collisionVolume *Target)
 {
 	//Pick Up
-	if (getEffect() == 0|| getEffect(false) == 0)
+	if (getEffect() == 0)
 	{
-		if (AllowPickUp)
+		if (AllowPickUp && Target->getCursor())
 		{
 			setCentre(Target->getCentre());
 			Target->setAlt(0);
@@ -193,7 +204,7 @@ void collisionVolume::CollisionEffect(collisionVolume *Target)
 
 
 	//Stationary Bounds(Walls/Shelves)
-	if (getEffect() == 1|| getEffect(false) == 1)
+	if (getEffect() == 1)
 	{
 		if (Target->getLiving())
 		{
@@ -232,17 +243,14 @@ void collisionVolume::CollisionEffect(collisionVolume *Target)
 		}
 	}
 
-
 	//Activation
-	if (getEffect() == 2|| getEffect(false) == 2)
+	if (getEffect() == 2 || getEffect(false))
 	{
 		if (AllowActivate)
+		{ 
 			setActivate(true);
+			Target->setActivate(true);
+		}
 	}
-
-
-	//Add Vector
-	if (getEffect() == 3|| getEffect(false) == 3)
-		Target->setCentre(Target->getCentre() + getVelocity());
 }
 

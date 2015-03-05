@@ -31,15 +31,15 @@ void SceneAssets::Add(Object target)
 
 Object SceneAssets::Call(std::string ObjectName)
 {
-		current = head;
-		while (current != NULL)
+	current = head;
+	while (current != NULL)
+	{
+		if (current->Data.Name == ObjectName)
 		{
-			if (current->Data.Name == ObjectName)
-			{
-				return current->Data;
-			}
-			current = current->next;
+			return current->Data;
 		}
+		current = current->next;
+	}
 }
 
 bool SceneAssets::Delete(std::string toDelete)
@@ -109,9 +109,11 @@ void SceneAssets::CheckCollision()
 	if (head != NULL)
 	{
 		current = head;
-		
+
 		while (current != NULL)
 		{
+			if (current->Data.OBJcV->getFixed() == false)
+			{
 				if (current->Data.OBJcV->getCollisionType() == 0)//It is a Sphere
 				{
 					TempSphere = ((collisionSphere*)current->Data.OBJcV);
@@ -126,7 +128,7 @@ void SceneAssets::CheckCollision()
 
 				while (check != NULL)
 				{
-					
+
 					if (check->Data.OBJcV->getCollisionType() == 0)//It is a Sphere
 					{
 						TempSphere2 = ((collisionSphere*)check->Data.OBJcV);
@@ -165,12 +167,13 @@ void SceneAssets::CheckCollision()
 						{
 							if (TempSphere->checkCollision(TempBox2))
 								check->Data.OBJcV->CollisionEffect(current->Data.OBJcV);
-						}	
+						}
 					}
 					check = check->next;
-					
+
 				}
-			current = current->next;
+			}
+				current = current->next;
 		}
 	}
 }
@@ -184,14 +187,14 @@ void SceneAssets::Gravity(float force)
 		{
 			if (check->Data.OBJcV->getCOORD(1) > check->Data.OBJcV->getAlt())
 			{
-			Vector3 thisVector(1, 0, 0);
-			Vector3 thisOtherVector(0, 0, 1);
+				Vector3 thisVector(1, 0, 0);
+				Vector3 thisOtherVector(0, 0, 1);
 
-			Vector3 Gravity = thisVector.Cross(thisOtherVector);
-			Gravity.Normalize();
-			Gravity *= force;
-			float NewAltitude = check->Data.OBJcV->getCOORD(1) - Gravity.Length();
-			check->Data.OBJcV->setCentre(Vector3(check->Data.OBJcV->getCOORD(0),NewAltitude, check->Data.OBJcV->getCOORD(2)));
+				Vector3 Gravity = thisVector.Cross(thisOtherVector);
+				Gravity.Normalize();
+				Gravity *= force;
+				float NewAltitude = check->Data.OBJcV->getCOORD(1) - Gravity.Length();
+				check->Data.OBJcV->setCentre(Vector3(check->Data.OBJcV->getCOORD(0), NewAltitude, check->Data.OBJcV->getCOORD(2)));
 			}
 		}
 		check = check->next;

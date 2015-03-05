@@ -90,7 +90,10 @@
     <ClInclude Include="Source\CNode.h" />
     <ClInclude Include="Source\collisionSphere.h" />
     <ClInclude Include="Source\collisionVolume.h" />
+    <ClInclude Include="Source\Floor1.h" />
     <ClInclude Include="Source\Floor2.h" />
+    <ClInclude Include="Source\Floor3.h" />
+    <ClInclude Include="Source\Floor4.h" />
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\LoadOBJ.h" />
     <ClInclude Include="Source\LoadTGA.h" />
@@ -100,7 +103,6 @@
     <ClInclude Include="Source\Object.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneAssets.h" />
-    <ClInclude Include="Source\SceneText.h" />
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
@@ -113,7 +115,10 @@
     <ClCompile Include="Source\CNode.cpp" />
     <ClCompile Include="Source\collisionSphere.cpp" />
     <ClCompile Include="Source\collisionVolume.cpp" />
+    <ClCompile Include="Source\Floor1.cpp" />
     <ClCompile Include="Source\Floor2.cpp" />
+    <ClCompile Include="Source\Floor3.cpp" />
+    <ClCompile Include="Source\Floor4.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
     <ClCompile Include="Source\LoadTGA.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -121,7 +126,6 @@
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\SceneAssets.cpp" />
-    <ClCompile Include="Source\SceneText.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>

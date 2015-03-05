@@ -49,6 +49,7 @@ void Floor3::Init()
 	lightOn = true;
 	JetPackActivated = true;
 	MovementSpeed = 10;
+	SP.Call("Teleporter").OBJcV->setActivate(false);
 
 	//Load vertex and fragment shaders
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
@@ -136,39 +137,11 @@ void Floor3::Init()
 	meshList[GEO_MODEL1] = MeshBuilder::GenerateOBJ("model1", "OBJ//chair.obj");
 	meshList[GEO_MODEL1]->textureID = LoadTGA("Image//chair.tga");
 
-	meshList[GEO_MODEL4] = MeshBuilder::GenerateOBJ("model1", "OBJ//doorman.obj");
-	meshList[GEO_MODEL4]->textureID = LoadTGA("Image//doorman.tga");
-	cV[GEO_MODEL4] = new collisionSphere(2.f);
-	Player = ((collisionSphere*)(cV[GEO_MODEL4]));
-	Player->setCOORD(0, 0, 0);
-	Player->setCOORD(1, 1, 1);
-
-	meshList[THIRDFLOOR] = MeshBuilder::GenerateOBJ("ThirdFloor", "OBJ//ThirdFloor.obj");
-	meshList[THIRDFLOOR]->textureID = LoadTGA("Image//ThirdFloor.tga");
-	cV[THIRDFLOOR] = new collisionSphere(25.f);
-	((collisionSphere*)(cV[THIRDFLOOR]))->setCOORD(0, 0, 0);
-
-	meshList[TELEPORTER] = MeshBuilder::GenerateOBJ("elevator", "OBJ//Elevator.obj");
-	meshList[TELEPORTER]->textureID = LoadTGA("Image//Elevator.tga");
-	cV[TELEPORTER] = new collisionSphere(0.5f);// TEST TEST TEST
-	Teleporter = ((collisionSphere*)cV[TELEPORTER]);
-	Teleporter->setCOORD(10, 0, 0);
-
-	meshList[GEO_MODEL6] = MeshBuilder::GenerateOBJ("model1", "OBJ//winebottle.obj");
-	meshList[GEO_MODEL6]->textureID = LoadTGA("Image//winebottle.tga");
-
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//ExportedFont.tga");
 
 
-	Object Player;
-	Player.Name = "Player";
-	Player.CollisionTrigger = true;
-	Player.OBJcV = new collisionSphere(2.f, Vector3(-10, 0, 0));
-	Player.OBJcV->setLiving(true);
-	Player.OBJmesh = MeshBuilder::GenerateOBJ("Player", "OBJ//doorman.obj");
-	Player.OBJmesh->textureID = LoadTGA("Image//doorman.tga");
-	SP.Add(Player);
+	
 
 	Object Can;
 	Can.Name = "Bowser";
@@ -179,25 +152,6 @@ void Floor3::Init()
 	Can.OBJmesh->textureID = LoadTGA("Image//CanTexture.tga");
 	SP.Add(Can);
 
-	Object Wine;
-	Wine.Name = "Wine";
-	Wine.OBJcV = new collisionSphere(2.f, Vector3(15, 0, 0));
-	Wine.OBJcV->setEffect(1);
-	Wine.OBJcV->setVelocity(Vector3(0, 5, 0));
-	Wine.OBJmesh = MeshBuilder::GenerateOBJ("Wine", "OBJ//winebottle.obj");
-	Wine.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
-	SP.Add(Wine);
-
-	Object Random;
-	Random.Name = "Random";//IMPORTANT
-	Random.OBJcV = new AABB(0.1f, 0.1f, 0.1f, Vector3(0,0,0)); //IMPORTANT
-	Random.OBJcV->setEffect(1); //IMPORTANT
-	Random.OBJcV->setVelocity(Vector3(0, 5, 0));
-	Random.OBJmesh = MeshBuilder::GenerateOBJ("Random", "OBJ//winebottle.obj");
-	Random.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
-	SP.Add(Random);
-
-
 	Object Floor;
 	Floor.Name = "ThirdLevel";//IMPORTANT
 	Floor.ReverseCollision = true;
@@ -207,25 +161,6 @@ void Floor3::Init()
 	Floor.OBJmesh = MeshBuilder::GenerateOBJ("ThirdLevel", "OBJ//Floor3.obj");
 	Floor.OBJmesh->textureID = LoadTGA("Image//Floor3.tga");
 	SP.Add(Floor);
-
-	Object ChemicalX;
-	ChemicalX.Name = "ChemicalX";
-	ChemicalX.Gravity = false;
-	ChemicalX.OBJcV = new collisionSphere(1.f, Vector3(41, 5, 13));
-	ChemicalX.OBJcV->setEffect(0);
-	ChemicalX.OBJmesh = MeshBuilder::GenerateOBJ("ChemicalX", "OBJ//ChemicalX.obj");
-	ChemicalX.OBJmesh->textureID = LoadTGA("Image//Flask.tga");
-	SP.Add(ChemicalX);
-
-	Object Teleporter;
-	Teleporter.Name = "Teleporter";
-	Teleporter.Gravity = false;
-	Teleporter.OBJcV = new collisionSphere(1.5f, Vector3(0,0,0));
-	//Teleporter.OBJmesh = MeshBuilder::GenerateOBJ("Tele", "OBJ//Teleporter.obj");
-	//Teleporter.OBJmesh->textureID = LoadTGA("Image//Teleporter.tga");
-	SP.Add(Teleporter);
-	
-
 
 	//Initialize camera settings
 	camera.Init(Vector3(0, 25, 20), Vector3(0, 0, 0), Vector3(0, 1, 0));
@@ -353,10 +288,16 @@ void Floor3::Update(double dt)
 		Here.AllowActivate = true;
 	}
 
+	if (SP.Call("Teleporter").OBJcV->getActivate())
+	{
+		FloorLevel = true;
+	}
+
 	SP.CheckCollision();
 	SP.Gravity();
+	UpdateCrosshair();
 
-	SP.Call("Bowser").OBJcV->Chase(SP.Call("Player").OBJcV, 0.1, true);
+	//SP.Call("Bowser").OBJcV->Chase(SP.Call("Player").OBJcV, 0.1, true);
 
 	if (SP.Call("Player").OBJcV->getFace() > 180)
 		SP.Call("Player").OBJcV->setFace(SP.Call("Player").OBJcV->getFace() - 360);
@@ -429,20 +370,6 @@ void Floor3::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Wine").OBJcV->getCOORD(0),
-		SP.Call("Wine").OBJcV->getCOORD(1),
-		SP.Call("Wine").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Wine").OBJmesh, false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Random").OBJcV->getCOORD(0),
-		SP.Call("Random").OBJcV->getCOORD(1),
-		SP.Call("Random").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Random").OBJmesh, false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
 	modelStack.Translate(SP.Call("ThirdLevel").OBJcV->getCOORD(0),
 		SP.Call("ThirdLevel").OBJcV->getCOORD(1),
 		SP.Call("ThirdLevel").OBJcV->getCOORD(2));
@@ -450,10 +377,17 @@ void Floor3::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("ChemicalX").OBJcV->getCOORD(0),
-		SP.Call("ChemicalX").OBJcV->getCOORD(1),
-		SP.Call("ChemicalX").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("ChemicalX").OBJmesh, false);
+	modelStack.Translate(SP.Call("Crosshair").OBJcV->getCOORD(0),
+		SP.Call("Crosshair").OBJcV->getCOORD(1),
+		SP.Call("Crosshair").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Crosshair").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Teleporter").OBJcV->getCOORD(0),
+		SP.Call("Teleporter").OBJcV->getCOORD(1),
+		SP.Call("Teleporter").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Teleporter").OBJmesh, false);
 	modelStack.PopMatrix();
 }
 

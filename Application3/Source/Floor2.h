@@ -21,19 +21,24 @@ private:
 	
 	void Hold();
 	int sound();
+	void RenderTaskList();
+	void RenderFloor2();
 	
 
-	
-
+	float SpeedUp;
+	float Floor2Timer;
+	float FreezeTimer;
+	float Limiter;
 	float LSPEED;
-	float rotateCharacter, rotateTele;
-	float engineHeat;
 	float MovementSpeed;
 	std::string warningTest;
 	bool JetPackActivated;
+	std::string MyTimer;
+	
 	
 	bool Teleport;
 	bool test;
+	bool TaskList[3];
 
 	
 };

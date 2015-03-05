@@ -53,9 +53,6 @@
     <ClInclude Include="Source\LoadOBJ.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneText.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\collisionSphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -75,6 +72,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Floor2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Floor3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Floor4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Floor1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -109,9 +115,6 @@
     <ClCompile Include="Source\LoadOBJ.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneText.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\collisionSphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -131,6 +134,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Floor2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Floor3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Floor4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Floor1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

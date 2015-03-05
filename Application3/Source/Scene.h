@@ -25,6 +25,7 @@ class Scene
 	public:
 
 		SceneAssets SP;
+		static bool FloorLevel;
 
 	enum UNIFORM_TYPE
 	{
@@ -77,7 +78,7 @@ class Scene
 	};
 
 
-	Scene() {}
+	Scene();
 	~Scene() {}
 
 	virtual void Init() = 0;
@@ -103,6 +104,8 @@ class Scene
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 	void RenderImageOnScreen(Mesh* mesh, float size, float x, float y);
 	void RenderSkybox();
+	void Teleport();
+	void UpdateCrosshair();
 
 
 	Camera2 camera;

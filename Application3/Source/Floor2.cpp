@@ -82,16 +82,20 @@ void Floor2::Init()
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
-	rotateCharacter = 0;
-	rotateTele = 0;
-	Teleport = false;
+	SpeedUp = 0;
+	Limiter = 1900;
+	Floor2Timer = 2000;
+	FreezeTimer = 0;
 	isFixed = false;
-	engineHeat = 0;
 	LSPEED = 20.f;
 	lightOn = true;
-	JetPackActivated = true;
 	MovementSpeed = 10;
 	test = false;
+	TaskList[0] = false;
+	TaskList[1] = false;
+	TaskList[2] = false;
+
+
 	//Load vertex and fragment shaders
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
 	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
@@ -172,77 +176,22 @@ void Floor2::Init()
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//right.tga");
 
-	meshList[GEO_NOOB] = MeshBuilder::GenerateQuad("noob", Color(1, 1, 1), 1.f);
-	meshList[GEO_NOOB]->textureID = LoadTGA("Image//noob.tga");
-
-	meshList[GEO_MODEL1] = MeshBuilder::GenerateOBJ("model1", "OBJ//chair.obj");
-	meshList[GEO_MODEL1]->textureID = LoadTGA("Image//chair.tga");
-
-	meshList[GEO_MODEL4] = MeshBuilder::GenerateOBJ("model1", "OBJ//doorman.obj");
-	meshList[GEO_MODEL4]->textureID = LoadTGA("Image//doorman.tga");
-	cV[GEO_MODEL4] = new collisionSphere(2.f);
-	Player = ((collisionSphere*)(cV[GEO_MODEL4]));
-	Player->setCOORD(0, 0, 0);
-	Player->setCOORD(1, 1, 1);
-
-	meshList[THIRDFLOOR] = MeshBuilder::GenerateOBJ("ThirdFloor", "OBJ//ThirdFloor.obj");
-	meshList[THIRDFLOOR]->textureID = LoadTGA("Image//ThirdFloor.tga");
-	cV[THIRDFLOOR] = new collisionSphere(25.f);
-	((collisionSphere*)(cV[THIRDFLOOR]))->setCOORD(0, 0, 0);
-
 	meshList[FLOOR2] = MeshBuilder::GenerateOBJ("SecondFloor", "OBJ//storey2.obj");
 	meshList[FLOOR2]->textureID = LoadTGA("Image//storey2.tga");
-
-	meshList[TELEPORTER] = MeshBuilder::GenerateOBJ("elevator", "OBJ//Elevator.obj");
-	meshList[TELEPORTER]->textureID = LoadTGA("Image//Elevator.tga");
-	cV[TELEPORTER] = new collisionSphere(0.5f);// TEST TEST TEST
-	Teleporter = ((collisionSphere*)cV[TELEPORTER]);
-	Teleporter->setCOORD(10, 0, 0);
-
-	meshList[GEO_MODEL6] = MeshBuilder::GenerateOBJ("model1", "OBJ//winebottle.obj");
-	meshList[GEO_MODEL6]->textureID = LoadTGA("Image//winebottle.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//ExportedFont.tga");
 
 
-	Object Player;
-	Player.Name = "Player";
-	Player.CollisionTrigger = true;
-	Player.OBJcV = new collisionSphere(3.f, Vector3(-10, 0, 0));
-	Player.OBJmesh = MeshBuilder::GenerateOBJ("Player", "OBJ//doorman.obj");
-	Player.OBJmesh->textureID = LoadTGA("Image//doorman.tga");
-	SP.Add(Player);
-
-	Object Can;
-	Can.Name = "Bowser";
-	Can.CollisionTrigger = false;
-	Can.OBJcV = new collisionSphere(0.01f, Vector3(5, 0, 0));
-	Can.OBJcV->setEffect(0);
-	Can.OBJcV->setVelocity(Vector3(0, 5, 0));
-	Can.OBJmesh = MeshBuilder::GenerateOBJ("Can", "OBJ//Bowser.obj");
-	Can.OBJmesh->textureID = LoadTGA("Image//CanTexture.tga");
-	SP.Add(Can);
-
-	Object Wine;
-	Wine.Name = "Wine";
-	Wine.CollisionTrigger = false;
-	Wine.OBJcV = new collisionSphere(2.f, Vector3(10, 0, 0));
-	Wine.OBJcV->setEffect(1);
-	Wine.OBJcV->setVelocity(Vector3(0, 5, 0));
-	Wine.OBJmesh = MeshBuilder::GenerateOBJ("Wine", "OBJ//winebottle.obj");
-	Wine.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
-	SP.Add(Wine);
-
-	Object Random;
-	Random.Name = "Random";
-	Random.CollisionTrigger = false;
-	Random.OBJcV = new AABB(2.f, 2.f, Vector3(5, 0, 0));
-	Random.OBJcV->setEffect(0);
-	Random.OBJcV->setVelocity(Vector3(0, 1, 0));
-	Random.OBJmesh = MeshBuilder::GenerateOBJ("Random", "OBJ//winebottle.obj");
-	Random.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
-	SP.Add(Random);
+	/*
+	Object Floor2;
+	Floor2.Name = "SecondLevel";//IMPORTANT
+	Floor2.ReverseCollision = true;
+	Floor2.OBJcV = new AABB(80.f, 75.f, 100.f, Vector3(0, 0, 0)); //IMPORTANT
+	Floor2.OBJcV->setEffect(1); //IMPORTANT
+	Floor2.OBJcV->setVelocity(Vector3(0, 5, 0));
+	SP.Add(Floor2);
+	*/
 	/**********************************************************************************/
 	for(int i = 0; i < 5; i++)
 	{
@@ -587,7 +536,7 @@ void Floor2::Init()
 			Nice.Name = "Nice";
 			Nice.CollisionTrigger = false;
 			Nice.OBJcV = new collisionSphere(2.f, Vector3(3, 5, 25));
-			Nice.OBJcV->setEffect(0);
+			Nice.OBJcV->setEffect(0,2);
 			Nice.OBJmesh = MeshBuilder::GenerateOBJ("Nice", "OBJ//NICE.obj");
 			Nice.OBJmesh->textureID = LoadTGA("Image//NICE.tga");
 			SP.Add(Nice);
@@ -750,6 +699,7 @@ void Floor2::Init()
 			Box5.OBJmesh = MeshBuilder::GenerateOBJ("Box54", "OBJ//Box5.obj");
 			Box5.OBJmesh->textureID = LoadTGA("Image//Box5.tga");
 			SP.Add(Box5);
+
 	}
 	/**********************************************************************************/
 			Object UFO;
@@ -760,6 +710,18 @@ void Floor2::Init()
 			UFO.OBJmesh = MeshBuilder::GenerateOBJ("UFO", "OBJ//ufo.obj");
 			UFO.OBJmesh->textureID = LoadTGA("Image//UFO.tga");
 			SP.Add(UFO);
+
+			Object FreezeBuff;
+			FreezeBuff.Name = "FreezeBuff";
+			FreezeBuff.CollisionTrigger = true;
+			FreezeBuff.Gravity = false;
+			FreezeBuff.OBJcV = new collisionSphere(0.2f, Vector3(0, 100, 0));
+			FreezeBuff.OBJcV->setEffect(2);
+			FreezeBuff.OBJmesh = MeshBuilder::GenerateOBJ("FreezeBuff", "OBJ//dart.obj");
+			FreezeBuff.OBJmesh->textureID = LoadTGA("Image//dart.tga");
+			SP.Add(FreezeBuff);
+			
+
 	//Initialize camera settings
 	camera.Init(Vector3(0, 25, 20), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
@@ -883,17 +845,41 @@ void Floor2::Update(double dt)
 		Here.AllowActivate = true;
 	}
 
-	SP.CheckCollision();
-
-	if (Application::IsKeyPressed('G'))
+	if (SP.Call("Nice").OBJcV->getActivate() == true)
 	{
-		//SP.Call("Bowser").OBJcV->Chase(SP.Call("Player").OBJcV, 1, true);
-		//SP.Call("Player").OBJcV->Jump(0.1, 20);
+		TaskList[2] = true;
 	}
 
-	SP.Call("UFO").OBJcV->Chase(SP.Call("Player").OBJcV, 0.1, true);
+	SP.CheckCollision();
+	SP.Gravity();
+	UpdateCrosshair();
 
 
+	if (SP.Call("FreezeBuff").OBJcV->getActivate() == false)
+		SP.Call("UFO").OBJcV->Chase(SP.Call("Player").OBJcV, 0.1f + SpeedUp, true);
+
+	if (Floor2Timer <= Limiter)
+	{
+		Limiter -= 100;
+		SpeedUp += 0.01f;
+		SP.Call("FreezeBuff").OBJcV->setCOORD(5,0,0);
+	}
+
+	if (Floor2Timer > 1 && SP.Call("FreezeBuff").OBJcV->getActivate() == false)
+		Floor2Timer -= 1;
+	else
+		FreezeTimer += 0.5f;
+
+	if (FreezeTimer >= 50)
+	{
+		SP.Call("FreezeBuff").OBJcV->setCOORD(0,100,0);
+		SP.Call("FreezeBuff").OBJcV->setActivate(false);
+		FreezeTimer = 0;
+	}
+
+	std::ostringstream ss;
+	ss << Floor2Timer;
+	MyTimer = ss.str();
 
 	//if(SP.Call("UFO").OBJcV->getActivate() == true)
 		//gameover
@@ -957,490 +943,14 @@ void Floor2::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Player").OBJcV->getCOORD(0),
-		SP.Call("Player").OBJcV->getCOORD(1),
-		SP.Call("Player").OBJcV->getCOORD(2));
-	modelStack.Rotate(SP.Call("Player").OBJcV->getFace() + 90, 0, 1, 0);
-	RenderMesh(SP.Call("Player").OBJmesh, false);
+	modelStack.Translate(SP.Call("Crosshair").OBJcV->getCOORD(0),
+		SP.Call("Crosshair").OBJcV->getCOORD(1),
+		SP.Call("Crosshair").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Crosshair").OBJmesh, false);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	RenderMesh(meshList[FLOOR2], false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Bowser").OBJcV->getCOORD(0),
-		SP.Call("Bowser").OBJcV->getCOORD(1),
-		SP.Call("Bowser").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Bowser").OBJmesh, false);
-	modelStack.PopMatrix();
-
-	/*modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Wine").OBJcV->getCOORD(0),
-		SP.Call("Wine").OBJcV->getCOORD(1),
-		SP.Call("Wine").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Wine").OBJmesh, false);
-	modelStack.PopMatrix();*/
-
-	/*modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Random").OBJcV->getCOORD(0),
-		SP.Call("Random").OBJcV->getCOORD(1),
-		SP.Call("Random").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Random").OBJmesh, false);
-	modelStack.PopMatrix();
-	*/
-	/*******************************************************************************/
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Packet1" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Packet1" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Packet1" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Packet1" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-	for(int j = 0; j < 5; j++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << j;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Packet2" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Packet2" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Packet2" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Packet2" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-	for(int k = 0; k < 5; k++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << k;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Packet3" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Packet3" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Packet3" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Packet3" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Packet4" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Packet4" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Packet4" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Packet4" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-	/*******************************************************************************/
-
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Sugar1" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Sugar1" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Sugar1" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Sugar1" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-	/*******************************************************************************/
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box1" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box1" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box1" + AddToName).OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Box1" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box2" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box2" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box2" + AddToName).OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Box2" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box3" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box3" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box3" + AddToName).OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Box3" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box4" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box4" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box4" + AddToName).OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Box4" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	/*******************************************************************************/
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Spice2").OBJcV->getCOORD(0),
-		SP.Call("Spice2").OBJcV->getCOORD(1),
-		SP.Call("Spice2").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Spice2").OBJmesh, false);
-	modelStack.PopMatrix();
-	/*******************************************************************************/
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Spice1" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Spice1" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Spice1" + AddToName).OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Spice1" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-	/********************************************************************************/
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box21" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box21" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box21" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Box21" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box22" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box22" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box22" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Box22" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box23" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box23" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box23" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Box23" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 2; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box24" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box24" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box24" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Box24" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 2; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box25" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box25" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box25" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Box25" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box26" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box26" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box26" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Box26" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box27" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box27" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box27" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Box27" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box28" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box28" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box28" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Box28" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box29" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box29" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box29" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Box29" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-	/*******************************************************************************/
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Nice").OBJcV->getCOORD(0),
-		SP.Call("Nice").OBJcV->getCOORD(1),
-		SP.Call("Nice").OBJcV->getCOORD(2));
-	modelStack.Rotate(180,0,1,0);
-	RenderMesh(SP.Call("Nice").OBJmesh, false);
-	modelStack.PopMatrix();
-	/*******************************************************************************/
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box31" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box31" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box31" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Box31" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box32" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box32" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box32" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Box32" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box33" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box33" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box33" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Box33" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 5; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box34" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box34" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box34" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-90,0,1,0);
-	RenderMesh(SP.Call("Box34" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-	/*******************************************************************************/
-	for(int i = 0; i < 12; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box41" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box41" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box41" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-180,0,1,0);
-	RenderMesh(SP.Call("Box41" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 12; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box42" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box42" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box42" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(-180,0,1,0);
-	RenderMesh(SP.Call("Box42" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-	/*******************************************************************************/
-	for(int i = 0; i < 12; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box51" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box51" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box51" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(90,0,1,0);
-	RenderMesh(SP.Call("Box51" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 12; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box52" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box52" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box52" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(90,0,1,0);
-	RenderMesh(SP.Call("Box52" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 12; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box53" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box53" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box53" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(90,0,1,0);
-	RenderMesh(SP.Call("Box53" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-
-	for(int i = 0; i < 12; i++)
-	{
-	string AddToName;
-	std::ostringstream ss;
-	ss << i;
-	AddToName = ss.str();
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Box54" + AddToName).OBJcV->getCOORD(0),
-		SP.Call("Box54" + AddToName).OBJcV->getCOORD(1),
-		SP.Call("Box54" + AddToName).OBJcV->getCOORD(2));
-	modelStack.Rotate(90,0,1,0);
-	RenderMesh(SP.Call("Box54" + AddToName).OBJmesh, false);
-	modelStack.PopMatrix();
-	}
-	/*******************************************************************************/
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("UFO").OBJcV->getCOORD(0),
-		SP.Call("UFO").OBJcV->getCOORD(1)+ 6,
-		SP.Call("UFO").OBJcV->getCOORD(2));
-	modelStack.Translate(0,10,0);
-	RenderMesh(SP.Call("UFO").OBJmesh, false);
-	modelStack.PopMatrix();
+	RenderFloor2();
+	RenderTaskList();
 
 	if(test == true)
 	{
@@ -1455,5 +965,531 @@ void Floor2::Exit()
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
 
+}
+
+void Floor2::RenderTaskList()
+{
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], MyTimer, Color(1,1,1),10,6.5f,5.5f);
+	modelStack.PopMatrix();
+
+	if (SP.Call("FreezeBuff").OBJcV->getActivate() == true)
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "Time Has Frozen!", Color(1, 1, 1), 10, 1, 5);
+		modelStack.PopMatrix();
+	}
+
+	if (TaskList[0] == false)
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "Find Sugar", Color(1, 1, 1), 7, 1, 0.8);
+		modelStack.PopMatrix();
+	}
+	else
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "SUGAR FOUND", Color(1, 1, 1), 7, 1, 0.8);
+		modelStack.PopMatrix();
+	}
+	if (TaskList[1] == false)
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "Find Spice", Color(1, 1, 1), 7, 1, 0.5);
+		modelStack.PopMatrix();
+	}
+	else
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "FOUND SPICE", Color(1, 1, 1), 7, 1, 0.5);
+		modelStack.PopMatrix();
+	}
+	if (TaskList[2] == false)
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "Find Everything Nice", Color(1, 1, 1), 7, 1, 0.2);
+		modelStack.PopMatrix();
+	}
+	else
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "FOUND EVERYTHING NICE", Color(1, 1, 1), 7, 1, 0.2);
+		modelStack.PopMatrix();
+	}
+}
+
+void Floor2::RenderFloor2()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Player").OBJcV->getCOORD(0),
+		SP.Call("Player").OBJcV->getCOORD(1),
+		SP.Call("Player").OBJcV->getCOORD(2));
+	modelStack.Rotate(SP.Call("Player").OBJcV->getFace() + 90, 0, 1, 0);
+	RenderMesh(SP.Call("Player").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	RenderMesh(meshList[FLOOR2], false);
+	modelStack.PopMatrix();
+
+	/*******************************************************************************/
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Packet1" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Packet1" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Packet1" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Packet1" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+	for (int j = 0; j < 5; j++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << j;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Packet2" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Packet2" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Packet2" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Packet2" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+	for (int k = 0; k < 5; k++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << k;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Packet3" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Packet3" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Packet3" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Packet3" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Packet4" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Packet4" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Packet4" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Packet4" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+	/*******************************************************************************/
+
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Sugar1" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Sugar1" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Sugar1" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Sugar1" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+	/*******************************************************************************/
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box1" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box1" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box1" + AddToName).OBJcV->getCOORD(2));
+		RenderMesh(SP.Call("Box1" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box2" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box2" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box2" + AddToName).OBJcV->getCOORD(2));
+		RenderMesh(SP.Call("Box2" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box3" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box3" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box3" + AddToName).OBJcV->getCOORD(2));
+		RenderMesh(SP.Call("Box3" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box4" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box4" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box4" + AddToName).OBJcV->getCOORD(2));
+		RenderMesh(SP.Call("Box4" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	/*******************************************************************************/
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Spice2").OBJcV->getCOORD(0),
+		SP.Call("Spice2").OBJcV->getCOORD(1),
+		SP.Call("Spice2").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Spice2").OBJmesh, false);
+	modelStack.PopMatrix();
+	/*******************************************************************************/
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Spice1" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Spice1" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Spice1" + AddToName).OBJcV->getCOORD(2));
+		RenderMesh(SP.Call("Spice1" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+	/********************************************************************************/
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box21" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box21" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box21" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Box21" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box22" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box22" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box22" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Box22" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box23" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box23" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box23" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Box23" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box24" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box24" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box24" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Box24" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box25" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box25" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box25" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Box25" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box26" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box26" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box26" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Box26" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box27" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box27" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box27" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Box27" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box28" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box28" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box28" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Box28" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box29" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box29" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box29" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Box29" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+	/*******************************************************************************/
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Nice").OBJcV->getCOORD(0),
+		SP.Call("Nice").OBJcV->getCOORD(1),
+		SP.Call("Nice").OBJcV->getCOORD(2));
+	modelStack.Rotate(180, 0, 1, 0);
+	RenderMesh(SP.Call("Nice").OBJmesh, false);
+	modelStack.PopMatrix();
+	/*******************************************************************************/
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box31" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box31" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box31" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Box31" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box32" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box32" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box32" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Box32" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box33" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box33" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box33" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Box33" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box34" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box34" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box34" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(SP.Call("Box34" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+	/*******************************************************************************/
+	for (int i = 0; i < 12; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box41" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box41" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box41" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-180, 0, 1, 0);
+		RenderMesh(SP.Call("Box41" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 12; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box42" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box42" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box42" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(-180, 0, 1, 0);
+		RenderMesh(SP.Call("Box42" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+	/*******************************************************************************/
+	for (int i = 0; i < 12; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box51" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box51" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box51" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(90, 0, 1, 0);
+		RenderMesh(SP.Call("Box51" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 12; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box52" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box52" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box52" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(90, 0, 1, 0);
+		RenderMesh(SP.Call("Box52" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 12; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box53" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box53" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box53" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(90, 0, 1, 0);
+		RenderMesh(SP.Call("Box53" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+
+	for (int i = 0; i < 12; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		modelStack.PushMatrix();
+		modelStack.Translate(SP.Call("Box54" + AddToName).OBJcV->getCOORD(0),
+			SP.Call("Box54" + AddToName).OBJcV->getCOORD(1),
+			SP.Call("Box54" + AddToName).OBJcV->getCOORD(2));
+		modelStack.Rotate(90, 0, 1, 0);
+		RenderMesh(SP.Call("Box54" + AddToName).OBJmesh, false);
+		modelStack.PopMatrix();
+	}
+	/*******************************************************************************/
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("UFO").OBJcV->getCOORD(0),
+		SP.Call("UFO").OBJcV->getCOORD(1) + 6,
+		SP.Call("UFO").OBJcV->getCOORD(2));
+	modelStack.Translate(0, 10, 0);
+	RenderMesh(SP.Call("UFO").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("FreezeBuff").OBJcV->getCOORD(0),
+		SP.Call("FreezeBuff").OBJcV->getCOORD(1),
+		SP.Call("FreezeBuff").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("FreezeBuff").OBJmesh, false);
+	modelStack.PopMatrix();
 }
 

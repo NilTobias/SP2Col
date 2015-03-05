@@ -44,7 +44,13 @@ public:
 	bool getLiving(void)const;
 	void setLiving(bool life);
 
-	void Chase(collisionVolume* Target, float Speed, float flying);
+	bool getFixed(void)const;
+	void setFixed(bool f);
+	
+	bool getCursor(void)const;
+	void setCursor(bool cur);
+
+	void Chase(collisionVolume* Target, float Speed, bool flying);
 	void Jump(float JumpStrength, float MaxHeight = 5);
 
 	void CollisionEffect(collisionVolume* Target);
@@ -59,7 +65,6 @@ private:
 	Vector3 Velocity;
 	Mtx44 charRotate;
 	float Face;
-	float timer;
 	float RiseObject; //Elevates the Object which sometimes sinks in when you try to set its Y Value to another Object's Y value
 	float Altitude; //The Level of the Platform at which it is standing
 	int type; //0 == Sphere, 1 == AABB
@@ -67,6 +72,8 @@ private:
 	bool gravity;
 	bool maxVelo;
 	bool Living;
+	bool isFixed;
+	bool isCursor;
 
 
 	int Effect, SecondaryEffect;
