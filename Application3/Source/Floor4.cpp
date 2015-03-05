@@ -87,7 +87,6 @@ void Floor4::Init()
 	isFixed = false;
 
 	LSPEED = 20.f;
-	lightOn = true;
 	JetPackActivated = true;
 	MovementSpeed = 10;
 	rise = 0.f;
@@ -109,11 +108,6 @@ void Floor4::Init()
 	m_parameters[U_LIGHT0_KQ] = glGetUniformLocation(m_programID, "lights[0].kQ");
 	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
-	m_parameters[U_LIGHT0_TYPE] = glGetUniformLocation(m_programID, "lights[0].type");
-	m_parameters[U_LIGHT0_SPOTDIRECTION] = glGetUniformLocation(m_programID, "lights[0].spotDirection");
-	m_parameters[U_LIGHT0_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[0].cosCutoff");
-	m_parameters[U_LIGHT0_COSINNER] = glGetUniformLocation(m_programID, "lights[0].cosInner");
-	m_parameters[U_LIGHT0_EXPONENT] = glGetUniformLocation(m_programID, "lights[0].exponent");
 	m_parameters[U_COLOR_TEXTURE_ENABLED] = glGetUniformLocation(m_programID, "colorTextureEnabled");
 	m_parameters[U_COLOR_TEXTURE] = glGetUniformLocation(m_programID, "colorTexture");
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
@@ -122,30 +116,22 @@ void Floor4::Init()
 
 	glUseProgram(m_programID);
 
-	glUniform1i(m_parameters[U_NUMLIGHTS], 1);
+	
 
-	lights[0].type = Light::LIGHT_SPOT;
 	lights[0].position.Set(0, 20, 0);
 	lights[0].color.Set(1, 1, 1);
-	lights[0].power = 1;
+	lights[0].power = 3;
 	lights[0].kC = 1.f;
 	lights[0].kL = 0.01f;
 	lights[0].kQ = 0.001f;
-	lights[0].cosCutoff = cos(Math::DegreeToRadian(45));
-	lights[0].cosInner = cos(Math::DegreeToRadian(30));
-	lights[0].exponent = 3.f;
-	lights[0].spotDirection.Set(0.f, 1.f, 0.f);
 
 	// Make sure you pass uniform parameters after glUseProgram()
-	glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
 	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &lights[0].color.r);
 	glUniform1f(m_parameters[U_LIGHT0_POWER], lights[0].power);
 	glUniform1f(m_parameters[U_LIGHT0_KC], lights[0].kC);
 	glUniform1f(m_parameters[U_LIGHT0_KL], lights[0].kL);
 	glUniform1f(m_parameters[U_LIGHT0_KQ], lights[0].kQ);
-	glUniform1f(m_parameters[U_LIGHT0_COSCUTOFF], lights[0].cosCutoff);
-	glUniform1f(m_parameters[U_LIGHT0_COSINNER], lights[0].cosInner);
-	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], lights[0].exponent);
+	glUniform1i(m_parameters[U_NUMLIGHTS], 1);
 
 
 	// Enable blending
@@ -172,17 +158,13 @@ void Floor4::Init()
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//right.tga");
 
-	meshList[GEO_MODEL4] = MeshBuilder::GenerateOBJ("model1", "OBJ//doorman.obj");
-	meshList[GEO_MODEL4]->textureID = LoadTGA("Image//doorman.tga");
-	cV[GEO_MODEL4] = new collisionSphere(2.f);
-	Player = ((collisionSphere*)(cV[GEO_MODEL4]));
-	Player->setCOORD(0, 0, 0);
-	Player->setCOORD(1, 1, 1);
 
 
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//ExportedFont.tga");
+
+
 
 	
 	Object Blossom;
@@ -190,6 +172,10 @@ void Floor4::Init()
 	Blossom.OBJcV = new collisionSphere(2.f, Vector3(10, 0 + rise, 0));
 	Blossom.OBJmesh = MeshBuilder::GenerateOBJ("Blossom", "OBJ//PuffBod.obj");
 	Blossom.OBJmesh->textureID = LoadTGA("Image//Blossom.tga");
+	Blossom.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	Blossom.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	Blossom.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	Blossom.OBJmesh->material.kShininess = 5.f;
 	SP.Add(Blossom);
 
 	Object Bubbles;
@@ -198,6 +184,10 @@ void Floor4::Init()
 	Bubbles.OBJcV = new collisionSphere(2.f, Vector3(10, 0 + rise, -5));
 	Bubbles.OBJmesh = MeshBuilder::GenerateOBJ("Bubbles", "OBJ//PuffBod.obj");
 	Bubbles.OBJmesh->textureID = LoadTGA("Image//Bubbles.tga");
+	Bubbles.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	Bubbles.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	Bubbles.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	Bubbles.OBJmesh->material.kShininess = 5.f;
 	SP.Add(Bubbles);
 
 	Object Buttercup;
@@ -206,6 +196,10 @@ void Floor4::Init()
 	Buttercup.OBJcV = new collisionSphere(2.f, Vector3(10, 0 + rise, 5));
 	Buttercup.OBJmesh = MeshBuilder::GenerateOBJ("Buttercup", "OBJ//PuffBod.obj");
 	Buttercup.OBJmesh->textureID = LoadTGA("Image//Buttercup.tga");
+	Buttercup.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	Buttercup.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	Buttercup.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	Buttercup.OBJmesh->material.kShininess = 5.f;
 	SP.Add(Buttercup);
 
 	Object Platform;
@@ -214,6 +208,10 @@ void Floor4::Init()
 	Platform.OBJcV = new collisionSphere(2.f, Vector3(10, 0 + rise, 0));
 	Platform.OBJmesh = MeshBuilder::GenerateOBJ("Platform", "OBJ//Platform.obj");
 	Platform.OBJmesh->textureID = LoadTGA("Image//Prison.tga");
+	Platform.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	Platform.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	Platform.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	Platform.OBJmesh->material.kShininess = 5.f;
 	SP.Add(Platform);
 
 	Object Prison;
@@ -222,6 +220,10 @@ void Floor4::Init()
 	Prison.OBJcV = new collisionSphere(2.f, Vector3(10, 0, 0));
 	Prison.OBJmesh = MeshBuilder::GenerateOBJ("Prison", "OBJ//Prison.obj");
 	Prison.OBJmesh->textureID = LoadTGA("Image//Prison.tga");
+	Prison.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	Prison.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	Prison.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	Prison.OBJmesh->material.kShininess = 5.f;
 	SP.Add(Prison);
 
 	Object Sugar;
@@ -230,6 +232,10 @@ void Floor4::Init()
 	Sugar.OBJcV = new collisionSphere(2.f, Vector3(-200, 5.5, 0));
 	Sugar.OBJmesh = MeshBuilder::GenerateOBJ("Sugar", "OBJ//Sugar.obj");
 	Sugar.OBJmesh->textureID = LoadTGA("Image//Sugar.tga");
+	Sugar.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	Sugar.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	Sugar.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	Sugar.OBJmesh->material.kShininess = 5.f;
 	SP.Add(Sugar);
 
 	Object Spice;
@@ -238,6 +244,10 @@ void Floor4::Init()
 	Spice.OBJcV = new collisionSphere(2.f, Vector3(-150, 5.5, 0));
 	Spice.OBJmesh = MeshBuilder::GenerateOBJ("Spice", "OBJ//Spice.obj");
 	Spice.OBJmesh->textureID = LoadTGA("Image//Spice.tga");
+	Spice.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	Spice.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	Spice.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	Spice.OBJmesh->material.kShininess = 5.f;
 	SP.Add(Spice);
 
 	Object Nice;
@@ -246,6 +256,10 @@ void Floor4::Init()
 	Nice.OBJcV = new collisionSphere(2.f, Vector3(-100, 6, 0));
 	Nice.OBJmesh = MeshBuilder::GenerateOBJ("Nice", "OBJ//NICE.obj");
 	Nice.OBJmesh->textureID = LoadTGA("Image//Nice.tga");
+	Nice.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	Nice.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	Nice.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	Nice.OBJmesh->material.kShininess = 5.f;
 	SP.Add(Nice);
 
 
@@ -256,6 +270,10 @@ void Floor4::Init()
 	ChemicalX.OBJcV->setEffect(0);
 	ChemicalX.OBJmesh = MeshBuilder::GenerateOBJ("ChemicalX", "OBJ//ChemicalX.obj");
 	ChemicalX.OBJmesh->textureID = LoadTGA("Image//Flask.tga");
+	ChemicalX.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	ChemicalX.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
+	ChemicalX.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
+	ChemicalX.OBJmesh->material.kShininess = 5.f;
 	SP.Add(ChemicalX);
 	
 	
@@ -294,42 +312,29 @@ void Floor4::Update(double dt)
 	if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
-	if (Application::IsKeyPressed('I'))// TEST TEST TEST
-		lights[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		lights[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		lights[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		lights[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		lights[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('P'))
-		lights[0].position.y += (float)(LSPEED * dt);
+	//if (Application::IsKeyPressed('I'))// TEST TEST TEST
+	//	lights[0].position.z -= (float)(LSPEED * dt);
+	//if (Application::IsKeyPressed('K'))
+	//	lights[0].position.z += (float)(LSPEED * dt);
+	//if (Application::IsKeyPressed('J'))
+	//	lights[0].position.x -= (float)(LSPEED * dt);
+	//if (Application::IsKeyPressed('L'))
+	//	lights[0].position.x += (float)(LSPEED * dt);
+	//if (Application::IsKeyPressed('O'))
+	//	lights[0].position.y -= (float)(LSPEED * dt);
+	//if (Application::IsKeyPressed('P'))
+	//	lights[0].position.y += (float)(LSPEED * dt);
 
-	if (Application::IsKeyPressed('T'))
-		lightOn = true;
 
-	if (Application::IsKeyPressed('Y'))
-		lightOn = false;
-
-	if (Application::IsKeyPressed('Z'))   //POINT LIGHT
-	{
-		lights[0].type = Light::LIGHT_POINT;
-	}
-	else if (Application::IsKeyPressed('X')) //DIRECTIONAL LIGHT
-	{
-		lights[0].type = Light::LIGHT_DIRECTIONAL;
-	}
-	else if (Application::IsKeyPressed('C')) //SPOT LIGHT
-	{
-		lights[0].type = Light::LIGHT_SPOT;
-	}
+	lights[0].position.x = camera.position.x - 2;
+	lights[0].position.y = camera.position.y + 4;
+	lights[0].position.z = camera.position.z;
+	
 
 	if(camera.position.x <= -10)
 	{
-		camera.position.x += 25 * dt;
-		camera.target.x += 25 * dt;
+		camera.position.x += 15 * dt;
+		camera.target.x += 15 * dt;
 	}
 
 	if(camera.position.x >= -11)
@@ -363,28 +368,14 @@ void Floor4::Render()
 
 	modelStack.LoadIdentity();
 
-	if (lights[0].type == Light::LIGHT_DIRECTIONAL)
-	{
-		Vector3 lightDir(lights[0].position.x, lights[0].position.y, lights[0].position.z);
-		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;// TEST TEST TEST
-		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightDirection_cameraspace.x);
-	}
-	else if (lights[0].type == Light::LIGHT_SPOT)
-	{
-		Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
-		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
-		Vector3 spotDirection_cameraspace = viewStack.Top() * lights[0].spotDirection;
-		glUniform3fv(m_parameters[U_LIGHT0_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-	}
-	else
-	{
-		Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
-		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
-	}
-
 
 	Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
 	glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
+	RenderMesh(meshList[GEO_LIGHTBALL], false);
+	modelStack.PopMatrix();
 
 
 	modelStack.PushMatrix();
@@ -393,7 +384,7 @@ void Floor4::Render()
 		SP.Call("Blossom").OBJcV->getCOORD(2));
 	modelStack.Translate(0,rise,0);
 	modelStack.Rotate(SP.Call("Blossom").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("Blossom").OBJmesh, false);
+	RenderMesh(SP.Call("Blossom").OBJmesh, true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -402,7 +393,7 @@ void Floor4::Render()
 		SP.Call("Bubbles").OBJcV->getCOORD(2));
 	modelStack.Translate(0,rise,0);
 	modelStack.Rotate(SP.Call("Bubbles").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("Bubbles").OBJmesh, false);
+	RenderMesh(SP.Call("Bubbles").OBJmesh, true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -411,7 +402,7 @@ void Floor4::Render()
 		SP.Call("Buttercup").OBJcV->getCOORD(2));
 	modelStack.Translate(0,rise,0);
 	modelStack.Rotate(SP.Call("Buttercup").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("Buttercup").OBJmesh, false);
+	RenderMesh(SP.Call("Buttercup").OBJmesh, true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -419,7 +410,7 @@ void Floor4::Render()
 		SP.Call("Platform").OBJcV->getCOORD(1),
 		SP.Call("Platform").OBJcV->getCOORD(2));
 	modelStack.Translate(0,rise,0);
-	RenderMesh(SP.Call("Platform").OBJmesh, false);
+	RenderMesh(SP.Call("Platform").OBJmesh, true);
 	modelStack.PopMatrix();
 
 
@@ -427,7 +418,7 @@ void Floor4::Render()
 	modelStack.Translate(SP.Call("Prison").OBJcV->getCOORD(0),
 		SP.Call("Prison").OBJcV->getCOORD(1),
 		SP.Call("Prison").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Prison").OBJmesh, false);
+	RenderMesh(SP.Call("Prison").OBJmesh, true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -435,7 +426,7 @@ void Floor4::Render()
 		SP.Call("Sugar").OBJcV->getCOORD(1),
 		SP.Call("Sugar").OBJcV->getCOORD(2));
 	modelStack.Rotate(SP.Call("Sugar").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("Sugar").OBJmesh, false);
+	RenderMesh(SP.Call("Sugar").OBJmesh, true);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
@@ -443,7 +434,7 @@ void Floor4::Render()
 		SP.Call("Spice").OBJcV->getCOORD(1),
 		SP.Call("Spice").OBJcV->getCOORD(2));
 	modelStack.Rotate(SP.Call("Spice").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("Spice").OBJmesh, false);
+	RenderMesh(SP.Call("Spice").OBJmesh, true);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
@@ -451,7 +442,7 @@ void Floor4::Render()
 		SP.Call("Nice").OBJcV->getCOORD(1),
 		SP.Call("Nice").OBJcV->getCOORD(2));
 	modelStack.Rotate(SP.Call("Nice").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("Nice").OBJmesh, false);
+	RenderMesh(SP.Call("Nice").OBJmesh, true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -459,7 +450,7 @@ void Floor4::Render()
 		SP.Call("ChemicalX").OBJcV->getCOORD(1),
 		SP.Call("ChemicalX").OBJcV->getCOORD(2));
 	modelStack.Rotate(SP.Call("ChemicalX").OBJcV->getFace() - 90, 0, 1, 0);
-	RenderMesh(SP.Call("ChemicalX").OBJmesh, false);
+	RenderMesh(SP.Call("ChemicalX").OBJmesh, true);
 	modelStack.PopMatrix();
 
 	if(test == true)
