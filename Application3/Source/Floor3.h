@@ -18,14 +18,14 @@ public:
 	static double DtCopy;
 private:
 	void RenderSP();
-	
+	void RenderObjective();
+	void RenderFloor3();
 
 	float LSPEED;
-	float rotateCharacter, rotateTele;
-	float engineHeat;
 	float MovementSpeed;
-	std::string warningTest;
-	bool JetPackActivated;
+	std::string MyTimer;
+	float Floor3Timer;
+	float Limiter;
 	
 	bool Teleport;
 	

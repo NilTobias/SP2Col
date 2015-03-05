@@ -40,14 +40,12 @@ void Floor3::Init()
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
-	rotateCharacter = 0;
-	rotateTele = 0;
 	Teleport = false;
 	isFixed = false;
-	engineHeat = 0;
 	LSPEED = 20.f;
-	JetPackActivated = true;
 	MovementSpeed = 10;
+	Floor3Timer = 2100;
+	Limiter = 1950;
 	SP.Call("Teleporter").OBJcV->setActivate(false);
 
 	//Load vertex and fragment shaders
@@ -116,9 +114,6 @@ void Floor3::Init()
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//right.tga");
 
-	meshList[GEO_NOOB] = MeshBuilder::GenerateQuad("noob", Color(1, 1, 1), 1.f);
-	meshList[GEO_NOOB]->textureID = LoadTGA("Image//noob.tga");
-
 	meshList[GEO_MODEL1] = MeshBuilder::GenerateOBJ("model1", "OBJ//chair.obj");
 	meshList[GEO_MODEL1]->textureID = LoadTGA("Image//chair.tga");
 	meshList[GEO_MODEL1]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -129,18 +124,6 @@ void Floor3::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//ExportedFont.tga");
 
-
-	
-
-	Object Can;
-	Can.Name = "Bowser";
-	Can.OBJcV = new collisionSphere(2.f, Vector3(25, 10, 0));
-	Can.OBJcV->setEffect(0);
-	Can.OBJcV->setVelocity(Vector3(0, 5, 0));
-	Can.OBJmesh = MeshBuilder::GenerateOBJ("Can", "OBJ//Bowser.obj");
-	Can.OBJmesh->textureID = LoadTGA("Image//CanTexture.tga");
-	SP.Add(Can);
-
 	Object Floor;
 	Floor.Name = "ThirdLevel";//IMPORTANT
 	Floor.ReverseCollision = true;
@@ -150,6 +133,25 @@ void Floor3::Init()
 	Floor.OBJmesh = MeshBuilder::GenerateOBJ("ThirdLevel", "OBJ//Floor3.obj");
 	Floor.OBJmesh->textureID = LoadTGA("Image//Floor3.tga");
 	SP.Add(Floor);
+
+	Object ProfessorX;
+	ProfessorX.Name = "ProfessorX";//IMPORTANT
+	ProfessorX.OBJcV = new collisionSphere(2.f, Vector3(0,0,15)); //IMPORTANT
+	ProfessorX.OBJcV->setEffect(2); //IMPORTANT
+	ProfessorX.OBJcV->setVelocity(Vector3(0, 5, 0));
+	ProfessorX.OBJmesh = MeshBuilder::GenerateOBJ("ProfessorX", "OBJ//ProfessorX.obj");
+	ProfessorX.OBJmesh->textureID = LoadTGA("Image//ProfessorX.tga");
+	SP.Add(ProfessorX);
+
+	Object Totem;
+	Totem.Name = "Totem";//IMPORTANT
+	Totem.OBJcV = new collisionSphere(1.f, Vector3(0,0,0)); //IMPORTANT
+	Totem.OBJcV->setEffect(2); //IMPORTANT
+	Totem.OBJcV->setVelocity(Vector3(0, 5, 0));
+	Totem.OBJmesh = MeshBuilder::GenerateOBJ("Totem", "OBJ//Totem.obj");
+	Totem.OBJmesh->textureID = LoadTGA("Image//Totem.tga");
+	SP.Add(Totem);
+
 
 	//Initialize camera settings
 	camera.Init(Vector3(0, 25, 20), Vector3(0, 0, 0), Vector3(0, 1, 0));
@@ -262,10 +264,21 @@ void Floor3::Update(double dt)
 		Here.AllowActivate = true;
 	}
 
-	if (SP.Call("Teleporter").OBJcV->getActivate())
+	Floor3Timer -= 0.5f;
+	if (Floor3Timer <= Limiter)
 	{
-		FloorLevel = true;
+		Limiter -= 150;
+		SP.Call("ProfessorX").OBJcV->setCOORD(5,0,0);
 	}
+
+	if (SP.Call("ProfessorX").OBJcV->getActivate())
+	{
+		//TeleporterIsNowHere
+	}
+
+	std::ostringstream ss;
+	ss << Floor3Timer;
+	MyTimer = ss.str();
 
 	SP.CheckCollision();
 	SP.Gravity();
@@ -324,13 +337,6 @@ void Floor3::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Bowser").OBJcV->getCOORD(0),
-		SP.Call("Bowser").OBJcV->getCOORD(1),
-		SP.Call("Bowser").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Bowser").OBJmesh, false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
 	modelStack.Translate(SP.Call("ThirdLevel").OBJcV->getCOORD(0),
 		SP.Call("ThirdLevel").OBJcV->getCOORD(1),
 		SP.Call("ThirdLevel").OBJcV->getCOORD(2));
@@ -350,6 +356,9 @@ void Floor3::Render()
 		SP.Call("Teleporter").OBJcV->getCOORD(2));
 	RenderMesh(SP.Call("Teleporter").OBJmesh, false);
 	modelStack.PopMatrix();
+
+	RenderObjective();
+	RenderFloor3();
 }
 
 void Floor3::Exit()
@@ -357,5 +366,48 @@ void Floor3::Exit()
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
 
+}
+
+void Floor3::RenderObjective()
+{
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], MyTimer, Color(1,1,1),10,6.5f,5.5f);
+	modelStack.PopMatrix();
+
+	if (Floor3Timer >= 2000)
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "It's Raining Bullets and Meteors!!!", Color(1, 1, 1), 10, 1, 5);
+		modelStack.PopMatrix();
+	}
+	if (SP.Call("ProfessorX").OBJcV->getActivate() == false)
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "Chase ProfessorX and Take Chemical X", Color(1, 1, 1), 7, 1, 0.2);
+		modelStack.PopMatrix();
+	}
+	else
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "YOU HAVE TAKEN CHEMICAL X", Color(1, 1, 1), 7, 1, 0.2);
+		modelStack.PopMatrix();
+	}
+}
+
+void Floor3::RenderFloor3()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("ProfessorX").OBJcV->getCOORD(0),
+		SP.Call("ProfessorX").OBJcV->getCOORD(1),
+		SP.Call("ProfessorX").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("ProfessorX").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Totem").OBJcV->getCOORD(0),
+		SP.Call("Totem").OBJcV->getCOORD(1),
+		SP.Call("Totem").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Totem").OBJmesh, false);
+	modelStack.PopMatrix();
 }
 
