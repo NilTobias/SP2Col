@@ -182,7 +182,7 @@ void Floor2::Init()
 	Object Teleporter;
 	Teleporter.Name = "Teleporter";
 	Teleporter.Gravity = false;
-	Teleporter.OBJcV = new collisionSphere(1.5f, Vector3(0, 0, 10));
+	Teleporter.OBJcV = new collisionSphere(1.5f, Vector3(0, 100, 0));
 	Teleporter.OBJcV->setEffect(2);
 	Teleporter.OBJmesh = MeshBuilder::GenerateOBJ("Tele", "OBJ//Elevator.obj");
 	Teleporter.OBJmesh->textureID = LoadTGA("Image//Elevator.tga");
@@ -856,7 +856,7 @@ void Floor2::Update(double dt)
 
 	SP2.CheckCollision();
 	SP2.Gravity();
-	UpdateCrosshair();
+	UpdateCrosshair(SP2);
 
 
 	if (SP2.Call("FreezeBuff").OBJcV->getActivate() == false)

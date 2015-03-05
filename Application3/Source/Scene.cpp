@@ -23,42 +23,42 @@ void Scene::Teleport()
 {
 }
 
-void Scene::UpdateCrosshair()
+void Scene::UpdateCrosshair(SceneAssets Target)
 {
-	/*
-	Vector3 Temp2(2, 0, 0);
+	Vector3 Temp2(3, 0, 0);
 	Mtx44 charRotate;
-	charRotate.SetToRotation(SP.Call("Player").OBJcV->getFace(), 0, 1, 0);
+	charRotate.SetToRotation(Target.Call("Player").OBJcV->getFace(), 0, 1, 0);
 	Temp2 = charRotate * Temp2;
-	Temp2 = SP.Call("Player").OBJcV->getCentre() + Temp2;
-	SP.Call("Crosshair").OBJcV->setCentre(Vector3(Temp2.x, SP.Call("Crosshair").OBJcV->getCOORD(1), Temp2.z));
+	Temp2 = Target.Call("Player").OBJcV->getCentre() + Temp2;
+	Target.Call("Crosshair").OBJcV->setCentre(Vector3(Temp2.x, Target.Call("Crosshair").OBJcV->getCOORD(1), Temp2.z));
 
 	if (Application::IsKeyPressed(VK_UP))
 	{
-		if (SP.Call("Crosshair").OBJcV->getCOORD(1) < 8)
+		if (Target.Call("Crosshair").OBJcV->getCOORD(1) < 8)
 		{
-			SP.Call("Crosshair").OBJcV->setCOORD(SP.Call("Crosshair").OBJcV->getCOORD(0),
-				SP.Call("Crosshair").OBJcV->getCOORD(1) + 0.1f,
-				SP.Call("Crosshair").OBJcV->getCOORD(2));
+			Target.Call("Crosshair").OBJcV->setCOORD(Target.Call("Crosshair").OBJcV->getCOORD(0),
+				Target.Call("Crosshair").OBJcV->getCOORD(1) + 0.1f,
+				Target.Call("Crosshair").OBJcV->getCOORD(2));
 		}
 	}
 	if (Application::IsKeyPressed(VK_DOWN))
 	{
-		if (SP.Call("Crosshair").OBJcV->getCOORD(1) > 0)
+		if (Target.Call("Crosshair").OBJcV->getCOORD(1) > 0)
 		{
-			SP.Call("Crosshair").OBJcV->setCOORD(SP.Call("Crosshair").OBJcV->getCOORD(0),
-				SP.Call("Crosshair").OBJcV->getCOORD(1) - 0.1f,
-				SP.Call("Crosshair").OBJcV->getCOORD(2));
+			Target.Call("Crosshair").OBJcV->setCOORD(Target.Call("Crosshair").OBJcV->getCOORD(0),
+				Target.Call("Crosshair").OBJcV->getCOORD(1) - 0.1f,
+				Target.Call("Crosshair").OBJcV->getCOORD(2));
 		}
 	}
 
-	Vector3 NewTarget = SP.Call("Crosshair").OBJcV->getCentre();
-	camera.position = SP.Call("Player").OBJcV->getCentre();
+	Vector3 NewTarget = Target.Call("Crosshair").OBJcV->getCentre();
+	camera.position = Target.Call("Player").OBJcV->getCentre();
 	camera.position.y = 6;
 	camera.target = NewTarget;
 	camera.target.y = 6;
 	camera.up.Set(0, 1, 0);
-	*/
+	
+
 }
 
 

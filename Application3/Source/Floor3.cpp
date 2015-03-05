@@ -46,7 +46,7 @@ void Floor3::Init()
 	MovementSpeed = 10;
 	Floor3Timer = 2100;
 	Limiter = 1950;
-	SP3.Call("Teleporter").OBJcV->setActivate(false);
+	//SP3.Call("Teleporter").OBJcV->setActivate(false);
 	speed = 0.2;
 	//Load vertex and fragment shaders
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
@@ -136,7 +136,7 @@ void Floor3::Init()
 	Object Teleporter;
 	Teleporter.Name = "Teleporter";
 	Teleporter.Gravity = false;
-	Teleporter.OBJcV = new collisionSphere(1.5f, Vector3(0, 0, 10));
+	Teleporter.OBJcV = new collisionSphere(1.5f, Vector3(0, 100, 0));
 	Teleporter.OBJcV->setEffect(2);
 	Teleporter.OBJmesh = MeshBuilder::GenerateOBJ("Tele", "OBJ//Elevator.obj");
 	Teleporter.OBJmesh->textureID = LoadTGA("Image//Elevator.tga");
@@ -371,16 +371,13 @@ void Floor3::Update(double dt)
 	Task3Complete();
 
 
-
 	std::ostringstream ss;
 	ss << Floor3Timer;
 	MyTimer = ss.str();
 
 	SP3.CheckCollision();
 	SP3.Gravity();
-	UpdateCrosshair();
-
-	//SP3.Call("Bowser").OBJcV->Chase(SP3.Call("Player").OBJcV, 0.1, true);
+	UpdateCrosshair(SP3);
 
 	if (SP3.Call("Player").OBJcV->getFace() > 180)
 		SP3.Call("Player").OBJcV->setFace(SP3.Call("Player").OBJcV->getFace() - 360);
@@ -402,8 +399,6 @@ void Floor3::Render()
 
 	modelStack.LoadIdentity();
 
-
-
 	Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
 	glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
 
@@ -417,35 +412,6 @@ void Floor3::Render()
 	modelStack.PushMatrix();
 	modelStack.Scale(1000, 1000, 1000);
 	RenderSkybox();
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(SP3.Call("Player").OBJcV->getCOORD(0),
-		SP3.Call("Player").OBJcV->getCOORD(1),
-		SP3.Call("Player").OBJcV->getCOORD(2));
-	modelStack.Rotate(SP3.Call("Player").OBJcV->getFace() + 90, 0, 1, 0);
-	RenderMesh(SP3.Call("Player").OBJmesh, false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(SP3.Call("ThirdLevel").OBJcV->getCOORD(0),
-		SP3.Call("ThirdLevel").OBJcV->getCOORD(1),
-		SP3.Call("ThirdLevel").OBJcV->getCOORD(2));
-	RenderMesh(SP3.Call("ThirdLevel").OBJmesh, false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(SP3.Call("Crosshair").OBJcV->getCOORD(0),
-		SP3.Call("Crosshair").OBJcV->getCOORD(1),
-		SP3.Call("Crosshair").OBJcV->getCOORD(2));
-	RenderMesh(SP3.Call("Crosshair").OBJmesh, false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(SP3.Call("Teleporter").OBJcV->getCOORD(0),
-		SP3.Call("Teleporter").OBJcV->getCOORD(1),
-		SP3.Call("Teleporter").OBJcV->getCOORD(2));
-	RenderMesh(SP3.Call("Teleporter").OBJmesh, false);
 	modelStack.PopMatrix();
 
 	RenderObjective();
@@ -471,6 +437,7 @@ void Floor3::RenderObjective()
 		RenderTextOnScreen(meshList[GEO_TEXT], "It's Raining Bullets and Meteors!!!", Color(1, 1, 1), 10, 1, 5);
 		modelStack.PopMatrix();
 	}
+	
 	if (SP3.Call("ProfessorX").OBJcV->getActivate() == false)
 	{
 		modelStack.PushMatrix();
@@ -487,6 +454,35 @@ void Floor3::RenderObjective()
 
 void Floor3::RenderFloor3()
 {
+	modelStack.PushMatrix();
+	modelStack.Translate(SP3.Call("Player").OBJcV->getCOORD(0),
+		SP3.Call("Player").OBJcV->getCOORD(1),
+		SP3.Call("Player").OBJcV->getCOORD(2));
+	modelStack.Rotate(SP3.Call("Player").OBJcV->getFace() + 90, 0, 1, 0);
+	RenderMesh(SP3.Call("Player").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP3.Call("Crosshair").OBJcV->getCOORD(0),
+		SP3.Call("Crosshair").OBJcV->getCOORD(1),
+		SP3.Call("Crosshair").OBJcV->getCOORD(2));
+	RenderMesh(SP3.Call("Crosshair").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP3.Call("Teleporter").OBJcV->getCOORD(0),
+		SP3.Call("Teleporter").OBJcV->getCOORD(1),
+		SP3.Call("Teleporter").OBJcV->getCOORD(2));
+	RenderMesh(SP3.Call("Teleporter").OBJmesh, false);
+	modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+	modelStack.Translate(SP3.Call("ThirdLevel").OBJcV->getCOORD(0),
+		SP3.Call("ThirdLevel").OBJcV->getCOORD(1),
+		SP3.Call("ThirdLevel").OBJcV->getCOORD(2));
+	RenderMesh(SP3.Call("ThirdLevel").OBJmesh, false);
+	modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	modelStack.Translate(SP3.Call("ProfessorX").OBJcV->getCOORD(0),
 		SP3.Call("ProfessorX").OBJcV->getCOORD(1),
@@ -553,6 +549,7 @@ void Floor3::RenderFloor3()
 	RenderMesh(SP3.Call("Bullet4").OBJmesh, false);
 	modelStack.PopMatrix();
 }
+
 
 void Floor3::ShootTo(std::string Target, Vector3 Destination, Vector3 Source, float MaxDistance, float BulletSpeed)
 {

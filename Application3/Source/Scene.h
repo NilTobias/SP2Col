@@ -88,7 +88,6 @@ class Scene
 	unsigned m_vertexArrayID;
 	Mesh* meshList[NUM_GEOMETRY];
 	collisionVolume* cV[NUM_GEOMETRY];
-	collisionSphere *Player, *Teleporter, *PickUp;
 
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
@@ -103,7 +102,7 @@ class Scene
 	void RenderImageOnScreen(Mesh* mesh, float size, float x, float y);
 	void RenderSkybox();
 	void Teleport();
-	void UpdateCrosshair();
+	void UpdateCrosshair(SceneAssets Target);
 
 
 	Camera2 camera;
