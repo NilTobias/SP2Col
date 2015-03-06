@@ -22,8 +22,6 @@ private:
 	void RenderFloor3();
 	void Task3Complete();
 
-    int sound();
-
 	void ShootTo(std::string Target,Vector3 Destination, Vector3 Source, float MaxDistance, float BulletSpeed);//Source will Always be the Totems.
 	void ShootTo2(std::string Target,Vector3 Destination, Vector3 Source, float MaxDistance, float BulletSpeed);
 	void ShootTo3(std::string Target,Vector3 Destination, Vector3 Source, float MaxDistance, float BulletSpeed);
@@ -37,8 +35,10 @@ private:
 	float Floor3Timer;
 	float Limiter;
 	float speed;
-	bool Teleport;	
-    bool test;
+	int ProfessorLife; std::string stXLife;
+	int MyLife; std::string stLife;
+	bool Teleport;
+	bool hit;
 };
 
 #endif

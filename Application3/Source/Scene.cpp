@@ -53,9 +53,9 @@ void Scene::UpdateCrosshair(SceneAssets Target)
 
 	Vector3 NewTarget = Target.Call("Crosshair").OBJcV->getCentre();
 	camera.position = Target.Call("Player").OBJcV->getCentre();
-	camera.position.y = 6;
+	camera.position.y = 5;
 	camera.target = NewTarget;
-	camera.target.y = 6;
+	camera.target.y = 5;
 	camera.up.Set(0, 1, 0);
 	
 

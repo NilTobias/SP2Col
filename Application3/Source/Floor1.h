@@ -23,11 +23,9 @@ private:
 	SceneAssets SP;
 
 	float LSPEED;
-	float rotateCharacter, rotateTele;
-	float engineHeat;
 	float MovementSpeed;
-	std::string warningTest;
-	bool JetPackActivated;
+	std::string Code;
+	
 
 	bool Teleport;
 	bool renderScreenText;

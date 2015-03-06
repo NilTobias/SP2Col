@@ -12,8 +12,6 @@
 #include "collisionSphere.h"
 #include "Object.h"
 
-ISoundEngine* engine3 = createIrrKlangDevice(ESOD_AUTO_DETECT, ESEO_MULTI_THREADED | ESEO_LOAD_PLUGINS | ESEO_USE_3D_BUFFERS );
-vec3df Pos3(0,0,0);
 
 Floor3::Floor3()
 {
@@ -21,23 +19,6 @@ Floor3::Floor3()
 
 Floor3 ::~Floor3()
 {
-}
-
-int  Floor3::sound()
-{ 
-	engine3->setSoundVolume(1.0f);
-	if(!engine3)
-	{ 
-		return 0;
-	}
-	vec3df position(0,0,0);
-
-    ISound* music = engine3->play3D("../Sounds/floor3.mp3", Pos3,true,false,true);
-	if(music)
-	{
-		music->setMinDistance(0.f);
-		music->setMaxDistance(1000.f);
-	}
 }
 
 void Floor3::Init()
@@ -65,9 +46,12 @@ void Floor3::Init()
 	MovementSpeed = 10;
 	Floor3Timer = 2100;
 	Limiter = 1950;
+	ProfessorLife = 10;
+	MyLife = 3;
+	stXLife = "Life:";
+	stLife = "Life:";
 	//SP3.Call("Teleporter").OBJcV->setActivate(false);
 	speed = 0.2;
-    test = true;
 	//Load vertex and fragment shaders
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
 	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
@@ -88,6 +72,7 @@ void Floor3::Init()
 	m_parameters[U_COLOR_TEXTURE_ENABLED] = glGetUniformLocation(m_programID, "colorTextureEnabled");
 	m_parameters[U_COLOR_TEXTURE] = glGetUniformLocation(m_programID, "colorTexture");
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
+	m_parameters[U_IMAGE_ENABLED] = glGetUniformLocation(m_programID, "imageEnabled");
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
 
 
@@ -144,6 +129,15 @@ void Floor3::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//ExportedFont.tga");
 
+	Object ChemicalX;
+	ChemicalX.Name = "ChemicalX";
+	ChemicalX.OBJcV = new collisionSphere(0.1f, Vector3(0, 5, 15));
+	ChemicalX.OBJcV->setEffect(1);
+	ChemicalX.OBJmesh = MeshBuilder::GenerateOBJ("ChemicalX", "OBJ//ChemicalX.obj");
+	ChemicalX.OBJmesh->textureID = LoadTGA("Image//ChemicalX.tga");
+	SP3.Add(ChemicalX);
+	
+
 	Object Player;
 	Player.Name = "Player";
 	Player.OBJcV = new collisionSphere(2.f, Vector3(-10, 0, 0));
@@ -173,8 +167,8 @@ void Floor3::Init()
 
 	Object Floor;
 	Floor.Name = "ThirdLevel";//IMPORTANT
-	Floor.ReverseCollision = true;
-	Floor.OBJcV = new AABB(80.f, 75.f, 100.f, Vector3(0,0,0)); //IMPORTANT
+	//Floor.ReverseCollision = true;
+	Floor.OBJcV = new AABB(1.f, 1.f, 0.f ,Vector3(0, 0, 0)); //IMPORTANT
 	Floor.OBJcV->setEffect(1); //IMPORTANT
 	Floor.OBJcV->setVelocity(Vector3(0, 5, 0));
 	Floor.OBJmesh = MeshBuilder::GenerateOBJ("ThirdLevel", "OBJ//Floor3.obj");
@@ -183,9 +177,8 @@ void Floor3::Init()
 
 	Object ProfessorX;
 	ProfessorX.Name = "ProfessorX";//IMPORTANT
-	ProfessorX.OBJcV = new collisionSphere(2.f, Vector3(0,0,15)); //IMPORTANT
+	ProfessorX.OBJcV = new collisionSphere(1.f, Vector3(0,0,15)); //IMPORTANT
 	ProfessorX.OBJcV->setEffect(2); //IMPORTANT
-	ProfessorX.OBJcV->setVelocity(Vector3(0, 5, 0));
 	ProfessorX.OBJmesh = MeshBuilder::GenerateOBJ("ProfessorX", "OBJ//ProfessorX.obj");
 	ProfessorX.OBJmesh->textureID = LoadTGA("Image//ProfessorX.tga");
 	SP3.Add(ProfessorX);
@@ -226,14 +219,14 @@ void Floor3::Init()
 	Totem4.OBJmesh->textureID = LoadTGA("Image//Totem.tga");
 	SP3.Add(Totem4);
 
-	Object Bullet;
-	Bullet.Name = "Bullet";//IMPORTANT
-	Bullet.OBJcV = new collisionSphere(1.f, Vector3(-39,0,-35)); //IMPORTANT
-	Bullet.OBJcV->setEffect(2); //IMPORTANT
-	Bullet.OBJcV->setVelocity(Vector3(0, 5, 0));
-	Bullet.OBJmesh = MeshBuilder::GenerateSphere("Bullet",Color(1,0,0),10,10,0.3f);
-	//Bullet.OBJmesh->textureID = LoadTGA("Image//dart.tga");
-	SP3.Add(Bullet);
+	Object Bullet1;
+	Bullet1.Name = "Bullet1";//IMPORTANT
+	Bullet1.OBJcV = new collisionSphere(1.f, Vector3(-39,5,-35)); //IMPORTANT
+	Bullet1.OBJcV->setEffect(2); //IMPORTANT
+	Bullet1.OBJcV->setVelocity(Vector3(0, 5, 0));
+	Bullet1.OBJmesh = MeshBuilder::GenerateSphere("Bullet1",Color(1,0,0),10,10,0.3f);
+	//Bullet1.OBJmesh->textureID = LoadTGA("Image//dart.tga");
+	SP3.Add(Bullet1);
 
 	Object Bullet2;
 	Bullet2.Name = "Bullet2";//IMPORTANT
@@ -287,7 +280,6 @@ void Floor3::Update(double dt)
 	Here.AllowPickUp = false;
 	Here.AllowForce = false;
 	Here.AllowActivate = false;
-	Here.MoveKeysPressed = 0;
 	Here.MainFace[0] = false;Here.MainFace[1] = false;
 	Here.MainFace[2] = false;Here.MainFace[3] = false;
 	if (Application::IsKeyPressed('1')) //enable back face culling
@@ -366,7 +358,6 @@ void Floor3::Update(double dt)
 		SP3.Call("Player").OBJcV->setFace(SP3.Call("Player").OBJcV->getFace() + 5.f);
 
 	if (Application::IsKeyPressed('F'))
-        //engine3->play3D("../Sounds/jump.wav", Pos3,false,false);
 		SP3.Call("Player").OBJcV->Jump(0.1f);
 	
 	if (Application::IsKeyPressed('E'))
@@ -376,24 +367,49 @@ void Floor3::Update(double dt)
 		Here.AllowActivate = true;
 	}
 
+	
+
 	Floor3Timer -= 0.5f;
 	if (Floor3Timer <= Limiter)
 	{
-        engine3->play3D("../Sounds/Timer.mp3", Pos3,false,false);
 		speed += 0.05;
 		Limiter -= 150;
 		SP3.Call("ProfessorX").OBJcV->setCOORD(randomX,0,randomZ);
+		SP3.Call("ChemicalX").OBJcV->setCOORD(SP3.Call("ProfessorX").OBJcV->getCOORD(0), 5, SP3.Call("ProfessorX").OBJcV->getCOORD(2));
 	}
 
-	ShootTo("Bullet",SP3.Call("Player").OBJcV->getCentre(),SP3.Call("Totem").OBJcV->getCentre(),130,speed);
+	ShootTo("Bullet1",SP3.Call("Player").OBJcV->getCentre(),SP3.Call("Totem").OBJcV->getCentre(),130,speed);
 	ShootTo2("Bullet2",SP3.Call("Player").OBJcV->getCentre(),SP3.Call("Totem2").OBJcV->getCentre(),150,speed);
 	ShootTo3("Bullet3",SP3.Call("Player").OBJcV->getCentre(),SP3.Call("Totem3").OBJcV->getCentre(),120,speed);
 	ShootTo4("Bullet4",SP3.Call("Player").OBJcV->getCentre(),SP3.Call("Totem4").OBJcV->getCentre(),170,speed);
 
+	for (int i = 1; i < 4; i++)
+	{
+		string AddToName;
+		std::ostringstream ss;
+		ss << i;
+		AddToName = ss.str();
+		collisionSphere* Temp = (collisionSphere*)(SP3.Call("Bullet" + AddToName).OBJcV);
+		if (Temp->checkCollision((collisionSphere*)(SP3.Call("Player").OBJcV)))
+		{
+			MyLife--;
+		}
+	}
+
+	string AddToName;
+	std::ostringstream ss;
+	ss << MyLife;
+	AddToName = ss.str();
+	stLife = stLife + AddToName;
+
+
+	if (MyLife <= 0)
+	{
+		//GameOver;
+		SP3.Call("Player").OBJcV->setCOORD(0, 0, 0);
+	}
 	Task3Complete();
 
-
-	std::ostringstream ss;
 	ss << Floor3Timer;
 	MyTimer = ss.str();
 
@@ -438,17 +454,10 @@ void Floor3::Render()
 
 	RenderObjective();
 	RenderFloor3();
-
-    if(test == true)
-	{
-	sound();
-	test = false;
-	}
 }
 
 void Floor3::Exit()
 {
-    engine3->drop();
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
 
@@ -456,6 +465,14 @@ void Floor3::Exit()
 
 void Floor3::RenderObjective()
 {
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], stLife, Color(1,0,1), 8, 1, 4.2);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], stXLife, Color(1, 0, 1), 8, 1, 4.2);
+	modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], MyTimer, Color(1,1,1),10,6.5f,5.5f);
 	modelStack.PopMatrix();
@@ -518,6 +535,13 @@ void Floor3::RenderFloor3()
 		SP3.Call("ProfessorX").OBJcV->getCOORD(2));
 	RenderMesh(SP3.Call("ProfessorX").OBJmesh, false);
 	modelStack.PopMatrix();
+	
+	modelStack.PushMatrix();
+	modelStack.Translate(SP3.Call("ChemicalX").OBJcV->getCOORD(0),
+		SP3.Call("ChemicalX").OBJcV->getCOORD(1),
+		SP3.Call("ChemicalX").OBJcV->getCOORD(2));
+	RenderMesh(SP3.Call("ChemicalX").OBJmesh, false);
+	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(SP3.Call("Totem").OBJcV->getCOORD(0),
@@ -527,10 +551,10 @@ void Floor3::RenderFloor3()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(SP3.Call("Bullet").OBJcV->getCOORD(0),
-		SP3.Call("Bullet").OBJcV->getCOORD(1),
-		SP3.Call("Bullet").OBJcV->getCOORD(2));
-	RenderMesh(SP3.Call("Bullet").OBJmesh, false);
+	modelStack.Translate(SP3.Call("Bullet1").OBJcV->getCOORD(0),
+		SP3.Call("Bullet1").OBJcV->getCOORD(1),
+		SP3.Call("Bullet1").OBJcV->getCOORD(2));
+	RenderMesh(SP3.Call("Bullet1").OBJmesh, false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -578,7 +602,6 @@ void Floor3::RenderFloor3()
 	RenderMesh(SP3.Call("Bullet4").OBJmesh, false);
 	modelStack.PopMatrix();
 }
-
 
 void Floor3::ShootTo(std::string Target, Vector3 Destination, Vector3 Source, float MaxDistance, float BulletSpeed)
 {
@@ -634,9 +657,18 @@ void Floor3::ShootTo4(std::string Target, Vector3 Destination, Vector3 Source, f
 
 void Floor3::Task3Complete()
 {
-	if (SP3.Call("ProfessorX").OBJcV->getActivate())
+	if (SP3.Call("ProfessorX").OBJcV->getActivate() && ProfessorLife > 0)
 	{
-		SP3.Call("Teleporter").OBJcV->setCOORD(0,0,0);
+		int randomX = rand() % 57 + -25;
+		int randomZ = rand() % 44 + -19;
+		ProfessorLife -= 1;
+		SP3.Call("ProfessorX").OBJcV->setActivate(false);
+		SP3.Call("ProfessorX").OBJcV->setCOORD(randomX, 0, randomZ);
+		SP3.Call("ChemicalX").OBJcV->setCOORD(SP3.Call("ProfessorX").OBJcV->getCOORD(0), 5, SP3.Call("ProfessorX").OBJcV->getCOORD(2));
+	}
+	if (ProfessorLife == 0)
+	{
+		SP3.Call("Teleporter").OBJcV->setCOORD(0, 0, 0);
 	}
 }
 

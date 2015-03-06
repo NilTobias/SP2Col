@@ -59,15 +59,12 @@ void Floor1::Init()
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
-	rotateCharacter = 0;
-	rotateTele = 0;
 	Teleport = false;
 	isFixed = false;
-	engineHeat = 0;
 	LSPEED = 20.f;
-	JetPackActivated = true;
     test = true;
 	MovementSpeed = 10;
+	Code = "Code: ";
 
 	//Load vertex and fragment shaders
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
@@ -156,11 +153,40 @@ void Floor1::Init()
 
 	Object Player;
 	Player.Name = "Player";
-	Player.CollisionTrigger = true;
-	Player.OBJcV = new collisionSphere(2.f, Vector3(0, 0, 50));
+	Player.OBJcV = new collisionSphere(2.f, Vector3(0, 0, 45));
+	Player.OBJcV->setFace(90);
+	Player.OBJcV->setLiving(true);
 	Player.OBJmesh = MeshBuilder::GenerateOBJ("Player", "OBJ//doorman.obj");
 	Player.OBJmesh->textureID = LoadTGA("Image//doorman.tga");
 	SP.Add(Player);
+
+
+	Object Teleporter;
+	Teleporter.Name = "Teleporter";
+	Teleporter.Gravity = false;
+	Teleporter.OBJcV = new collisionSphere(4.f, Vector3(0, 0, -25));
+	Teleporter.OBJcV->setEffect(2);
+	Teleporter.OBJmesh = MeshBuilder::GenerateOBJ("Tele", "OBJ//Elevator.obj");
+	Teleporter.OBJmesh->textureID = LoadTGA("Image//Elevator.tga");
+	SP.Add(Teleporter);
+
+	Object Crosshair;
+	Crosshair.Name = "Crosshair";
+	Crosshair.Gravity = false;
+	Crosshair.OBJcV = new collisionSphere(0.1f, Vector3(0, 0, 0));
+	Crosshair.OBJcV->setCursor(true);
+	Crosshair.OBJmesh = MeshBuilder::GenerateQuad("Crosshair", Color(1, 1, 1), 1.f);
+	Crosshair.OBJmesh->textureID = LoadTGA("Image//Hand.tga");
+	SP.Add(Crosshair);
+
+	Object ElevatorMan;
+	ElevatorMan.Name = "ElevatorMan";
+	ElevatorMan.OBJcV = new AABB(2.f, 2.f,0.f, Vector3(0, 0, -19));
+	ElevatorMan.OBJcV->setEffect(2);
+	ElevatorMan.OBJmesh = MeshBuilder::GenerateOBJ("ElevatorMan", "OBJ//doorman.obj");
+	ElevatorMan.OBJmesh->textureID = LoadTGA("Image//doorman.tga");
+	SP.Add(ElevatorMan);
+
 
 	Object Can;
 	Can.Name = "Bowser";
@@ -172,25 +198,11 @@ void Floor1::Init()
 	Can.OBJmesh->textureID = LoadTGA("Image//CanTexture.tga");
 	SP.Add(Can);
 
-	Object Wine;
-	Wine.Name = "Wine";
-	Wine.CollisionTrigger = false;
-	Wine.OBJcV = new collisionSphere(2.f, Vector3(15, 0, 0));
-	Wine.OBJcV->setEffect(1);
-	Wine.OBJcV->setVelocity(Vector3(0, 5, 0));
-	Wine.OBJmesh = MeshBuilder::GenerateOBJ("Wine", "OBJ//winebottle.obj");
-	Wine.OBJmesh->textureID = LoadTGA("Image//winebottle.tga");
-	Wine.OBJmesh->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	Wine.OBJmesh->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
-	Wine.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
-	Wine.OBJmesh->material.kShininess = 5.f;
-	SP.Add(Wine);
-
     Object VD1;
 	VD1.Name = "VD1";
 	VD1.CollisionTrigger = false;
 	VD1.OBJcV = new collisionSphere(2.f, Vector3(17, 0, 5));
-	VD1.OBJcV->setEffect(1);
+	VD1.OBJcV->setEffect(2,1);
 	VD1.OBJcV->setVelocity(Vector3(0, 5, 0));
 	VD1.OBJmesh = MeshBuilder::GenerateOBJ("VD1", "OBJ//VendingMachine.obj");
 	VD1.OBJmesh->textureID = LoadTGA("Image//VendingMachine.tga");
@@ -204,7 +216,7 @@ void Floor1::Init()
 	VD2.Name = "VD2";
 	VD2.CollisionTrigger = false;
 	VD2.OBJcV = new collisionSphere(2.f, Vector3(-17, 0, -5));
-	VD2.OBJcV->setEffect(1);
+	VD2.OBJcV->setEffect(2,1);
 	VD2.OBJcV->setVelocity(Vector3(0, 5, 0));
 	VD2.OBJmesh = MeshBuilder::GenerateOBJ("VD2", "OBJ//VendingMachine.obj");
 	VD2.OBJmesh->textureID = LoadTGA("Image//VendingMachine.tga");
@@ -218,7 +230,7 @@ void Floor1::Init()
 	VD3.Name = "VD3";
 	VD3.CollisionTrigger = false;
 	VD3.OBJcV = new collisionSphere(2.f, Vector3(17, 0, -5));
-	VD3.OBJcV->setEffect(1);
+	VD3.OBJcV->setEffect(2,1);
 	VD3.OBJcV->setVelocity(Vector3(0, 5, 0));
 	VD3.OBJmesh = MeshBuilder::GenerateOBJ("VD3", "OBJ//VendingMachine.obj");
 	VD3.OBJmesh->textureID = LoadTGA("Image//VendingMachine.tga");
@@ -232,7 +244,7 @@ void Floor1::Init()
 	VD4.Name = "VD4";
 	VD4.CollisionTrigger = false;
 	VD4.OBJcV = new collisionSphere(2.f, Vector3(-17, 0, 5));
-	VD4.OBJcV->setEffect(1);
+	VD4.OBJcV->setEffect(2,1);
 	VD4.OBJcV->setVelocity(Vector3(0, 5, 0));
 	VD4.OBJmesh = MeshBuilder::GenerateOBJ("VD4", "OBJ//VendingMachine.obj");
 	VD4.OBJmesh->textureID = LoadTGA("Image//VendingMachine.tga");
@@ -250,16 +262,6 @@ void Floor1::Init()
 	Shelf1.OBJcV->setVelocity(Vector3(0, 5, 0));
 	SP.Add(Shelf1);
 
-	Object Random;
-	Random.Name = "Random";
-	Random.CollisionTrigger = false;
-	Random.OBJcV = new AABB(1, 1, 1, Vector3(-15, 0, 35));
-	Random.OBJcV->setEffect(1);
-	Random.OBJcV->setVelocity(Vector3(0, 5, 0));
-	Random.OBJmesh = MeshBuilder::GenerateOBJ("Random", "OBJ//NPCModel.obj");
-	Random.OBJmesh->textureID = LoadTGA("Image//DrLuctTexture.tga");
-	SP.Add(Random);
-
 	Object FirstFloor;
 	FirstFloor.Name = "FirstFloor";
 	FirstFloor.CollisionTrigger = true;
@@ -273,9 +275,6 @@ void Floor1::Init()
 	FirstFloor.OBJmesh->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
 	FirstFloor.OBJmesh->material.kShininess = 5.f;
 	SP.Add(FirstFloor);
-
-
-
 
 	//Initialize camera settings
 	camera.Init(Vector3(0, 25, 75), Vector3(0, 0, 0), Vector3(0, 1, 0));
@@ -389,55 +388,7 @@ void Floor1::Update(double dt)
 	else if (Application::IsKeyPressed(VK_LEFT))
 		SP.Call("Player").OBJcV->setFace(SP.Call("Player").OBJcV->getFace() + 5.f);
 
-	/*
-	if (Application::IsKeyPressed('E') && Player->checkCollision(Teleporter))
-	{
-	Teleport = true;
-	isFixed = true;
-	}
-	if (Teleport)
-	rotateTele += 15;
-	if (rotateTele > 1080)
-	{
-	Teleport = false;
-	isFixed = false;
-	rotateTele = 0;
-	Player->setCOORD(0,0,0);
-	}
-
-	//JetPack
-	if (Application::IsKeyPressed('F') && JetPackActivated)
-	{
-
-	Player->setCOORD(Player->getCOORD(0), Player->getCOORD(1) + 0.4, Player->getCOORD(2));
-	engineHeat += 40;
-	if (engineHeat >= 2000)
-	JetPackActivated = false;
-	}
-	if (Player->getCOORD(1) > 0)
-	{
-	Player->setCOORD(Player->getCOORD(0), Player->getCOORD(1) - 0.1, Player->getCOORD(2));
-	if (engineHeat < 50 && !JetPackActivated)
-	JetPackActivated = true;
-	else
-	engineHeat -= 10;
-	}
-
-	/* COLLISION EFFECTS
-	while (SP.CheckCollision().Name != "Finished")
-	//Pick Ups
-
-	//Stationary Bounds
-
-	//Activations
-
-	//Vector Addition
-
-	float test = engineHeat;
-	std::ostringstream ss;
-	ss<< test;
-	warningTest = ss.str();
-	*/
+	
 	if (Application::IsKeyPressed('E'))
 	{
 		Here.AllowPickUp = true;
@@ -446,11 +397,7 @@ void Floor1::Update(double dt)
 	}
 
 	SP.CheckCollision();
-
-	if (Application::IsKeyPressed('F'))
-	{
-		SP.Call("Bowser").OBJcV->Chase(SP.Call("Player").OBJcV, 1, true);
-	}
+	UpdateCrosshair(SP);
 
 	if (SP.Call("Player").OBJcV->getFace() > 180)
 		SP.Call("Player").OBJcV->setFace(SP.Call("Player").OBJcV->getFace() - 360);
@@ -492,74 +439,7 @@ void Floor1::Render()
 	RenderSkybox();
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Player").OBJcV->getCOORD(0),
-		SP.Call("Player").OBJcV->getCOORD(1),
-		SP.Call("Player").OBJcV->getCOORD(2));
-	modelStack.Rotate(SP.Call("Player").OBJcV->getFace() + 90, 0, 1, 0);
-	RenderMesh(SP.Call("Player").OBJmesh, false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Bowser").OBJcV->getCOORD(0),
-		SP.Call("Bowser").OBJcV->getCOORD(1),
-		SP.Call("Bowser").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Bowser").OBJmesh, false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Wine").OBJcV->getCOORD(0),
-		SP.Call("Wine").OBJcV->getCOORD(1),
-		SP.Call("Wine").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("Wine").OBJmesh, true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("Random").OBJcV->getCOORD(0),
-		SP.Call("Random").OBJcV->getCOORD(1),
-		SP.Call("Random").OBJcV->getCOORD(2));
-	modelStack.Rotate(90, 0, -1, 0);
-	RenderMesh(SP.Call("Random").OBJmesh, false);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("FirstFloor").OBJcV->getCOORD(0),
-		SP.Call("FirstFloor").OBJcV->getCOORD(1),
-		SP.Call("FirstFloor").OBJcV->getCOORD(2));
-	RenderMesh(SP.Call("FirstFloor").OBJmesh, true);
-	modelStack.PopMatrix();
-	
-    modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("VD1").OBJcV->getCOORD(0),
-		SP.Call("VD1").OBJcV->getCOORD(1),
-		SP.Call("VD1").OBJcV->getCOORD(2));
-    modelStack.Rotate(90, 0, -1, 0);
-	RenderMesh(SP.Call("VD1").OBJmesh, true);
-	modelStack.PopMatrix();
-
-     modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("VD2").OBJcV->getCOORD(0),
-		SP.Call("VD2").OBJcV->getCOORD(1),
-		SP.Call("VD2").OBJcV->getCOORD(2));
-    modelStack.Rotate(90, 0, 1, 0);
-	RenderMesh(SP.Call("VD2").OBJmesh, true);
-	modelStack.PopMatrix();
-
-     modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("VD3").OBJcV->getCOORD(0),
-		SP.Call("VD3").OBJcV->getCOORD(1),
-		SP.Call("VD3").OBJcV->getCOORD(2));
-    modelStack.Rotate(90, 0, -1, 0);
-	RenderMesh(SP.Call("VD3").OBJmesh, true);
-	modelStack.PopMatrix();
-
-     modelStack.PushMatrix();
-	modelStack.Translate(SP.Call("VD4").OBJcV->getCOORD(0),
-		SP.Call("VD4").OBJcV->getCOORD(1),
-		SP.Call("VD4").OBJcV->getCOORD(2));
-    modelStack.Rotate(90, 0, 1, 0);
-	RenderMesh(SP.Call("VD4").OBJmesh, true);
-	modelStack.PopMatrix();
+	RenderSP();
 
 	//Text on screen for later debug
 	std::ostringstream screenTxt1;
@@ -588,5 +468,86 @@ void Floor1::Exit()
 
 void Floor1::RenderSP()
 {
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Player").OBJcV->getCOORD(0),
+		SP.Call("Player").OBJcV->getCOORD(1),
+		SP.Call("Player").OBJcV->getCOORD(2));
+	modelStack.Rotate(SP.Call("Player").OBJcV->getFace() + 90, 0, 1, 0);
+	RenderMesh(SP.Call("Player").OBJmesh, false);
+	modelStack.PopMatrix();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Crosshair").OBJcV->getCOORD(0),
+		SP.Call("Crosshair").OBJcV->getCOORD(1),
+		SP.Call("Crosshair").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Crosshair").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Teleporter").OBJcV->getCOORD(0),
+		SP.Call("Teleporter").OBJcV->getCOORD(1),
+		SP.Call("Teleporter").OBJcV->getCOORD(2));
+	modelStack.Rotate(150,0,1,0);
+	modelStack.Scale(1.8f, 1.8f, 1.8f);
+	RenderMesh(SP.Call("Teleporter").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("ElevatorMan").OBJcV->getCOORD(0),
+		SP.Call("ElevatorMan").OBJcV->getCOORD(1),
+		SP.Call("ElevatorMan").OBJcV->getCOORD(2));
+	modelStack.Rotate(1, 0, 1, 0);
+	modelStack.Scale(1.4f, 1.4f, 1.4f);
+	RenderMesh(SP.Call("ElevatorMan").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("Bowser").OBJcV->getCOORD(0),
+		SP.Call("Bowser").OBJcV->getCOORD(1),
+		SP.Call("Bowser").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("Bowser").OBJmesh, false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("FirstFloor").OBJcV->getCOORD(0),
+		SP.Call("FirstFloor").OBJcV->getCOORD(1),
+		SP.Call("FirstFloor").OBJcV->getCOORD(2));
+	RenderMesh(SP.Call("FirstFloor").OBJmesh, true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("VD1").OBJcV->getCOORD(0),
+		SP.Call("VD1").OBJcV->getCOORD(1),
+		SP.Call("VD1").OBJcV->getCOORD(2));
+	modelStack.Rotate(90, 0, -1, 0);
+	RenderMesh(SP.Call("VD1").OBJmesh, true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("VD2").OBJcV->getCOORD(0),
+		SP.Call("VD2").OBJcV->getCOORD(1),
+		SP.Call("VD2").OBJcV->getCOORD(2));
+	modelStack.Rotate(90, 0, 1, 0);
+	RenderMesh(SP.Call("VD2").OBJmesh, true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("VD3").OBJcV->getCOORD(0),
+		SP.Call("VD3").OBJcV->getCOORD(1),
+		SP.Call("VD3").OBJcV->getCOORD(2));
+	modelStack.Rotate(90, 0, -1, 0);
+	RenderMesh(SP.Call("VD3").OBJmesh, true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(SP.Call("VD4").OBJcV->getCOORD(0),
+		SP.Call("VD4").OBJcV->getCOORD(1),
+		SP.Call("VD4").OBJcV->getCOORD(2));
+	modelStack.Rotate(90, 0, 1, 0);
+	RenderMesh(SP.Call("VD4").OBJmesh, true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], Code, (1,0.5,1), 9, 1, 6);
+	modelStack.PopMatrix();
 }
